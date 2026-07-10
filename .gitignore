@@ -14,3 +14,10 @@ out/
 Thumbs.db
 .vscode/
 .idea/
+
+# .claude/skills is tracked so writing/coding skills travel with the repo.
+# Only ignore local session noise.
+.claude/settings.local.json
+.claude/logs/
+.claude/cache/
+.claude/tmp/

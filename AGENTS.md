@@ -2,6 +2,16 @@
 
 This is the **public** Canico Pets website repository. It is intentionally isolated from the internal ops repo one level up.
 
+## Skills — top priority
+
+Before writing any user-facing string on this site, consult the project-scoped skills at `.claude/skills/`. See `CLAUDE.md` for details. Short version:
+
+- Any prose or copy (hero lines, product descriptions, alt text, meta descriptions, form labels) → invoke `no-ai-slop` first. Fall back to reading `.claude/skills/no-ai-slop/SKILL.md` directly if the Skill tool says "Unknown skill".
+- Any Astro/CSS/JS work → invoke `ponytail` first.
+- If the task involves both → invoke both, at the top of the turn.
+
+The whole point of this repo is public-facing copy. Every emoji, em-dash, "It's not X, it's Y" pattern, or vague adjective is a slop signal.
+
 ## Rules
 
 - Everything committed here is publishable. Assume it will be indexed by Google and read by competitors.

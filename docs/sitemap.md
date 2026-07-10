@@ -4,7 +4,7 @@ Working plan for pages. Nothing built yet.
 
 ## Public pages (v1)
 
-- `/` — home: what Canico Pets makes and why.
+- `/` — home: what Canico Pet makes and why.
 - `/products` — product catalog (starts with litter mats).
 - `/products/litter-mats` — deep dive on the flagship product.
 - `/wholesale` — B2B pitch, MOQ, contact form.

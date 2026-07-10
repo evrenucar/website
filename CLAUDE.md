@@ -1,6 +1,6 @@
 # CLAUDE.md — Website repo
 
-This is the **public** Canico Pets website (Astro static site, deploys to GitHub Pages). Read `AGENTS.md` first for full rules.
+This is the **public** Canico Pet website (Astro static site, deploys to GitHub Pages). Read `AGENTS.md` first for full rules.
 
 ## Skills you must use — do not skip
 
@@ -25,7 +25,7 @@ The whole point of this repo is public-facing copy. Every Trans component, every
 ### Code (Astro components, pages, styles)
 
 - **`ponytail`** — YAGNI. Do not add a component, dependency, or CSS layer unless it earns its keep. One line over fifty. Reuse what is already here.
-- **`frontend-design`** — invoke before starting any new UI section, layout, or visual restyle. Rejects templated defaults; forces deliberate choices about palette, type, and structure that fit *this* brand (Canico Pets pet lifestyle, not a generic SaaS aesthetic).
+- **`frontend-design`** — invoke before starting any new UI section, layout, or visual restyle. Rejects templated defaults; forces deliberate choices about palette, type, and structure that fit *this* brand (Canico Pet pet lifestyle, not a generic SaaS aesthetic).
 
 Trigger words: refactor, abstraction, dependency, install, "let me add a helper", new section, new page, restyle, redesign, layout, hero, palette, typography.
 

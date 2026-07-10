@@ -1,6 +1,6 @@
-# Canico Pets — Website
+# Canico Pet — Website
 
-Public marketing site for **Canico Pets** at [canicopets.com](https://canicopets.com).
+Public marketing site for **Canico Pet** at [canicopet.com](https://canicopet.com).
 
 Static Astro build, hosted on GitHub Pages. Structured to grow into a real webshop later without a rewrite.
 
@@ -29,9 +29,9 @@ Every push to `main` builds the site and deploys to GitHub Pages via the workflo
 
 On GitHub:
 
-1. Push this repo to `github.com/<owner>/canicopets-website` (or similar).
+1. Push this repo to `github.com/<owner>/canicopet-website` (or similar).
 2. Settings → Pages → Build and deployment → **Source: GitHub Actions**.
-3. Settings → Pages → Custom domain: `canicopets.com`. The `public/CNAME` file is already in place.
+3. Settings → Pages → Custom domain: `canicopet.com`. The `public/CNAME` file is already in place.
 4. Point the domain's DNS at GitHub Pages (`A` records or `CNAME` per [GitHub Pages docs](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site)).
 
 ## Layout

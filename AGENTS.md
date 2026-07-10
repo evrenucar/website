@@ -1,6 +1,6 @@
 # AGENTS.md — Rules for the Public Website Repo
 
-This is the **public** Canico Pets website repository. It is intentionally isolated from the internal ops repo one level up.
+This is the **public** Canico Pet website repository. It is intentionally isolated from the internal ops repo one level up.
 
 ## Skills — top priority
 

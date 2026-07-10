@@ -9,55 +9,77 @@ const isActive = (p: string) => path === p || path.startsWith(p + '/');
       <img src="/logo-placeholder.svg" alt="Canico Pets" width="200" height="50" />
     </a>
 
+    <nav class="site-nav__nav" aria-label="Primary">
+      <ul class="site-nav__links">
+        <li><a href="/products" class:list={[{ 'is-active': isActive('/products') }]}>
+          <Trans en="Products" tr="Ürünler" />
+        </a></li>
+        <li><a href="/wholesale" class:list={[{ 'is-active': isActive('/wholesale') }]}>
+          <Trans en="Wholesale" tr="Toptan" />
+        </a></li>
+        <li><a href="/private-label" class:list={[{ 'is-active': isActive('/private-label') }]}>
+          <Trans en="Private Label" tr="Özel Marka" />
+        </a></li>
+        <li><a href="/about" class:list={[{ 'is-active': isActive('/about') }]}>
+          <Trans en="About" tr="Hakkımızda" />
+        </a></li>
+        <li><a href="/contact" class:list={[{ 'is-active': isActive('/contact') }]}>
+          <Trans en="Contact" tr="İletişim" />
+        </a></li>
+      </ul>
+    </nav>
+
+    <div class="lang-toggle site-nav__lang" role="group" aria-label="Language">
+      <button type="button" data-lang-switch="en" aria-pressed="true" aria-label="Switch to English">EN</button>
+      <button type="button" data-lang-switch="tr" aria-pressed="false" aria-label="Türkçe'ye geç">TR</button>
+    </div>
+
     <button
       class="site-nav__toggle"
       type="button"
       aria-expanded="false"
-      aria-controls="site-nav-drawer"
+      aria-controls="site-nav-mobile"
       aria-label="Toggle menu"
     >
       <span class="site-nav__toggle-bar" aria-hidden="true"></span>
       <span class="site-nav__toggle-bar" aria-hidden="true"></span>
       <span class="site-nav__toggle-bar" aria-hidden="true"></span>
     </button>
+  </div>
 
-    <div id="site-nav-drawer" class="site-nav__drawer" data-open="false">
-      <nav class="site-nav__nav" aria-label="Primary">
-        <ul class="site-nav__links">
-          <li><a href="/products" class:list={[{ 'is-active': isActive('/products') }]}>
-            <Trans en="Products" tr="Ürünler" />
-          </a></li>
-          <li><a href="/wholesale" class:list={[{ 'is-active': isActive('/wholesale') }]}>
-            <Trans en="Wholesale" tr="Toptan" />
-          </a></li>
-          <li><a href="/private-label" class:list={[{ 'is-active': isActive('/private-label') }]}>
-            <Trans en="Private Label" tr="Özel Marka" />
-          </a></li>
-          <li><a href="/about" class:list={[{ 'is-active': isActive('/about') }]}>
-            <Trans en="About" tr="Hakkımızda" />
-          </a></li>
-          <li><a href="/contact" class:list={[{ 'is-active': isActive('/contact') }]}>
-            <Trans en="Contact" tr="İletişim" />
-          </a></li>
-        </ul>
-      </nav>
-      <div class="lang-toggle" role="group" aria-label="Language">
-        <button type="button" data-lang-switch="en" aria-pressed="true" aria-label="Switch to English">EN</button>
-        <button type="button" data-lang-switch="tr" aria-pressed="false" aria-label="Türkçe'ye geç">TR</button>
-      </div>
-    </div>
+  <div id="site-nav-mobile" class="site-nav__mobile" data-open="false" aria-hidden="true">
+    <nav aria-label="Primary mobile">
+      <ul>
+        <li><a href="/products" class:list={[{ 'is-active': isActive('/products') }]}>
+          <Trans en="Products" tr="Ürünler" />
+        </a></li>
+        <li><a href="/wholesale" class:list={[{ 'is-active': isActive('/wholesale') }]}>
+          <Trans en="Wholesale" tr="Toptan" />
+        </a></li>
+        <li><a href="/private-label" class:list={[{ 'is-active': isActive('/private-label') }]}>
+          <Trans en="Private Label" tr="Özel Marka" />
+        </a></li>
+        <li><a href="/about" class:list={[{ 'is-active': isActive('/about') }]}>
+          <Trans en="About" tr="Hakkımızda" />
+        </a></li>
+        <li><a href="/contact" class:list={[{ 'is-active': isActive('/contact') }]}>
+          <Trans en="Contact" tr="İletişim" />
+        </a></li>
+      </ul>
+    </nav>
   </div>
 </header>
 
 <script is:inline>
   (function () {
     var btn = document.querySelector('.site-nav__toggle');
-    var drawer = document.getElementById('site-nav-drawer');
-    if (!btn || !drawer) return;
+    var panel = document.getElementById('site-nav-mobile');
+    if (!btn || !panel) return;
 
     function setOpen(open) {
       btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-      drawer.dataset.open = open ? 'true' : 'false';
+      panel.dataset.open = open ? 'true' : 'false';
+      panel.setAttribute('aria-hidden', open ? 'false' : 'true');
       document.body.style.overflow = open ? 'hidden' : '';
     }
 
@@ -65,7 +87,7 @@ const isActive = (p: string) => path === p || path.startsWith(p + '/');
       setOpen(btn.getAttribute('aria-expanded') !== 'true');
     });
 
-    drawer.querySelectorAll('a').forEach(function (a) {
+    panel.querySelectorAll('a').forEach(function (a) {
       a.addEventListener('click', function () { setOpen(false); });
     });
 
@@ -83,135 +105,46 @@ const isActive = (p: string) => path === p || path.startsWith(p + '/');
     z-index: 20;
     border-bottom: 1px solid var(--color-line);
   }
+
   .site-nav__inner {
     display: flex;
+    flex-direction: row;
     align-items: center;
-    justify-content: space-between;
     gap: var(--space-3);
     padding-block: 12px;
     min-height: 70px;
     flex-wrap: nowrap;
   }
+
   .site-nav__brand {
     flex-shrink: 0;
     line-height: 0;
+    margin-right: auto;
   }
   .site-nav__brand img {
     height: 40px;
     width: auto;
-    transition: transform 200ms ease;
     display: block;
   }
-  .site-nav__brand:hover img { transform: rotate(-2deg); }
 
-  /* Hamburger button */
-  .site-nav__toggle {
-    display: inline-flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 5px;
-    width: 44px;
-    height: 44px;
-    padding: 10px;
-    background: transparent;
-    border: 1.5px solid var(--color-line);
-    border-radius: 12px;
-    cursor: pointer;
-    flex-shrink: 0;
-  }
-  .site-nav__toggle-bar {
-    display: block;
-    width: 20px;
-    height: 2px;
-    background: var(--color-ink);
-    border-radius: 2px;
-    transition: transform 200ms ease, opacity 200ms ease;
-  }
-  .site-nav__toggle[aria-expanded="true"] .site-nav__toggle-bar:nth-child(1) {
-    transform: translateY(7px) rotate(45deg);
-  }
-  .site-nav__toggle[aria-expanded="true"] .site-nav__toggle-bar:nth-child(2) {
-    opacity: 0;
-  }
-  .site-nav__toggle[aria-expanded="true"] .site-nav__toggle-bar:nth-child(3) {
-    transform: translateY(-7px) rotate(-45deg);
-  }
+  /* Desktop nav: shown at >= 900px, hidden below. */
+  .site-nav__nav { display: none; }
+  .site-nav__lang { display: none; }
 
-  /* Drawer (contains nav + lang toggle) */
-  .site-nav__drawer {
-    display: flex;
-    align-items: center;
-    gap: var(--space-4);
-  }
-
-  /* Mobile: drawer collapses into a full-width panel below the bar */
-  @media (max-width: 899px) {
-    .site-nav__drawer {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      right: 0;
-      flex-direction: column;
-      align-items: stretch;
-      background: var(--color-bg);
-      border-bottom: 1px solid var(--color-line);
-      padding: var(--space-3) var(--space-4) var(--space-4);
-      gap: var(--space-3);
-      transform-origin: top;
-      max-height: 0;
-      overflow: hidden;
-      opacity: 0;
-      transition: max-height 260ms ease, opacity 200ms ease, padding 200ms ease;
-      pointer-events: none;
-    }
-    .site-nav__drawer[data-open="true"] {
-      max-height: 500px;
-      opacity: 1;
-      padding-block: var(--space-3) var(--space-4);
-      pointer-events: auto;
-      box-shadow: 0 10px 30px rgba(27,27,36,0.06);
-    }
-    .site-nav__nav { width: 100%; }
-    .site-nav__links {
-      flex-direction: column;
-      gap: 2px;
-      align-items: stretch;
-    }
-    .site-nav__links a {
-      display: block;
-      padding: 12px 14px;
-      font-size: 17px;
-      border-radius: 12px;
-    }
-    .site-nav__links a.is-active {
-      background: color-mix(in srgb, var(--color-sunshine) 30%, transparent);
-      color: var(--color-ink);
-    }
-    .site-nav__links a.is-active::after { display: none; }
-    .lang-toggle { align-self: flex-start; }
-  }
-
-  /* Desktop: hide hamburger, drawer sits inline */
   @media (min-width: 900px) {
-    .site-nav__toggle { display: none; }
-    .site-nav__drawer {
-      position: static;
-      max-height: none;
-      opacity: 1;
-      pointer-events: auto;
-      background: transparent;
-      padding: 0;
-      border: 0;
-    }
+    .site-nav__nav { display: block; }
+    .site-nav__lang { display: inline-flex; }
+    .site-nav__toggle { display: none !important; }
   }
 
-  .site-nav__nav { display: block; }
   .site-nav__links {
     display: flex;
-    gap: var(--space-3);
+    flex-direction: row;
+    gap: var(--space-4);
     list-style: none;
     padding: 0;
     margin: 0;
+    align-items: center;
     flex-wrap: nowrap;
   }
 
@@ -226,7 +159,6 @@ const isActive = (p: string) => path === p || path.startsWith(p + '/');
     white-space: nowrap;
     display: inline-block;
   }
-  /* Reserve the underline space so hover/active states never shift layout. */
   .site-nav__links a::after {
     content: '';
     position: absolute;
@@ -246,5 +178,85 @@ const isActive = (p: string) => path === p || path.startsWith(p + '/');
   .site-nav__links a.is-active::after {
     transform: scaleX(1);
     background: var(--color-ink);
+  }
+
+  /* Hamburger — only visible below 900px */
+  .site-nav__toggle {
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    width: 44px;
+    height: 44px;
+    padding: 10px;
+    background: transparent;
+    border: 1.5px solid var(--color-line);
+    border-radius: 12px;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .site-nav__toggle-bar {
+    display: block;
+    width: 20px;
+    height: 2px;
+    background: var(--color-ink);
+    border-radius: 2px;
+    transition: transform 200ms ease, opacity 200ms ease;
+    transform-origin: center;
+  }
+  .site-nav__toggle[aria-expanded="true"] .site-nav__toggle-bar:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+  .site-nav__toggle[aria-expanded="true"] .site-nav__toggle-bar:nth-child(2) {
+    opacity: 0;
+  }
+  .site-nav__toggle[aria-expanded="true"] .site-nav__toggle-bar:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
+  /* Mobile drawer — separate panel below the bar. Hidden on desktop. */
+  .site-nav__mobile {
+    display: block;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    background: var(--color-bg);
+    border-bottom: 1px solid var(--color-line);
+    transition: max-height 260ms ease, opacity 200ms ease;
+    pointer-events: none;
+  }
+  .site-nav__mobile[data-open="true"] {
+    max-height: 560px;
+    opacity: 1;
+    pointer-events: auto;
+    box-shadow: 0 10px 30px rgba(27,27,36,0.06);
+  }
+  .site-nav__mobile ul {
+    list-style: none;
+    padding: var(--space-3) var(--space-4) var(--space-4);
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .site-nav__mobile a {
+    display: block;
+    padding: 14px 16px;
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--color-ink-soft);
+    text-decoration: none;
+    border-radius: 12px;
+    transition: background 140ms ease, color 140ms ease;
+  }
+  .site-nav__mobile a:hover,
+  .site-nav__mobile a.is-active {
+    background: color-mix(in srgb, var(--color-sunshine) 25%, transparent);
+    color: var(--color-ink);
+  }
+
+  @media (min-width: 900px) {
+    .site-nav__mobile { display: none !important; }
   }
 </style>

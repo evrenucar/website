@@ -16,9 +16,6 @@ const products = (await getCollection('products'))
 
   {/* ---------- Hero ---------- */}
   <section class="home-hero">
-    <span class="home-hero__blob home-hero__blob--a" aria-hidden="true"></span>
-    <span class="home-hero__blob home-hero__blob--b" aria-hidden="true"></span>
-
     <div class="container home-hero__inner">
       <div class="home-hero__copy">
         <p class="eyebrow"><Trans en="Made in Ankara · Cats and dogs" tr="Ankara üretimi · Kedi ve köpek" /></p>
@@ -140,7 +137,7 @@ const products = (await getCollection('products'))
   </section>
 
   {/* ---------- Story block: single landscape photo, side-by-side copy ---------- */}
-  <section class="section blob-bg" style="background: var(--color-bg-warm);">
+  <section class="section" style="background: var(--color-bg-warm);">
     <div class="container story">
       <div class="story__media">
         <img

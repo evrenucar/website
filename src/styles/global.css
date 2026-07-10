@@ -239,16 +239,6 @@ html.lang-tr [lang="en"] { display: none !important; }
 @media (min-width: 900px) {
   .home-hero__inner { grid-template-columns: 1.05fr 1fr; }
 }
-.home-hero__blob {
-  position: absolute;
-  z-index: 0;
-  filter: blur(60px);
-  opacity: 0.5;
-  pointer-events: none;
-}
-.home-hero__blob--a { top: -80px; right: -60px; width: 320px; height: 320px; background: var(--color-lavender); border-radius: 50%; }
-.home-hero__blob--b { bottom: -100px; left: -60px; width: 360px; height: 360px; background: var(--color-sunshine); border-radius: 50%; opacity: 0.35; }
-.home-hero__blob--c { top: 30%; left: 45%; width: 220px; height: 220px; background: var(--color-teal); border-radius: 50%; opacity: 0.25; }
 .home-hero__copy { position: relative; z-index: 2; }
 .home-hero__media {
   position: relative;
@@ -275,30 +265,6 @@ html.lang-tr [lang="en"] { display: none !important; }
   transform: rotate(6deg);
   z-index: 3;
   box-shadow: var(--shadow-soft);
-}
-
-.blob-bg {
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-}
-.blob-bg::before,
-.blob-bg::after {
-  content: '';
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(80px);
-  z-index: -1;
-  pointer-events: none;
-}
-.blob-bg::before { top: -100px; right: -80px; width: 340px; height: 340px; background: var(--color-lavender); opacity: 0.25; }
-.blob-bg::after { bottom: -120px; left: -80px; width: 380px; height: 380px; background: var(--color-sunshine); opacity: 0.3; }
-
-/* Playful decorative shapes we use in a few places */
-.deco-heart {
-  display: inline-block;
-  color: var(--color-coral);
-  transform: translateY(2px);
 }
 
 /* Easter egg: paw-print cursor trail (rendered by inline JS) */

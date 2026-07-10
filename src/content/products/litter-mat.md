@@ -29,6 +29,8 @@ tags:
 private_label_ready: true
 ---
 
+<div lang="en">
+
 ## What it's for
 
 Litter tracks out of the box. It sticks to paws and ends up on floors, on
@@ -50,3 +52,30 @@ the cat walks over it. Machine-washable in cold water. Non-slip backing.
 
 Available now for wholesale orders and private-label projects. See the
 [Wholesale](/wholesale) or [Private Label](/private-label) pages.
+
+</div>
+<div lang="tr">
+
+## Ne işe yarar
+
+Kum, kap dışına taşar. Patilere yapışır; oradan zemine, halıya ve diğer
+odalara ulaşır. Plastik tepsi paspaslar bir kısmını yakalar; ama sert,
+soğuktur ve oturma odasında pet shop plastiği gibi durur.
+
+## Ürün
+
+Kabartma petek dokulu tekstil paspas. Kedi üzerinden geçerken kum, petekler
+arasına düşer. Soğuk suda makinede yıkanabilir. Kaydırmaz taban.
+
+## Detaylar
+
+- Yüzey; kumu tutacak kadar derin, silkeleyerek temizlenecek kadar sığdır.
+- Kaydırmaz taban seramik, ahşap ve halıda tutar.
+- Kenarlar tekrarlı yıkamalara dayanacak şekilde bantlıdır.
+
+## Perakendeciler için
+
+Toptan siparişler ve özel marka projeleri için şimdi mevcut.
+[Toptan](/wholesale) veya [Özel Marka](/private-label) sayfalarını inceleyin.
+
+</div>

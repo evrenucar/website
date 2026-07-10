@@ -100,6 +100,9 @@ img, svg { max-width: 100%; height: auto; display: block; }
 .section {
   padding-block: var(--space-8);
 }
+@media (max-width: 720px) {
+  .section { padding-block: var(--space-6); }
+}
 
 .btn {
   display: inline-block;
@@ -223,6 +226,9 @@ html.lang-tr [lang="en"] { display: none !important; }
   position: relative;
   overflow: hidden;
   padding-block: var(--space-8) var(--space-7);
+}
+@media (max-width: 720px) {
+  .home-hero { padding-block: var(--space-6) var(--space-5); }
 }
 .home-hero__inner {
   display: grid;

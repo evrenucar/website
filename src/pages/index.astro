@@ -18,14 +18,13 @@ const products = (await getCollection('products'))
   <section class="home-hero">
     <span class="home-hero__blob home-hero__blob--a" aria-hidden="true"></span>
     <span class="home-hero__blob home-hero__blob--b" aria-hidden="true"></span>
-    <span class="home-hero__blob home-hero__blob--c" aria-hidden="true"></span>
 
     <div class="container home-hero__inner">
       <div class="home-hero__copy">
-        <p class="eyebrow"><Trans en="Made in Ankara · Cats & dogs" tr="Ankara üretimi · Kedi ve köpek" /></p>
+        <p class="eyebrow"><Trans en="Made in Ankara · Cats and dogs" tr="Ankara üretimi · Kedi ve köpek" /></p>
         <h1>
           <Trans en="Designed for pets." tr="Evcil hayvanlar için tasarlandı." /><br />
-          <span class="hero-line-2"><Trans en="Made for modern homes." tr="Modern evler için üretildi." /> <span class="deco-heart" aria-hidden="true">♥</span></span>
+          <span class="hero-line-2"><Trans en="Made for modern homes." tr="Modern evler için üretildi." /></span>
         </h1>
         <p class="home-hero__lede">
           <Trans
@@ -36,11 +35,6 @@ const products = (await getCollection('products'))
         <div class="home-hero__ctas">
           <a class="btn btn--primary" href="/products"><Trans en="Shop the products" tr="Ürünlere göz atın" /></a>
           <a class="btn btn--ghost" href="/wholesale"><Trans en="For retailers" tr="Perakendeciler için" /></a>
-        </div>
-        <div class="home-hero__badges" aria-label="Highlights">
-          <div><strong>🇹🇷</strong> <span><Trans en="Made in Turkiye" tr="Türkiye üretimi" /></span></div>
-          <div><strong>🧵</strong> <span><Trans en="Textile-first" tr="Tekstil odaklı" /></span></div>
-          <div><strong>💧</strong> <span><Trans en="Machine washable" tr="Makinede yıkanır" /></span></div>
         </div>
       </div>
       <div class="home-hero__media">
@@ -55,41 +49,35 @@ const products = (await getCollection('products'))
     </div>
   </section>
 
-  {/* ---------- Shop by category ---------- */}
+  {/* ---------- Shop by pet: three solid colored tiles, no stock photos ---------- */}
   <section class="section">
     <div class="container">
       <div class="section-head">
         <div>
-          <p class="eyebrow"><Trans en="Shop by pet" tr="Evcil hayvana göre" /></p>
-          <h2><Trans en="Who are you shopping for?" tr="Kimin için alışveriş yapıyorsunuz?" /></h2>
+          <p class="eyebrow"><Trans en="Shop" tr="Alışveriş" /></p>
+          <h2><Trans en="Pick your household." tr="Hanenizi seçin." /></h2>
         </div>
-        <a class="link-cta" href="/products"><Trans en="See everything ↗" tr="Tümünü görün ↗" /></a>
+        <a class="link-cta" href="/products"><Trans en="See everything" tr="Tümünü görün" /> ↗</a>
       </div>
 
       <div class="cat-tiles">
-        <a class="cat-tile" href="/products" style="--tile:var(--color-lavender);">
-          <img src="https://images.unsplash.com/photo-1650975273652-95ab415dc414?auto=format&fit=crop&w=900&q=80" alt="Cat seated on a chair" loading="lazy" />
-          <div class="cat-tile__body">
-            <span class="cat-tile__eyebrow"><Trans en="For cats" tr="Kediler için" /></span>
-            <h3><Trans en="Cats" tr="Kediler" /></h3>
-            <span class="cat-tile__cta"><Trans en="Shop cats ↗" tr="Kedi ürünleri ↗" /></span>
-          </div>
+        <a class="cat-tile" href="/products" style="--tile:var(--color-coral);">
+          <span class="cat-tile__eyebrow"><Trans en="For cats" tr="Kediler için" /></span>
+          <h3><Trans en="Cats" tr="Kediler" /></h3>
+          <p><Trans en="Litter mats and scratching pads that solve real problems without pet-shop plastic." tr="Kum paspasları ve tırmalama pedleri; pet shop plastiği olmadan gerçek çözümler." /></p>
+          <span class="cat-tile__cta"><Trans en="Shop cats" tr="Kedi ürünleri" /> ↗</span>
         </a>
-        <a class="cat-tile" href="/products" style="--tile:var(--color-sunshine);">
-          <img src="https://images.unsplash.com/photo-1587463272361-565200f82b33?auto=format&fit=crop&w=900&q=80" alt="Small dog resting on white textile" loading="lazy" />
-          <div class="cat-tile__body">
-            <span class="cat-tile__eyebrow"><Trans en="For dogs · coming soon" tr="Köpekler için · yakında" /></span>
-            <h3><Trans en="Dogs" tr="Köpekler" /></h3>
-            <span class="cat-tile__cta"><Trans en="Preview the line ↗" tr="Seriye göz atın ↗" /></span>
-          </div>
+        <a class="cat-tile" href="/products" style="--tile:var(--color-lavender);">
+          <span class="cat-tile__eyebrow"><Trans en="For dogs · coming soon" tr="Köpekler için · yakında" /></span>
+          <h3><Trans en="Dogs" tr="Köpekler" /></h3>
+          <p><Trans en="Feeding mats, floor protection, and travel pieces are in production on the same textile workflow." tr="Mama paspasları, zemin koruma ve seyahat parçaları aynı süreçte üretimde." /></p>
+          <span class="cat-tile__cta"><Trans en="Preview the line" tr="Seriye göz atın" /> ↗</span>
         </a>
         <a class="cat-tile" href="/wholesale" style="--tile:var(--color-teal);">
-          <img src="https://images.unsplash.com/photo-1554890448-9f63112b37cf?auto=format&fit=crop&w=900&q=80" alt="Dog resting on a made bed" loading="lazy" />
-          <div class="cat-tile__body">
-            <span class="cat-tile__eyebrow"><Trans en="For retailers" tr="Perakendeciler için" /></span>
-            <h3><Trans en="Wholesale" tr="Toptan" /></h3>
-            <span class="cat-tile__cta"><Trans en="Talk to us ↗" tr="Bize ulaşın ↗" /></span>
-          </div>
+          <span class="cat-tile__eyebrow"><Trans en="For retailers" tr="Perakendeciler için" /></span>
+          <h3><Trans en="Wholesale" tr="Toptan" /></h3>
+          <p><Trans en="Buy direct from the factory. MOQs, private label, and custom prints on request." tr="Doğrudan fabrikadan alım. MOQ, özel marka ve özel baskı talep üzerine." /></p>
+          <span class="cat-tile__cta"><Trans en="Talk to us" tr="Bize ulaşın" /> ↗</span>
         </a>
       </div>
     </div>
@@ -101,9 +89,9 @@ const products = (await getCollection('products'))
       <div class="section-head">
         <div>
           <p class="eyebrow"><Trans en="The collection" tr="Koleksiyon" /></p>
-          <h2><Trans en="Textile pieces, shipping today." tr="Bugün gönderime hazır tekstil ürünler." /></h2>
+          <h2><Trans en="Shipping today." tr="Bugün gönderime hazır." /></h2>
         </div>
-        <a class="link-cta" href="/products"><Trans en="All products ↗" tr="Tüm ürünler ↗" /></a>
+        <a class="link-cta" href="/products"><Trans en="All products" tr="Tüm ürünler" /> ↗</a>
       </div>
       <div class="grid grid--3" style="margin-top: 32px;">
         {products.map((p) => (
@@ -121,60 +109,53 @@ const products = (await getCollection('products'))
     </div>
   </section>
 
-  {/* ---------- Why us: benefits row ---------- */}
+  {/* ---------- Benefits row: colored accent, no emoji ---------- */}
   <section class="section">
     <div class="container">
+      <p class="eyebrow"><Trans en="Why Canico" tr="Neden Canico" /></p>
+      <h2><Trans en="What every mat we ship has in common." tr="Her paspasımızın ortak yönleri." /></h2>
       <div class="benefits">
-        <div class="benefit">
-          <span class="benefit__icon" style="--f:var(--color-coral);">🏭</span>
-          <div>
-            <h4><Trans en="In-house factory" tr="Kendi fabrikamız" /></h4>
-            <p><Trans en="Print, cut, sew, and finish at Aktunc Tekstil in Ankara." tr="Baskı, kesim, dikim ve bitirme Ankara'daki Aktunc Tekstil'de." /></p>
-          </div>
+        <div class="benefit" style="--accent: var(--color-coral);">
+          <span class="benefit__num">01</span>
+          <h4><Trans en="In-house factory" tr="Kendi fabrikamız" /></h4>
+          <p><Trans en="Print, cut, sew, and finish at Aktunc Tekstil in Ankara." tr="Baskı, kesim, dikim ve bitirme Ankara'daki Aktunc Tekstil'de." /></p>
         </div>
-        <div class="benefit">
-          <span class="benefit__icon" style="--f:var(--color-lavender);">🧵</span>
-          <div>
-            <h4><Trans en="Textile face" tr="Tekstil yüzey" /></h4>
-            <p><Trans en="Loop-pile face for litter, natural fiber face for scratching." tr="Kum için petek doku, tırmalama için doğal elyaf yüzey." /></p>
-          </div>
+        <div class="benefit" style="--accent: var(--color-lavender);">
+          <span class="benefit__num">02</span>
+          <h4><Trans en="Textile face" tr="Tekstil yüzey" /></h4>
+          <p><Trans en="Loop-pile face for litter. Natural fiber face for scratching." tr="Kum için petek yüzey. Tırmalama için doğal elyaf yüzey." /></p>
         </div>
-        <div class="benefit">
-          <span class="benefit__icon" style="--f:var(--color-teal);">💧</span>
-          <div>
-            <h4><Trans en="Machine washable" tr="Makinede yıkanır" /></h4>
-            <p><Trans en="Cold wash, air dry. Bound edges survive repeat washes." tr="Soğuk yıkama, doğal kuruma. Bantlı kenarlar yıkamalara dayanır." /></p>
-          </div>
+        <div class="benefit" style="--accent: var(--color-teal);">
+          <span class="benefit__num">03</span>
+          <h4><Trans en="Machine washable" tr="Makinede yıkanır" /></h4>
+          <p><Trans en="Cold wash, air dry. Bound edges survive repeat washes." tr="Soğuk yıkama, doğal kuruma. Bantlı kenarlar yıkamalara dayanır." /></p>
         </div>
-        <div class="benefit">
-          <span class="benefit__icon" style="--f:var(--color-sunshine);">📦</span>
-          <div>
-            <h4><Trans en="Custom runs" tr="Özel üretim" /></h4>
-            <p><Trans en="Sizes, prints, packaging on request. Standard for private label." tr="Boyut, baskı, ambalaj talep üzerine. Özel markada standart." /></p>
-          </div>
+        <div class="benefit" style="--accent: var(--color-sunshine);">
+          <span class="benefit__num">04</span>
+          <h4><Trans en="Custom runs" tr="Özel üretim" /></h4>
+          <p><Trans en="Sizes, prints, packaging on request. Standard for private label." tr="Boyut, baskı, ambalaj talep üzerine. Özel markada standart." /></p>
         </div>
       </div>
     </div>
   </section>
 
-  {/* ---------- Story block: factory image + copy ---------- */}
+  {/* ---------- Story block: single landscape photo, side-by-side copy ---------- */}
   <section class="section blob-bg" style="background: var(--color-bg-warm);">
     <div class="container story">
       <div class="story__media">
         <img
-          src="https://images.unsplash.com/photo-1550831107-1553da8c8464?auto=format&fit=crop&w=1200&q=80"
-          alt="Factory textile workshop with fabric rolls"
+          src="https://images.unsplash.com/photo-1496416889320-d7f26667c8d5?auto=format&fit=crop&w=1400&q=80"
+          alt="White cat at a stainless steel bowl in a warm interior"
           loading="lazy"
         />
-        <span class="story__sticker" aria-hidden="true">🏭 ANKARA</span>
       </div>
       <div class="story__copy">
         <p class="eyebrow"><Trans en="Our story" tr="Hikayemiz" /></p>
         <h2><Trans en="A textile factory that started making pet products." tr="Evcil hayvan ürünleri yapmaya başlayan bir tekstil fabrikası." /></h2>
         <p>
           <Trans
-            en="Aktunc Tekstil has been running a textile workshop in Ankara. Canico Pets is the pet-lifestyle brand built on that workflow. Sublimation printing, punching, and edge binding is what we do well, so that is what our first products are built from."
-            tr="Aktunc Tekstil, Ankara'da bir tekstil atölyesi işletiyor. Canico Pets, bu sürecin üzerine kurulmuş evcil hayvan yaşam markasıdır. Süblimasyon baskı, punç ve kenar bantlama iyi yaptığımız iş; ilk ürünlerimiz de buradan çıkıyor."
+            en="Aktunc Tekstil has been running a textile workshop in Ankara for years. Canico Pets is the pet-lifestyle brand built on that workflow. Sublimation printing, punching, and edge binding is what we do well, so that is what our first products are built from."
+            tr="Aktunc Tekstil, Ankara'da yıllardır bir tekstil atölyesi işletiyor. Canico Pets, bu sürecin üzerine kurulmuş evcil hayvan yaşam markasıdır. Süblimasyon baskı, punç ve kenar bantlama iyi yaptığımız iş; ilk ürünlerimiz de buradan çıkıyor."
           />
         </p>
         <a class="btn btn--ghost" href="/about"><Trans en="More about us" tr="Daha fazla bilgi" /></a>
@@ -182,11 +163,15 @@ const products = (await getCollection('products'))
     </div>
   </section>
 
-  {/* ---------- Testimonials / social proof ---------- */}
+  {/* ---------- Testimonials ---------- */}
   <section class="section">
     <div class="container">
-      <p class="eyebrow" style="text-align: center;"><Trans en="Loved in test households" tr="Test hanelerinden sevgi ile" /></p>
-      <h2 style="text-align: center;"><Trans en="What early testers say." tr="İlk kullanıcılar ne diyor." /></h2>
+      <div class="section-head" style="justify-content: center; text-align: center;">
+        <div>
+          <p class="eyebrow"><Trans en="From test households" tr="Test hanelerinden" /></p>
+          <h2><Trans en="What early testers say." tr="İlk kullanıcılar ne diyor." /></h2>
+        </div>
+      </div>
       <div class="reviews">
         <figure class="review">
           <div class="review__stars" aria-label="5 out of 5">★★★★★</div>
@@ -198,7 +183,7 @@ const products = (await getCollection('products'))
           </blockquote>
           <figcaption>
             <span class="review__name">Ayşe K.</span>
-            <span class="review__meta"><Trans en="Ankara · Cat mom" tr="Ankara · Kedi annesi" /></span>
+            <span class="review__meta"><Trans en="Ankara · Cat household" tr="Ankara · Kedili ev" /></span>
           </figcaption>
         </figure>
         <figure class="review">
@@ -211,7 +196,7 @@ const products = (await getCollection('products'))
           </blockquote>
           <figcaption>
             <span class="review__name">Mert D.</span>
-            <span class="review__meta"><Trans en="Istanbul · Cat dad" tr="İstanbul · Kedi babası" /></span>
+            <span class="review__meta"><Trans en="Istanbul · Cat household" tr="İstanbul · Kedili ev" /></span>
           </figcaption>
         </figure>
         <figure class="review">
@@ -224,18 +209,18 @@ const products = (await getCollection('products'))
           </blockquote>
           <figcaption>
             <span class="review__name">Elif A.</span>
-            <span class="review__meta"><Trans en="Izmir · Dog & cat home" tr="İzmir · Kedi ve köpekli ev" /></span>
+            <span class="review__meta"><Trans en="Izmir · Dog and cat household" tr="İzmir · Kedi ve köpekli ev" /></span>
           </figcaption>
         </figure>
       </div>
       <p class="reviews__note">
         <span class="placeholder-note"><Trans en="Placeholder" tr="Yer tutucu" /></span>
-        <Trans en="These are sample reviews for layout. We'll swap them for real customer quotes as they arrive." tr="Bu yorumlar düzen için örnektir. Gerçek müşteri yorumları geldikçe değiştirilecek." />
+        <Trans en="Sample reviews for layout. Real quotes will replace these as they arrive." tr="Bu yorumlar düzen için örnektir. Gerçek yorumlar geldikçe değiştirilecek." />
       </p>
     </div>
   </section>
 
-  {/* ---------- Wholesale / retailer CTA ---------- */}
+  {/* ---------- Wholesale CTA band ---------- */}
   <section class="section" style="background: var(--color-ink); color: var(--color-bg);">
     <div class="container">
       <div class="cta-band">
@@ -270,18 +255,7 @@ const products = (await getCollection('products'))
     display: flex;
     gap: var(--space-3);
     flex-wrap: wrap;
-    margin-bottom: var(--space-5);
   }
-  .home-hero__badges {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px 28px;
-    font-family: var(--font-accent);
-    font-size: 13px;
-    color: var(--color-ink-soft);
-  }
-  .home-hero__badges div { display: inline-flex; align-items: center; gap: 8px; }
-  .home-hero__badges strong { font-size: 18px; }
 
   .section-head {
     display: flex;
@@ -298,9 +272,11 @@ const products = (await getCollection('products'))
     font-size: 14px;
     color: var(--color-coral);
     letter-spacing: 0.5px;
+    white-space: nowrap;
   }
   .link-cta:hover { color: var(--color-ink); }
 
+  /* Category tiles: solid color, generous type, no photos. */
   .cat-tiles {
     display: grid;
     gap: var(--space-4);
@@ -310,94 +286,97 @@ const products = (await getCollection('products'))
     .cat-tiles { grid-template-columns: repeat(3, 1fr); }
   }
   .cat-tile {
-    position: relative;
-    display: block;
-    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    background: var(--tile);
     color: var(--color-ink);
-    background: white;
-    border: 1.5px solid var(--color-line);
+    text-decoration: none;
+    padding: var(--space-5);
     border-radius: var(--radius-lg);
+    aspect-ratio: 3 / 4;
+    transition: transform 220ms ease, box-shadow 220ms ease;
+    position: relative;
     overflow: hidden;
-    aspect-ratio: 4 / 5;
-    transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
   }
-  .cat-tile img {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 500ms ease;
-  }
-  .cat-tile:hover img { transform: scale(1.06); }
   .cat-tile:hover {
     transform: translateY(-4px);
     box-shadow: var(--shadow-hover);
-    border-color: var(--tile);
     color: var(--color-ink);
-  }
-  .cat-tile__body {
-    position: absolute;
-    inset: auto 0 0 0;
-    padding: var(--space-4);
-    background: linear-gradient(to top, rgba(27,27,36,0.85), transparent);
-    color: white;
   }
   .cat-tile__eyebrow {
     font-family: var(--font-accent);
     font-size: 11px;
     letter-spacing: 1.5px;
     text-transform: uppercase;
-    display: block;
-    color: var(--tile);
     font-weight: 700;
-    margin-bottom: 4px;
+    color: var(--color-ink);
+    opacity: 0.75;
+    margin-bottom: 6px;
+    display: block;
   }
   .cat-tile h3 {
-    color: white;
-    margin: 0 0 8px 0;
-    font-size: 1.75rem;
+    color: var(--color-ink);
+    margin: 0 0 12px 0;
+    font-size: clamp(2rem, 4vw, 2.75rem);
+    line-height: 0.95;
+  }
+  .cat-tile p {
+    margin: 0 0 var(--space-4) 0;
+    font-size: 14px;
+    color: var(--color-ink);
+    opacity: 0.85;
+    line-height: 1.45;
+    max-width: 32ch;
   }
   .cat-tile__cta {
     font-family: var(--font-accent);
     font-size: 13px;
     font-weight: 700;
-    opacity: 0.9;
+    color: var(--color-ink);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 14px;
+    background: rgba(0,0,0,0.08);
+    border-radius: 999px;
+    align-self: flex-start;
+    transition: background 140ms ease;
+  }
+  .cat-tile:hover .cat-tile__cta {
+    background: var(--color-ink);
+    color: var(--tile);
   }
 
+  /* Benefits: numbered, colored accent, no emoji */
   .benefits {
     display: grid;
     gap: var(--space-4);
     grid-template-columns: 1fr;
+    margin-top: var(--space-5);
   }
-  @media (min-width: 720px) {
-    .benefits { grid-template-columns: repeat(2, 1fr); }
-  }
-  @media (min-width: 1000px) {
-    .benefits { grid-template-columns: repeat(4, 1fr); }
-  }
+  @media (min-width: 720px) { .benefits { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1000px) { .benefits { grid-template-columns: repeat(4, 1fr); } }
   .benefit {
-    display: flex;
-    gap: 14px;
-    align-items: flex-start;
-    padding: var(--space-4);
+    padding: var(--space-5);
     background: white;
     border: 1.5px solid var(--color-line);
+    border-top: 4px solid var(--accent, var(--color-coral));
     border-radius: var(--radius-lg);
   }
-  .benefit__icon {
-    width: 44px;
-    height: 44px;
-    display: grid;
-    place-items: center;
-    border-radius: 999px;
-    background: color-mix(in srgb, var(--f) 18%, transparent);
-    font-size: 22px;
-    flex-shrink: 0;
+  .benefit__num {
+    font-family: var(--font-accent);
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: var(--accent, var(--color-coral));
+    font-weight: 700;
+    display: block;
+    margin-bottom: 12px;
   }
-  .benefit h4 { margin: 0 0 4px; font-size: 16px; font-weight: 700; }
-  .benefit p { margin: 0; font-size: 13px; color: var(--color-ink-soft); line-height: 1.4; }
+  .benefit h4 { margin: 0 0 8px; font-size: 17px; font-weight: 700; }
+  .benefit p { margin: 0; font-size: 14px; color: var(--color-ink-soft); line-height: 1.5; }
 
+  /* Story block: landscape image, wider spacing */
   .story {
     display: grid;
     gap: var(--space-6);
@@ -405,31 +384,19 @@ const products = (await getCollection('products'))
     grid-template-columns: 1fr;
   }
   @media (min-width: 900px) {
-    .story { grid-template-columns: 1fr 1fr; }
+    .story { grid-template-columns: 1.15fr 1fr; }
   }
   .story__media {
     position: relative;
-    aspect-ratio: 4 / 5;
+    aspect-ratio: 4 / 3;
     border-radius: var(--radius-lg);
     overflow: hidden;
     background: var(--color-bg-soft);
   }
   .story__media img { width: 100%; height: 100%; object-fit: cover; }
-  .story__sticker {
-    position: absolute;
-    bottom: 20px;
-    left: 20px;
-    background: var(--color-ink);
-    color: var(--color-sunshine);
-    padding: 8px 14px;
-    border-radius: 999px;
-    font-family: var(--font-accent);
-    font-size: 12px;
-    letter-spacing: 1.5px;
-    font-weight: 700;
-  }
   .story__copy .btn { margin-top: var(--space-3); }
 
+  /* Reviews */
   .reviews {
     display: grid;
     gap: var(--space-4);
@@ -445,7 +412,6 @@ const products = (await getCollection('products'))
     background: white;
     border: 1.5px solid var(--color-line);
     border-radius: var(--radius-lg);
-    position: relative;
   }
   .review__stars {
     color: var(--color-sunshine);
@@ -474,6 +440,7 @@ const products = (await getCollection('products'))
     font-size: 13px;
   }
 
+  /* CTA band */
   .cta-band {
     display: grid;
     gap: var(--space-5);

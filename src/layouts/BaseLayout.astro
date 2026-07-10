@@ -1,7 +1,6 @@
 ---
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
-import Marquee from '../components/Marquee.astro';
 import '../styles/global.css';
 
 interface Props {
@@ -66,7 +65,6 @@ const canonical = new URL(Astro.url.pathname, Astro.site).toString();
     <main id="content">
       <slot />
     </main>
-    <Marquee />
     <Footer />
 
     <div id="egg-toast" class="egg-toast" role="status" aria-live="polite"></div>

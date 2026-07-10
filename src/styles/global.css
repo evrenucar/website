@@ -46,7 +46,10 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 
-html { -webkit-text-size-adjust: 100%; }
+html {
+  -webkit-text-size-adjust: 100%;
+  overflow-x: hidden;
+}
 
 body {
   margin: 0;
@@ -56,6 +59,7 @@ body {
   font-size: 17px;
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
 h1, h2, h3, h4 {
@@ -214,68 +218,6 @@ html.lang-tr [lang="en"] { display: none !important; }
   color: var(--color-bg);
 }
 
-/* Scrolling marquee announcement bar */
-.marquee {
-  background: var(--color-ink);
-  color: var(--color-bg);
-  overflow: hidden;
-  padding-block: 8px;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-  font-family: var(--font-accent);
-  font-size: 13px;
-  letter-spacing: 1px;
-}
-.marquee__track {
-  display: flex;
-  gap: var(--space-6);
-  width: max-content;
-  animation: marquee-scroll 32s linear infinite;
-  will-change: transform;
-}
-.marquee__item {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  white-space: nowrap;
-}
-.marquee__dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 999px;
-  background: var(--color-coral);
-  flex-shrink: 0;
-}
-@keyframes marquee-scroll {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .marquee__track { animation: none; justify-content: center; }
-}
-
-/* Vertical carousel (auto-scrolling column of feature cards) */
-.vcarousel {
-  position: relative;
-  overflow: hidden;
-  max-height: 420px;
-  mask-image: linear-gradient(to bottom, transparent 0, black 8%, black 92%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0, black 8%, black 92%, transparent 100%);
-}
-.vcarousel__track {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  animation: vcarousel-scroll 22s linear infinite;
-}
-.vcarousel:hover .vcarousel__track { animation-play-state: paused; }
-@keyframes vcarousel-scroll {
-  from { transform: translateY(0); }
-  to { transform: translateY(-50%); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .vcarousel__track { animation: none; }
-}
-
 /* Hero with lifestyle image + colored blobs */
 .home-hero {
   position: relative;
@@ -332,6 +274,7 @@ html.lang-tr [lang="en"] { display: none !important; }
 .blob-bg {
   position: relative;
   isolation: isolate;
+  overflow: hidden;
 }
 .blob-bg::before,
 .blob-bg::after {

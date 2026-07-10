@@ -33,6 +33,14 @@ const canonical = new URL(Astro.url.pathname, Astro.site).toString();
     {descriptionTr && <meta name="description" data-lang="tr" content={descriptionTr} />}
     <link rel="canonical" href={canonical} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png" />
+    <link rel="icon" type="image/png" sizes="256x256" href="/favicon-256x256.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon-180x180.png" />
+
+    <link rel="preload" as="image" href="/caniko_logo_dark_color1080.png" fetchpriority="high" />
+    <link rel="preload" as="image" href="/caniko_logo_light1080.png" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -50,8 +58,20 @@ const canonical = new URL(Astro.url.pathname, Astro.site).toString();
 
     <script is:inline>
       (function () {
+        // Priority: user's saved choice > browser languages > default EN.
+        // navigator.languages honors the OS/browser preference order the user set.
         try {
-          var lang = localStorage.getItem('canico-lang') || 'en';
+          var saved = localStorage.getItem('canico-lang');
+          var lang = saved;
+          if (!lang) {
+            var prefs = (navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || 'en']);
+            for (var i = 0; i < prefs.length; i++) {
+              var p = (prefs[i] || '').toLowerCase();
+              if (p.indexOf('tr') === 0) { lang = 'tr'; break; }
+              if (p.indexOf('en') === 0) { lang = 'en'; break; }
+            }
+            if (!lang) lang = 'en';
+          }
           if (lang === 'tr') {
             document.documentElement.classList.add('lang-tr');
             document.documentElement.lang = 'tr';

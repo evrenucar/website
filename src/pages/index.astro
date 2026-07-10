@@ -14,37 +14,104 @@ const products = (await getCollection('products'))
   descriptionTr="Kediler ve köpekler için tekstil paspaslar ve pedler. Ankara'daki Aktunc Tekstil'de üretilir."
 >
 
-  {/* ---------- Hero ---------- */}
-  <section class="home-hero">
-    <div class="container home-hero__inner">
-      <div class="home-hero__copy">
-        <p class="eyebrow"><Trans en="Made in Ankara · Cats and dogs" tr="Ankara üretimi · Kedi ve köpek" /></p>
-        <h1>
-          <Trans en="Designed for pets." tr="Evcil hayvanlar için tasarlandı." /><br />
-          <span class="hero-line-2"><Trans en="Made for modern homes." tr="Modern evler için üretildi." /></span>
-        </h1>
-        <p class="home-hero__lede">
-          <Trans
-            en="Canico Pets makes textile mats and pads for cats and dogs, produced at our own factory in Ankara. Simple, useful, and made to fit the home you already love."
-            tr="Canico Pets, kediler ve köpekler için tekstil paspaslar ve pedler üretir. Üretim Ankara'daki kendi fabrikamızda yapılır. Sade, işlevsel ve sevdiğiniz eve yakışır."
-          />
-        </p>
-        <div class="home-hero__ctas">
-          <a class="btn btn--primary" href="/products"><Trans en="Shop the products" tr="Ürünlere göz atın" /></a>
-          <a class="btn btn--ghost" href="/wholesale"><Trans en="For retailers" tr="Perakendeciler için" /></a>
-        </div>
-      </div>
-      <div class="home-hero__media">
-        <span class="home-hero__sticker" aria-hidden="true">FOR PETS. FOR LIFE.</span>
+  {/* ---------- Full-width carousel ---------- */}
+  <section class="home-carousel" aria-roledescription="carousel" aria-label="Featured">
+    <ul class="home-carousel__track" tabindex="0">
+      <li class="home-carousel__slide" aria-roledescription="slide" aria-label="1 of 3">
         <img
-          src="https://images.unsplash.com/photo-1758607009173-01adaa43d8c0?auto=format&fit=crop&w=1200&q=80"
-          alt="Tabby cat under a warm interior lamp"
+          src="https://images.unsplash.com/photo-1762013214046-04898e5d271c?auto=format&fit=crop&w=2000&q=80"
+          alt="Cat scratching a textile pad on a sofa arm"
           loading="eager"
           fetchpriority="high"
         />
-      </div>
+        <div class="home-carousel__caption">
+          <h2><Trans en="Couch-Arm Scratching Pad" tr="Koltuk Kolu Tırmalama Pedi" /></h2>
+          <p><Trans en="A scratcher that sits on the corner your cat already picks." tr="Kedinizin zaten seçtiği köşeye oturan bir tırmalama pedi." /></p>
+        </div>
+      </li>
+      <li class="home-carousel__slide" aria-roledescription="slide" aria-label="2 of 3">
+        <img
+          src="https://images.unsplash.com/photo-1727510153658-643787acb16a?auto=format&fit=crop&w=2000&q=80"
+          alt="Cat stepping off a textile mat next to a litter box"
+          loading="lazy"
+        />
+        <div class="home-carousel__caption">
+          <h2><Trans en="Cat Litter Collecting Mat" tr="Kedi Kumu Toplama Paspası" /></h2>
+          <p><Trans en="Catches litter before it reaches the floor." tr="Kum yere ulaşmadan yakalar." /></p>
+        </div>
+      </li>
+      <li class="home-carousel__slide" aria-roledescription="slide" aria-label="3 of 3">
+        <img
+          src="https://images.unsplash.com/photo-1758607009173-01adaa43d8c0?auto=format&fit=crop&w=2000&q=80"
+          alt="Tabby cat under a warm interior lamp"
+          loading="lazy"
+        />
+        <div class="home-carousel__caption">
+          <h1>
+            <Trans en="Designed for pets. Made for modern homes." tr="Evcil hayvanlar için tasarlandı. Modern evler için üretildi." />
+          </h1>
+          <p>
+            <Trans
+              en="Textile mats and pads for cats and dogs. Made at Aktunc Tekstil in Ankara."
+              tr="Kediler ve köpekler için tekstil paspaslar ve pedler. Ankara'daki Aktunc Tekstil'de üretilir."
+            />
+          </p>
+        </div>
+      </li>
+    </ul>
+    <div class="home-carousel__dots" role="tablist" aria-label="Select slide">
+      <button type="button" role="tab" aria-label="Slide 1" aria-selected="true" data-slide="0"></button>
+      <button type="button" role="tab" aria-label="Slide 2" aria-selected="false" data-slide="1"></button>
+      <button type="button" role="tab" aria-label="Slide 3" aria-selected="false" data-slide="2"></button>
     </div>
   </section>
+
+  <script is:inline>
+    (function () {
+      var track = document.querySelector('.home-carousel__track');
+      var dots = document.querySelectorAll('.home-carousel__dots button');
+      if (!track || !dots.length) return;
+      var slides = track.children.length;
+      var i = 0;
+      var timer;
+
+      function go(n) {
+        i = (n + slides) % slides;
+        track.scrollTo({ left: i * track.clientWidth, behavior: 'smooth' });
+        dots.forEach(function (d, k) { d.setAttribute('aria-selected', k === i ? 'true' : 'false'); });
+      }
+
+      function start() {
+        stop();
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        timer = setInterval(function () { go(i + 1); }, 15000);
+      }
+      function stop() { if (timer) clearInterval(timer); }
+
+      dots.forEach(function (d) {
+        d.addEventListener('click', function () { go(parseInt(d.dataset.slide, 10)); start(); });
+      });
+
+      track.addEventListener('pointerdown', stop);
+      track.addEventListener('pointerup', start);
+      track.addEventListener('focusin', stop);
+      track.addEventListener('focusout', start);
+
+      var syncing;
+      track.addEventListener('scroll', function () {
+        clearTimeout(syncing);
+        syncing = setTimeout(function () {
+          var k = Math.round(track.scrollLeft / track.clientWidth);
+          if (k !== i) {
+            i = k;
+            dots.forEach(function (d, m) { d.setAttribute('aria-selected', m === i ? 'true' : 'false'); });
+          }
+        }, 120);
+      }, { passive: true });
+
+      start();
+    })();
+  </script>
 
   {/* ---------- Shop by pet: three solid colored tiles, no stock photos ---------- */}
   <section class="section">
@@ -59,21 +126,24 @@ const products = (await getCollection('products'))
 
       <div class="cat-tiles">
         <a class="cat-tile" href="/products" style="--tile:var(--color-coral);">
+          <svg class="cat-tile__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M96,140a12,12,0,1,1-12-12A12,12,0,0,1,96,140Zm76-12a12,12,0,1,0,12,12A12,12,0,0,0,172,128Zm60-80v88c0,52.93-46.65,96-104,96S24,188.93,24,136V48A16,16,0,0,1,51.31,36.69c.14.14.26.27.38.41L69,57a111.22,111.22,0,0,1,118.1,0L204.31,37.1c.12-.14.24-.27.38-.41A16,16,0,0,1,232,48Zm-16,0-21.56,24.8A8,8,0,0,1,183.63,74,88.86,88.86,0,0,0,168,64.75V88a8,8,0,1,1-16,0V59.05a97.43,97.43,0,0,0-16-2.72V88a8,8,0,1,1-16,0V56.33a97.43,97.43,0,0,0-16,2.72V88a8,8,0,1,1-16,0V64.75A88.86,88.86,0,0,0,72.37,74a8,8,0,0,1-10.81-1.17L40,48v88c0,41.66,35.21,76,80,79.67V195.31l-13.66-13.66a8,8,0,0,1,11.32-11.31L128,180.68l10.34-10.34a8,8,0,0,1,11.32,11.31L136,195.31v20.36c44.79-3.69,80-38,80-79.67Z"/></svg>
           <span class="cat-tile__eyebrow"><Trans en="For cats" tr="Kediler için" /></span>
           <h3><Trans en="Cats" tr="Kediler" /></h3>
-          <p><Trans en="Litter mats and scratching pads that solve real problems without pet-shop plastic." tr="Kum paspasları ve tırmalama pedleri; pet shop plastiği olmadan gerçek çözümler." /></p>
+          <p><Trans en="Litter mats and scratching pads without pet-shop plastic." tr="Kum paspasları ve tırmalama pedleri; pet shop plastiği olmadan gerçek çözümler." /></p>
           <span class="cat-tile__cta"><Trans en="Shop cats" tr="Kedi ürünleri" /> ↗</span>
         </a>
         <a class="cat-tile" href="/products" style="--tile:var(--color-lavender);">
+          <svg class="cat-tile__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M239.71,125l-16.42-88a16,16,0,0,0-19.61-12.58l-.31.09L150.85,40h-45.7L52.63,24.56l-.31-.09A16,16,0,0,0,32.71,37.05L16.29,125a15.77,15.77,0,0,0,9.12,17.52A16.26,16.26,0,0,0,32.12,144,15.48,15.48,0,0,0,40,141.84V184a40,40,0,0,0,40,40h96a40,40,0,0,0,40-40V141.85a15.5,15.5,0,0,0,7.87,2.16,16.31,16.31,0,0,0,6.72-1.47A15.77,15.77,0,0,0,239.71,125ZM32,128h0L48.43,40,90.5,52.37Zm144,80H136V195.31l13.66-13.65a8,8,0,0,0-11.32-11.32L128,180.69l-10.34-10.35a8,8,0,0,0-11.32,11.32L120,195.31V208H80a24,24,0,0,1-24-24V123.11L107.92,56h40.15L200,123.11V184A24,24,0,0,1,176,208Zm48-80L165.5,52.37,207.57,40,224,128ZM104,140a12,12,0,1,1-12-12A12,12,0,0,1,104,140Zm72,0a12,12,0,1,1-12-12A12,12,0,0,1,176,140Z"/></svg>
           <span class="cat-tile__eyebrow"><Trans en="For dogs · coming soon" tr="Köpekler için · yakında" /></span>
           <h3><Trans en="Dogs" tr="Köpekler" /></h3>
-          <p><Trans en="Feeding mats, floor protection, and travel pieces are in production on the same textile workflow." tr="Mama paspasları, zemin koruma ve seyahat parçaları aynı süreçte üretimde." /></p>
+          <p><Trans en="Feeding mats, floor protection, and travel pieces in production." tr="Mama paspasları, zemin koruma ve seyahat parçaları aynı süreçte üretimde." /></p>
           <span class="cat-tile__cta"><Trans en="Preview the line" tr="Seriye göz atın" /> ↗</span>
         </a>
         <a class="cat-tile" href="/wholesale" style="--tile:var(--color-teal);">
+          <svg class="cat-tile__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M232,96a7.89,7.89,0,0,0-.3-2.2L217.35,43.6A16.07,16.07,0,0,0,202,32H54A16.07,16.07,0,0,0,38.65,43.6L24.31,93.8A7.89,7.89,0,0,0,24,96h0v16a40,40,0,0,0,16,32v72a8,8,0,0,0,8,8H208a8,8,0,0,0,8-8V144a40,40,0,0,0,16-32V96ZM54,48H202l11.42,40H42.61Zm50,56h48v8a24,24,0,0,1-48,0Zm-16,0v8a24,24,0,0,1-35.12,21.26,7.88,7.88,0,0,0-1.82-1.06A24,24,0,0,1,40,112v-8ZM200,208H56V151.2a40.57,40.57,0,0,0,8,.8,40,40,0,0,0,32-16,40,40,0,0,0,64,0,40,40,0,0,0,32,16,40.57,40.57,0,0,0,8-.8Zm4.93-75.8a8.08,8.08,0,0,0-1.8,1.05A24,24,0,0,1,168,112v-8h48v8A24,24,0,0,1,204.93,132.2Z"/></svg>
           <span class="cat-tile__eyebrow"><Trans en="For retailers" tr="Perakendeciler için" /></span>
           <h3><Trans en="Wholesale" tr="Toptan" /></h3>
-          <p><Trans en="Buy direct from the factory. MOQs, private label, and custom prints on request." tr="Doğrudan fabrikadan alım. MOQ, özel marka ve özel baskı talep üzerine." /></p>
+          <p><Trans en="Direct from the factory. MOQs, private label, custom prints." tr="Doğrudan fabrikadan alım. MOQ, özel marka ve özel baskı talep üzerine." /></p>
           <span class="cat-tile__cta"><Trans en="Talk to us" tr="Bize ulaşın" /> ↗</span>
         </a>
       </div>
@@ -110,7 +180,7 @@ const products = (await getCollection('products'))
   <section class="section">
     <div class="container">
       <p class="eyebrow"><Trans en="Why Canico" tr="Neden Canico" /></p>
-      <h2><Trans en="What every mat we ship has in common." tr="Her paspasımızın ortak yönleri." /></h2>
+      <h2><Trans en="What every mat we ship has in common." tr="Ürünlerimizin nitelikleri." /></h2>
       <div class="benefits">
         <div class="benefit" style="--accent: var(--color-coral);">
           <span class="benefit__num">01</span>
@@ -148,11 +218,11 @@ const products = (await getCollection('products'))
       </div>
       <div class="story__copy">
         <p class="eyebrow"><Trans en="Our story" tr="Hikayemiz" /></p>
-        <h2><Trans en="A textile factory that started making pet products." tr="Evcil hayvan ürünleri yapmaya başlayan bir tekstil fabrikası." /></h2>
+        <h2><Trans en="A textile workshop since 1968." tr="1968'den beri aynı çatı altında." /></h2>
         <p>
           <Trans
-            en="Aktunc Tekstil has been running a textile workshop in Ankara for years. Canico Pets is the pet-lifestyle brand built on that workflow. Sublimation printing, punching, and edge binding is what we do well, so that is what our first products are built from."
-            tr="Aktunc Tekstil, Ankara'da yıllardır bir tekstil atölyesi işletiyor. Canico Pets, bu sürecin üzerine kurulmuş evcil hayvan yaşam markasıdır. Süblimasyon baskı, punç ve kenar bantlama iyi yaptığımız iş; ilk ürünlerimiz de buradan çıkıyor."
+            en="Aktunc Tekstil has been printing, cutting, and binding textiles in Ankara since 1968. That's 58 years of the same workflow: sublimation printing, punching, and edge binding. Canico Pets is the pet-lifestyle brand built on top of it, and the first two products are built from what that workshop already does well."
+            tr="Aktunc Tekstil, 1968'den bu yana Ankara'da tekstil baskısı, kesimi ve bantlaması yapıyor. 58 yıllık aynı süreç: süblimasyon baskı, punç ve kenar bantlama. Canico Pets, bu sürecin üzerine kurulmuş evcil hayvan yaşam markasıdır; ilk iki ürünümüz de bu atölyenin zaten iyi yaptığı işten çıkıyor."
           />
         </p>
         <a class="btn btn--ghost" href="/about"><Trans en="More about us" tr="Daha fazla bilgi" /></a>
@@ -166,7 +236,7 @@ const products = (await getCollection('products'))
       <div class="section-head" style="justify-content: center; text-align: center;">
         <div>
           <p class="eyebrow"><Trans en="From test households" tr="Test hanelerinden" /></p>
-          <h2><Trans en="What early testers say." tr="İlk kullanıcılar ne diyor." /></h2>
+          <h2><Trans en="What early testers say." tr="Kullanıcıların yorumları." /></h2>
         </div>
       </div>
       <div class="reviews">
@@ -210,10 +280,6 @@ const products = (await getCollection('products'))
           </figcaption>
         </figure>
       </div>
-      <p class="reviews__note">
-        <span class="placeholder-note"><Trans en="Placeholder" tr="Yer tutucu" /></span>
-        <Trans en="Sample reviews for layout. Real quotes will replace these as they arrive." tr="Bu yorumlar düzen için örnektir. Gerçek yorumlar geldikçe değiştirilecek." />
-      </p>
     </div>
   </section>
 
@@ -227,7 +293,7 @@ const products = (await getCollection('products'))
           <p>
             <Trans
               en="We produce direct from Ankara. Wholesale, private label, and custom prints all start with the same conversation."
-              tr="Ankara'dan doğrudan üretim yaparız. Toptan, özel marka ve özel baskı, hepsi aynı görüşmeyle başlar."
+              tr="Üretimimizi Ankara'da gerçekleştirmekteyiz. Toptan ve özelleştirilmiş ürünlere yönelik bizimle iletişime geçin."
             />
           </p>
         </div>
@@ -241,17 +307,74 @@ const products = (await getCollection('products'))
 </BaseLayout>
 
 <style>
-  .hero-line-2 { color: var(--color-coral); }
-  .home-hero__lede {
-    font-size: 1.15rem;
-    color: var(--color-ink-soft);
-    max-width: 52ch;
-    margin-block: var(--space-4) var(--space-5);
+  /* Full-width carousel: one slide per viewport width, native scroll-snap. */
+  .home-carousel {
+    position: relative;
+    width: 100%;
+    background: var(--color-bg-soft);
   }
-  .home-hero__ctas {
+  .home-carousel__track {
     display: flex;
-    gap: var(--space-3);
-    flex-wrap: wrap;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+  }
+  .home-carousel__track::-webkit-scrollbar { display: none; }
+  .home-carousel__slide {
+    flex: 0 0 100%;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    display: flex;
+    flex-direction: column;
+  }
+  .home-carousel__slide img {
+    width: 100%;
+    height: clamp(320px, 55vh, 620px);
+    object-fit: cover;
+    display: block;
+  }
+  .home-carousel__caption {
+    padding: var(--space-5) var(--space-4);
+    max-width: var(--w-content);
+    margin: 0 auto;
+    text-align: left;
+  }
+  .home-carousel__caption h1,
+  .home-carousel__caption h2 {
+    margin: 0 0 var(--space-2);
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+  }
+  .home-carousel__caption p {
+    margin: 0;
+    max-width: 60ch;
+    font-size: clamp(1rem, 1.6vw, 1.2rem);
+    color: var(--color-ink-soft);
+    line-height: 1.5;
+  }
+  .home-carousel__dots {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding: var(--space-3) 0 var(--space-4);
+  }
+  .home-carousel__dots button {
+    width: 34px;
+    height: 4px;
+    padding: 0;
+    background: color-mix(in srgb, var(--color-ink) 15%, transparent);
+    border: 0;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: background 160ms ease;
+  }
+  .home-carousel__dots button[aria-selected="true"] {
+    background: var(--color-coral);
   }
 
   .section-head {
@@ -300,6 +423,21 @@ const products = (await getCollection('products'))
     transform: translateY(-4px);
     box-shadow: var(--shadow-hover);
     color: var(--color-ink);
+  }
+  .cat-tile__icon {
+    position: absolute;
+    top: -8%;
+    right: -8%;
+    width: 60%;
+    height: auto;
+    color: var(--color-ink);
+    opacity: 0.16;
+    pointer-events: none;
+    transition: opacity 220ms ease, transform 220ms ease;
+  }
+  .cat-tile:hover .cat-tile__icon {
+    opacity: 0.24;
+    transform: rotate(-4deg) scale(1.03);
   }
   .cat-tile__eyebrow {
     font-family: var(--font-accent);

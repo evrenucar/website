@@ -6,10 +6,10 @@ const isActive = (p: string) => path === p || path.startsWith(p + '/');
 <header class="site-nav">
   <div class="container site-nav__inner">
     <a href="/" class="site-nav__brand" aria-label="Canico Pets home">
-      <img src="/logo-placeholder.svg" alt="Canico Pets" width="200" height="50" />
+      <img src="/caniko_logo_dark_color1080.png" alt="Canico Pets" width="200" height="50" fetchpriority="high" decoding="sync" />
     </a>
 
-    <nav class="site-nav__nav" aria-label="Primary">
+    <nav id="site-nav-menu" class="site-nav__nav" data-open="false" aria-label="Primary">
       <ul class="site-nav__links">
         <li><a href="/products" class:list={[{ 'is-active': isActive('/products') }]}>
           <Trans en="Products" tr="Ürünler" />
@@ -38,7 +38,7 @@ const isActive = (p: string) => path === p || path.startsWith(p + '/');
       class="site-nav__toggle"
       type="button"
       aria-expanded="false"
-      aria-controls="site-nav-mobile"
+      aria-controls="site-nav-menu"
       aria-label="Toggle menu"
     >
       <span class="site-nav__toggle-bar" aria-hidden="true"></span>
@@ -46,40 +46,17 @@ const isActive = (p: string) => path === p || path.startsWith(p + '/');
       <span class="site-nav__toggle-bar" aria-hidden="true"></span>
     </button>
   </div>
-
-  <div id="site-nav-mobile" class="site-nav__mobile" data-open="false" aria-hidden="true">
-    <nav aria-label="Primary mobile">
-      <ul>
-        <li><a href="/products" class:list={[{ 'is-active': isActive('/products') }]}>
-          <Trans en="Products" tr="Ürünler" />
-        </a></li>
-        <li><a href="/wholesale" class:list={[{ 'is-active': isActive('/wholesale') }]}>
-          <Trans en="Wholesale" tr="Toptan" />
-        </a></li>
-        <li><a href="/private-label" class:list={[{ 'is-active': isActive('/private-label') }]}>
-          <Trans en="Private Label" tr="Özel Marka" />
-        </a></li>
-        <li><a href="/about" class:list={[{ 'is-active': isActive('/about') }]}>
-          <Trans en="About" tr="Hakkımızda" />
-        </a></li>
-        <li><a href="/contact" class:list={[{ 'is-active': isActive('/contact') }]}>
-          <Trans en="Contact" tr="İletişim" />
-        </a></li>
-      </ul>
-    </nav>
-  </div>
 </header>
 
 <script is:inline>
   (function () {
     var btn = document.querySelector('.site-nav__toggle');
-    var panel = document.getElementById('site-nav-mobile');
+    var panel = document.getElementById('site-nav-menu');
     if (!btn || !panel) return;
 
     function setOpen(open) {
       btn.setAttribute('aria-expanded', open ? 'true' : 'false');
       panel.dataset.open = open ? 'true' : 'false';
-      panel.setAttribute('aria-hidden', open ? 'false' : 'true');
       document.body.style.overflow = open ? 'hidden' : '';
     }
 
@@ -127,60 +104,112 @@ const isActive = (p: string) => path === p || path.startsWith(p + '/');
     display: block;
   }
 
-  /* Desktop nav: shown at >= 900px, hidden below. */
-  .site-nav__nav { display: none; }
+  /* Mobile: nav hides behind a drawer that drops from the header.
+     Desktop (>= 900px): nav is inline in the bar, drawer styles vanish. */
+  .site-nav__nav {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--color-bg);
+    border-bottom: 1px solid var(--color-line);
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 260ms ease, opacity 200ms ease;
+    pointer-events: none;
+  }
+  .site-nav__nav[data-open="true"] {
+    max-height: 560px;
+    opacity: 1;
+    pointer-events: auto;
+    box-shadow: 0 10px 30px rgba(27,27,36,0.06);
+  }
+  .site-nav__links {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    list-style: none;
+    padding: var(--space-3) var(--space-4) var(--space-4);
+    margin: 0;
+  }
+  .site-nav__links a {
+    display: block;
+    padding: 14px 16px;
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--color-ink-soft);
+    text-decoration: none;
+    border-radius: 12px;
+    transition: background 140ms ease, color 140ms ease;
+  }
+  .site-nav__links a:hover,
+  .site-nav__links a.is-active {
+    background: color-mix(in srgb, var(--color-sunshine) 25%, transparent);
+    color: var(--color-ink);
+  }
+
   .site-nav__lang { display: none; }
 
   @media (min-width: 900px) {
-    .site-nav__nav { display: block; }
+    .site-nav__nav {
+      position: static;
+      max-height: none;
+      overflow: visible;
+      opacity: 1;
+      pointer-events: auto;
+      background: transparent;
+      border: 0;
+      box-shadow: none;
+      transition: none;
+    }
+    .site-nav__links {
+      flex-direction: row;
+      align-items: center;
+      gap: var(--space-4);
+      padding: 0;
+      flex-wrap: nowrap;
+    }
+    .site-nav__links a {
+      position: relative;
+      padding: 8px 4px;
+      font-size: 15px;
+      border-radius: 0;
+      background: transparent;
+      color: var(--color-ink-soft);
+      white-space: nowrap;
+    }
+    .site-nav__links a::after {
+      content: '';
+      position: absolute;
+      left: 4px;
+      right: 4px;
+      bottom: 2px;
+      height: 2px;
+      background: var(--color-coral);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 160ms ease;
+      border-radius: 2px;
+    }
+    .site-nav__links a:hover {
+      background: transparent;
+      color: var(--color-coral);
+    }
+    .site-nav__links a:hover::after { transform: scaleX(1); }
+    .site-nav__links a.is-active {
+      background: transparent;
+      color: var(--color-ink);
+    }
+    .site-nav__links a.is-active::after {
+      transform: scaleX(1);
+      background: var(--color-ink);
+    }
     .site-nav__lang { display: inline-flex; }
     .site-nav__toggle { display: none !important; }
   }
 
-  .site-nav__links {
-    display: flex;
-    flex-direction: row;
-    gap: var(--space-4);
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    align-items: center;
-    flex-wrap: nowrap;
-  }
-
-  .site-nav__links a {
-    position: relative;
-    text-decoration: none;
-    color: var(--color-ink-soft);
-    font-weight: 600;
-    font-size: 15px;
-    padding: 8px 4px;
-    transition: color 140ms ease;
-    white-space: nowrap;
-    display: inline-block;
-  }
-  .site-nav__links a::after {
-    content: '';
-    position: absolute;
-    left: 4px;
-    right: 4px;
-    bottom: 2px;
-    height: 2px;
-    background: var(--color-coral);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 160ms ease;
-    border-radius: 2px;
-  }
-  .site-nav__links a:hover { color: var(--color-coral); }
-  .site-nav__links a:hover::after { transform: scaleX(1); }
-  .site-nav__links a.is-active { color: var(--color-ink); }
-  .site-nav__links a.is-active::after {
-    transform: scaleX(1);
-    background: var(--color-ink);
-  }
-
-  /* Hamburger — only visible below 900px */
+  /* Hamburger — only visible below 900px, pinned to the left of the bar */
   .site-nav__toggle {
     display: inline-flex;
     flex-direction: column;
@@ -195,6 +224,7 @@ const isActive = (p: string) => path === p || path.startsWith(p + '/');
     border-radius: 12px;
     cursor: pointer;
     flex-shrink: 0;
+    order: -1;
   }
   .site-nav__toggle-bar {
     display: block;
@@ -213,50 +243,5 @@ const isActive = (p: string) => path === p || path.startsWith(p + '/');
   }
   .site-nav__toggle[aria-expanded="true"] .site-nav__toggle-bar:nth-child(3) {
     transform: translateY(-7px) rotate(-45deg);
-  }
-
-  /* Mobile drawer — separate panel below the bar. Hidden on desktop. */
-  .site-nav__mobile {
-    display: block;
-    max-height: 0;
-    overflow: hidden;
-    opacity: 0;
-    background: var(--color-bg);
-    border-bottom: 1px solid var(--color-line);
-    transition: max-height 260ms ease, opacity 200ms ease;
-    pointer-events: none;
-  }
-  .site-nav__mobile[data-open="true"] {
-    max-height: 560px;
-    opacity: 1;
-    pointer-events: auto;
-    box-shadow: 0 10px 30px rgba(27,27,36,0.06);
-  }
-  .site-nav__mobile ul {
-    list-style: none;
-    padding: var(--space-3) var(--space-4) var(--space-4);
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-  .site-nav__mobile a {
-    display: block;
-    padding: 14px 16px;
-    font-size: 17px;
-    font-weight: 600;
-    color: var(--color-ink-soft);
-    text-decoration: none;
-    border-radius: 12px;
-    transition: background 140ms ease, color 140ms ease;
-  }
-  .site-nav__mobile a:hover,
-  .site-nav__mobile a.is-active {
-    background: color-mix(in srgb, var(--color-sunshine) 25%, transparent);
-    color: var(--color-ink);
-  }
-
-  @media (min-width: 900px) {
-    .site-nav__mobile { display: none !important; }
   }
 </style>

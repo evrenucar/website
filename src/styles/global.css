@@ -48,7 +48,7 @@
 
 html {
   -webkit-text-size-adjust: 100%;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -59,7 +59,7 @@ body {
   font-size: 17px;
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 h1, h2, h3, h4 {
@@ -93,7 +93,6 @@ img, svg { max-width: 100%; height: auto; display: block; }
 header ul,
 nav ul,
 .site-nav ul,
-.site-nav__mobile ul,
 .site-foot ul {
   list-style: none;
   padding-left: 0;

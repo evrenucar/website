@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Trans from '../components/Trans.astro';
+---
+<BaseLayout title="Imprint" titleTr="Künye" description="Imprint / legal notice for canicopets.com." descriptionTr="canicopets.com künye / yasal bildirim.">
+  <section class="section">
+    <div class="container container--narrow">
+      <p class="eyebrow"><Trans en="Imprint" tr="Künye" /></p>
+      <h1><Trans en="Imprint" tr="Künye" /></h1>
+      <p class="placeholder-note">
+        <Trans en="Placeholder. Fill in confirmed legal entity details before launch." tr="Yer tutucu. Yayın öncesi doğrulanmış yasal şirket bilgileriyle doldurulacak." />
+      </p>
+
+      <h2><Trans en="Publisher" tr="Yayıncı" /></h2>
+      <p>
+        Canico Pets<br />
+        c/o Aktunc Tekstil<br />
+        Ankara, <Trans en="Turkiye" tr="Türkiye" />
+      </p>
+
+      <h2><Trans en="Contact" tr="İletişim" /></h2>
+      <p><a href="mailto:hello@canicopets.com">hello@canicopets.com</a></p>
+
+      <h2><Trans en="Responsible for content" tr="İçerikten sorumlu" /></h2>
+      <p><Trans en="TBD. Add responsible person and address per applicable law." tr="Belirlenecek. Geçerli yasaya göre sorumlu kişi ve adres eklenecek." /></p>
+    </div>
+  </section>
+</BaseLayout>

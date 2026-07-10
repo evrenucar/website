@@ -1,0 +1,279 @@
+---
+import Trans from './Trans.astro';
+const year = new Date().getFullYear();
+---
+<footer class="site-foot">
+  <div class="container site-foot__grid">
+    <div class="site-foot__brand">
+      <img src="/logo-placeholder.svg" alt="Canico Pets" width="200" height="50" />
+      <p class="site-foot__tag">
+        <Trans en="Designed for pets. Made for modern homes." tr="Evcil hayvanlar için tasarlandı. Modern evler için üretildi." />
+      </p>
+      <div class="site-foot__social" aria-label="Social">
+        <a href="https://instagram.com/canicopets" aria-label="Instagram" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+        </a>
+        <a href="https://tiktok.com/@canicopets" aria-label="TikTok" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M20.5 8.2a6.6 6.6 0 0 1-3.9-1.3v7.8a5.7 5.7 0 1 1-5.7-5.7c.3 0 .6 0 .9.1v3a2.7 2.7 0 1 0 1.8 2.6V3h2.9a3.7 3.7 0 0 0 3.9 3.4V8.2Z"/></svg>
+        </a>
+        <a href="https://linkedin.com/company/canicopets" aria-label="LinkedIn" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9h4v12H3V9Zm7 0h3.8v1.7h.1c.5-1 1.9-2 3.9-2 4.2 0 5 2.7 5 6.2V21h-4v-5.4c0-1.3 0-3-1.8-3s-2.1 1.4-2.1 2.9V21h-4V9Z"/></svg>
+        </a>
+        <a href="mailto:hello@canicopets.com" aria-label="Email">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="site-foot__col">
+      <h4><Trans en="Shop" tr="Alışveriş" /></h4>
+      <ul>
+        <li><a href="/products"><Trans en="All products" tr="Tüm ürünler" /></a></li>
+        <li><a href="/products/litter-mat"><Trans en="Cat Litter Collecting Mat" tr="Kedi Kumu Toplama Paspası" /></a></li>
+        <li><a href="/products/scratching-pad"><Trans en="Couch-Arm Scratching Pad" tr="Koltuk Kolu Tırmalama Pedi" /></a></li>
+        <li><a href="/products"><Trans en="For cats" tr="Kediler için" /></a></li>
+        <li><a href="/products"><Trans en="For dogs (coming soon)" tr="Köpekler için (yakında)" /></a></li>
+      </ul>
+    </div>
+
+    <div class="site-foot__col">
+      <h4><Trans en="Business" tr="İş ortaklığı" /></h4>
+      <ul>
+        <li><a href="/wholesale"><Trans en="Wholesale" tr="Toptan" /></a></li>
+        <li><a href="/private-label"><Trans en="Private label" tr="Özel marka" /></a></li>
+        <li><a href="/wholesale#samples"><Trans en="Request samples" tr="Numune talep et" /></a></li>
+      </ul>
+    </div>
+
+    <div class="site-foot__col">
+      <h4><Trans en="Company" tr="Şirket" /></h4>
+      <ul>
+        <li><a href="/about"><Trans en="About" tr="Hakkımızda" /></a></li>
+        <li><a href="/contact"><Trans en="Contact" tr="İletişim" /></a></li>
+        <li><a href="/privacy"><Trans en="Privacy" tr="Gizlilik" /></a></li>
+        <li><a href="/imprint"><Trans en="Imprint" tr="Künye" /></a></li>
+      </ul>
+    </div>
+
+    <div class="site-foot__col site-foot__newsletter">
+      <h4><Trans en="Join the pack" tr="Kervanımıza katılın" /></h4>
+      <p>
+        <Trans
+          en="New products, restocks, and behind-the-scenes from the factory. No spam."
+          tr="Yeni ürünler, tekrar stoklar ve fabrikadan perde arkası. Spam yok."
+        />
+      </p>
+      <form class="nlform" method="post" action="#">
+        <label for="nl-email" class="visually-hidden">
+          <Trans en="Email address" tr="E-posta adresi" />
+        </label>
+        <input id="nl-email" type="email" name="email" required
+          placeholder="hello@yourdomain.com"
+          autocomplete="email" />
+        <button type="submit"><Trans en="Sign up" tr="Kaydol" /></button>
+      </form>
+      <p class="nlform__note">
+        <span class="placeholder-note"><Trans en="Placeholder" tr="Yer tutucu" /></span>
+        <Trans en="Newsletter provider not wired yet." tr="Bülten sağlayıcısı henüz bağlı değil." />
+      </p>
+    </div>
+  </div>
+
+  <div class="container site-foot__bar">
+    <div class="site-foot__region">
+      <span class="site-foot__flag" aria-hidden="true">🇹🇷</span>
+      <select aria-label="Country" disabled>
+        <option>Türkiye (TRY)</option>
+        <option>European Union (EUR)</option>
+        <option>United Kingdom (GBP)</option>
+        <option>United States (USD)</option>
+      </select>
+    </div>
+    <p class="site-foot__legal">
+      © {year} Canico Pets · Aktunc Tekstil, Ankara. <Trans en="All rights reserved." tr="Tüm hakları saklıdır." />
+    </p>
+  </div>
+</footer>
+
+<style>
+  .site-foot {
+    background: var(--color-ink);
+    color: var(--color-bg);
+    padding-block: var(--space-7) var(--space-4);
+    margin-top: var(--space-8);
+  }
+  .site-foot a {
+    color: var(--color-bg);
+    text-decoration: none;
+    opacity: 0.8;
+    transition: opacity 140ms ease, color 140ms ease;
+  }
+  .site-foot a:hover {
+    opacity: 1;
+    color: var(--color-coral);
+  }
+
+  .site-foot__grid {
+    display: grid;
+    gap: var(--space-6);
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 720px) {
+    .site-foot__grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (min-width: 960px) {
+    .site-foot__grid {
+      grid-template-columns: 1.4fr 1fr 1fr 1fr 1.4fr;
+      align-items: start;
+    }
+  }
+
+  .site-foot__brand img {
+    filter: brightness(0) invert(1) sepia(1) hue-rotate(-20deg) saturate(0.4);
+    height: 46px;
+  }
+  .site-foot__tag {
+    margin: 12px 0 20px;
+    font-size: 14px;
+    opacity: 0.75;
+    max-width: 32ch;
+    line-height: 1.5;
+  }
+  .site-foot__social {
+    display: flex;
+    gap: 12px;
+  }
+  .site-foot__social a {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border: 1.5px solid rgba(255,255,255,0.2);
+    border-radius: 999px;
+    color: var(--color-bg);
+    transition: border-color 140ms ease, color 140ms ease, background 140ms ease;
+    opacity: 1;
+  }
+  .site-foot__social a:hover {
+    background: var(--color-coral);
+    border-color: var(--color-coral);
+    color: white;
+  }
+
+  .site-foot__col h4 {
+    margin: 0 0 var(--space-3) 0;
+    font-family: var(--font-accent);
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--color-sunshine);
+    font-weight: 700;
+  }
+  .site-foot__col ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 10px;
+    font-size: 14px;
+  }
+
+  .site-foot__newsletter p {
+    font-size: 14px;
+    opacity: 0.75;
+    margin: 0 0 var(--space-3);
+    line-height: 1.5;
+  }
+  .nlform {
+    display: flex;
+    gap: 6px;
+    background: rgba(255,255,255,0.06);
+    padding: 4px;
+    border-radius: 999px;
+    border: 1.5px solid rgba(255,255,255,0.15);
+  }
+  .nlform input {
+    flex: 1;
+    background: transparent;
+    border: 0;
+    color: var(--color-bg);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    padding: 10px 14px;
+    outline: none;
+    min-width: 0;
+  }
+  .nlform input::placeholder { color: rgba(255,255,255,0.4); }
+  .nlform button {
+    background: var(--color-coral);
+    color: white;
+    border: 0;
+    border-radius: 999px;
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 13px;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: background 140ms ease, transform 140ms ease;
+  }
+  .nlform button:hover {
+    background: var(--color-sunshine);
+    color: var(--color-ink);
+    transform: translateY(-1px);
+  }
+  .nlform__note { font-size: 12px; margin-top: 10px; opacity: 0.55; }
+  .nlform__note .placeholder-note {
+    color: rgba(255,255,255,0.55);
+    border-color: rgba(255,255,255,0.25);
+    background: transparent;
+  }
+
+  .site-foot__bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    margin-top: var(--space-7);
+    padding-top: var(--space-4);
+    border-top: 1px solid rgba(255,255,255,0.12);
+    flex-wrap: wrap;
+  }
+  .site-foot__region {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    border: 1.5px solid rgba(255,255,255,0.15);
+    border-radius: 999px;
+    padding: 6px 12px 6px 14px;
+    font-size: 13px;
+    opacity: 0.85;
+  }
+  .site-foot__region select {
+    background: transparent;
+    border: 0;
+    color: var(--color-bg);
+    font-family: var(--font-accent);
+    font-size: 13px;
+    outline: none;
+    padding-right: 4px;
+  }
+  .site-foot__region select option { color: var(--color-ink); }
+  .site-foot__flag { font-size: 14px; }
+  .site-foot__legal {
+    margin: 0;
+    font-size: 12px;
+    opacity: 0.6;
+  }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    white-space: nowrap;
+    border: 0;
+  }
+</style>

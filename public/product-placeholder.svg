@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="Product image placeholder">
+  <rect width="800" height="600" fill="#EFE9DE"/>
+  <rect x="60" y="60" width="680" height="480" fill="#DDD3C2" stroke="#B8AC97" stroke-width="2" stroke-dasharray="8 8"/>
+  <text x="400" y="290" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="28" fill="#5A5245" font-weight="600">Product image placeholder</text>
+  <text x="400" y="330" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="16" fill="#8A7F70">Replace with real photography</text>
+</svg>

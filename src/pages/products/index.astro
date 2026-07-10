@@ -1,0 +1,43 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import Trans from '../../components/Trans.astro';
+import { getCollection } from 'astro:content';
+
+const products = (await getCollection('products'))
+  .filter((p) => p.data.status !== 'archived')
+  .sort((a, b) => a.data.order - b.data.order);
+---
+<BaseLayout
+  title="Products"
+  titleTr="Ürünler"
+  description="Textile mats and pads for cats and dogs. Litter mats and scratching pads ship today from our Ankara factory."
+  descriptionTr="Kediler ve köpekler için tekstil paspaslar ve pedler. Kum paspasları ve tırmalama pedleri Ankara'daki fabrikamızdan bugün gönderime hazır."
+>
+  <section class="section">
+    <div class="container">
+      <p class="eyebrow"><Trans en="Products" tr="Ürünler" /></p>
+      <h1><Trans en="Our products." tr="Ürünlerimiz." /></h1>
+      <p style="max-width: 60ch; color: var(--color-ink-soft);">
+        <Trans
+          en="Textile mats and pads for cats and dogs. Two products ship today. Feeding mats, water mats, and floor protection mats are in production."
+          tr="Kediler ve köpekler için tekstil paspaslar ve pedler. İki ürün bugün gönderime hazır. Mama paspası, su paspası ve zemin koruma paspası üretim aşamasında."
+        />
+      </p>
+
+      <div class="grid grid--3" style="margin-top: 40px;">
+        {products.map((p) => (
+          <ProductCard
+            href={`/products/${p.slug}`}
+            name={p.data.name}
+            nameTr={p.data.name_tr}
+            tagline={p.data.tagline}
+            taglineTr={p.data.tagline_tr}
+            image={p.data.images[0]}
+            status={p.data.status === 'available' ? 'available' : 'coming-soon'}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

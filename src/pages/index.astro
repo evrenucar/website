@@ -1,0 +1,489 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ProductCard from '../components/ProductCard.astro';
+import Trans from '../components/Trans.astro';
+import { getCollection } from 'astro:content';
+
+const products = (await getCollection('products'))
+  .filter((p) => p.data.status !== 'archived')
+  .sort((a, b) => a.data.order - b.data.order);
+---
+<BaseLayout
+  title="Canico Pets"
+  description="Textile mats and pads for cats and dogs. Made at Aktunc Tekstil in Ankara."
+  descriptionTr="Kediler ve köpekler için tekstil paspaslar ve pedler. Ankara'daki Aktunc Tekstil'de üretilir."
+>
+
+  {/* ---------- Hero ---------- */}
+  <section class="home-hero">
+    <span class="home-hero__blob home-hero__blob--a" aria-hidden="true"></span>
+    <span class="home-hero__blob home-hero__blob--b" aria-hidden="true"></span>
+    <span class="home-hero__blob home-hero__blob--c" aria-hidden="true"></span>
+
+    <div class="container home-hero__inner">
+      <div class="home-hero__copy">
+        <p class="eyebrow"><Trans en="Made in Ankara · Cats & dogs" tr="Ankara üretimi · Kedi ve köpek" /></p>
+        <h1>
+          <Trans en="Designed for pets." tr="Evcil hayvanlar için tasarlandı." /><br />
+          <span class="hero-line-2"><Trans en="Made for modern homes." tr="Modern evler için üretildi." /> <span class="deco-heart" aria-hidden="true">♥</span></span>
+        </h1>
+        <p class="home-hero__lede">
+          <Trans
+            en="Canico Pets makes textile mats and pads for cats and dogs, produced at our own factory in Ankara. Simple, useful, and made to fit the home you already love."
+            tr="Canico Pets, kediler ve köpekler için tekstil paspaslar ve pedler üretir. Üretim Ankara'daki kendi fabrikamızda yapılır. Sade, işlevsel ve sevdiğiniz eve yakışır."
+          />
+        </p>
+        <div class="home-hero__ctas">
+          <a class="btn btn--primary" href="/products"><Trans en="Shop the products" tr="Ürünlere göz atın" /></a>
+          <a class="btn btn--ghost" href="/wholesale"><Trans en="For retailers" tr="Perakendeciler için" /></a>
+        </div>
+        <div class="home-hero__badges" aria-label="Highlights">
+          <div><strong>🇹🇷</strong> <span><Trans en="Made in Turkiye" tr="Türkiye üretimi" /></span></div>
+          <div><strong>🧵</strong> <span><Trans en="Textile-first" tr="Tekstil odaklı" /></span></div>
+          <div><strong>💧</strong> <span><Trans en="Machine washable" tr="Makinede yıkanır" /></span></div>
+        </div>
+      </div>
+      <div class="home-hero__media">
+        <span class="home-hero__sticker" aria-hidden="true">FOR PETS. FOR LIFE.</span>
+        <img
+          src="https://images.unsplash.com/photo-1758607009173-01adaa43d8c0?auto=format&fit=crop&w=1200&q=80"
+          alt="Tabby cat under a warm interior lamp"
+          loading="eager"
+          fetchpriority="high"
+        />
+      </div>
+    </div>
+  </section>
+
+  {/* ---------- Shop by category ---------- */}
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow"><Trans en="Shop by pet" tr="Evcil hayvana göre" /></p>
+          <h2><Trans en="Who are you shopping for?" tr="Kimin için alışveriş yapıyorsunuz?" /></h2>
+        </div>
+        <a class="link-cta" href="/products"><Trans en="See everything ↗" tr="Tümünü görün ↗" /></a>
+      </div>
+
+      <div class="cat-tiles">
+        <a class="cat-tile" href="/products" style="--tile:var(--color-lavender);">
+          <img src="https://images.unsplash.com/photo-1650975273652-95ab415dc414?auto=format&fit=crop&w=900&q=80" alt="Cat seated on a chair" loading="lazy" />
+          <div class="cat-tile__body">
+            <span class="cat-tile__eyebrow"><Trans en="For cats" tr="Kediler için" /></span>
+            <h3><Trans en="Cats" tr="Kediler" /></h3>
+            <span class="cat-tile__cta"><Trans en="Shop cats ↗" tr="Kedi ürünleri ↗" /></span>
+          </div>
+        </a>
+        <a class="cat-tile" href="/products" style="--tile:var(--color-sunshine);">
+          <img src="https://images.unsplash.com/photo-1587463272361-565200f82b33?auto=format&fit=crop&w=900&q=80" alt="Small dog resting on white textile" loading="lazy" />
+          <div class="cat-tile__body">
+            <span class="cat-tile__eyebrow"><Trans en="For dogs · coming soon" tr="Köpekler için · yakında" /></span>
+            <h3><Trans en="Dogs" tr="Köpekler" /></h3>
+            <span class="cat-tile__cta"><Trans en="Preview the line ↗" tr="Seriye göz atın ↗" /></span>
+          </div>
+        </a>
+        <a class="cat-tile" href="/wholesale" style="--tile:var(--color-teal);">
+          <img src="https://images.unsplash.com/photo-1554890448-9f63112b37cf?auto=format&fit=crop&w=900&q=80" alt="Dog resting on a made bed" loading="lazy" />
+          <div class="cat-tile__body">
+            <span class="cat-tile__eyebrow"><Trans en="For retailers" tr="Perakendeciler için" /></span>
+            <h3><Trans en="Wholesale" tr="Toptan" /></h3>
+            <span class="cat-tile__cta"><Trans en="Talk to us ↗" tr="Bize ulaşın ↗" /></span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  {/* ---------- Featured products ---------- */}
+  <section class="section" style="background: var(--color-bg-soft);">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow"><Trans en="The collection" tr="Koleksiyon" /></p>
+          <h2><Trans en="Textile pieces, shipping today." tr="Bugün gönderime hazır tekstil ürünler." /></h2>
+        </div>
+        <a class="link-cta" href="/products"><Trans en="All products ↗" tr="Tüm ürünler ↗" /></a>
+      </div>
+      <div class="grid grid--3" style="margin-top: 32px;">
+        {products.map((p) => (
+          <ProductCard
+            href={`/products/${p.slug}`}
+            name={p.data.name}
+            nameTr={p.data.name_tr}
+            tagline={p.data.tagline}
+            taglineTr={p.data.tagline_tr}
+            image={p.data.images[0]}
+            status={p.data.status === 'available' ? 'available' : 'coming-soon'}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  {/* ---------- Why us: benefits row ---------- */}
+  <section class="section">
+    <div class="container">
+      <div class="benefits">
+        <div class="benefit">
+          <span class="benefit__icon" style="--f:var(--color-coral);">🏭</span>
+          <div>
+            <h4><Trans en="In-house factory" tr="Kendi fabrikamız" /></h4>
+            <p><Trans en="Print, cut, sew, and finish at Aktunc Tekstil in Ankara." tr="Baskı, kesim, dikim ve bitirme Ankara'daki Aktunc Tekstil'de." /></p>
+          </div>
+        </div>
+        <div class="benefit">
+          <span class="benefit__icon" style="--f:var(--color-lavender);">🧵</span>
+          <div>
+            <h4><Trans en="Textile face" tr="Tekstil yüzey" /></h4>
+            <p><Trans en="Loop-pile face for litter, natural fiber face for scratching." tr="Kum için petek doku, tırmalama için doğal elyaf yüzey." /></p>
+          </div>
+        </div>
+        <div class="benefit">
+          <span class="benefit__icon" style="--f:var(--color-teal);">💧</span>
+          <div>
+            <h4><Trans en="Machine washable" tr="Makinede yıkanır" /></h4>
+            <p><Trans en="Cold wash, air dry. Bound edges survive repeat washes." tr="Soğuk yıkama, doğal kuruma. Bantlı kenarlar yıkamalara dayanır." /></p>
+          </div>
+        </div>
+        <div class="benefit">
+          <span class="benefit__icon" style="--f:var(--color-sunshine);">📦</span>
+          <div>
+            <h4><Trans en="Custom runs" tr="Özel üretim" /></h4>
+            <p><Trans en="Sizes, prints, packaging on request. Standard for private label." tr="Boyut, baskı, ambalaj talep üzerine. Özel markada standart." /></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* ---------- Story block: factory image + copy ---------- */}
+  <section class="section blob-bg" style="background: var(--color-bg-warm);">
+    <div class="container story">
+      <div class="story__media">
+        <img
+          src="https://images.unsplash.com/photo-1550831107-1553da8c8464?auto=format&fit=crop&w=1200&q=80"
+          alt="Factory textile workshop with fabric rolls"
+          loading="lazy"
+        />
+        <span class="story__sticker" aria-hidden="true">🏭 ANKARA</span>
+      </div>
+      <div class="story__copy">
+        <p class="eyebrow"><Trans en="Our story" tr="Hikayemiz" /></p>
+        <h2><Trans en="A textile factory that started making pet products." tr="Evcil hayvan ürünleri yapmaya başlayan bir tekstil fabrikası." /></h2>
+        <p>
+          <Trans
+            en="Aktunc Tekstil has been running a textile workshop in Ankara. Canico Pets is the pet-lifestyle brand built on that workflow. Sublimation printing, punching, and edge binding is what we do well, so that is what our first products are built from."
+            tr="Aktunc Tekstil, Ankara'da bir tekstil atölyesi işletiyor. Canico Pets, bu sürecin üzerine kurulmuş evcil hayvan yaşam markasıdır. Süblimasyon baskı, punç ve kenar bantlama iyi yaptığımız iş; ilk ürünlerimiz de buradan çıkıyor."
+          />
+        </p>
+        <a class="btn btn--ghost" href="/about"><Trans en="More about us" tr="Daha fazla bilgi" /></a>
+      </div>
+    </div>
+  </section>
+
+  {/* ---------- Testimonials / social proof ---------- */}
+  <section class="section">
+    <div class="container">
+      <p class="eyebrow" style="text-align: center;"><Trans en="Loved in test households" tr="Test hanelerinden sevgi ile" /></p>
+      <h2 style="text-align: center;"><Trans en="What early testers say." tr="İlk kullanıcılar ne diyor." /></h2>
+      <div class="reviews">
+        <figure class="review">
+          <div class="review__stars" aria-label="5 out of 5">★★★★★</div>
+          <blockquote>
+            <Trans
+              en="The floor around the litter box is finally clean. My cat walks right onto it and the mess just falls between the loops."
+              tr="Kedi kumu kabının etrafındaki zemin sonunda temiz. Kedim doğrudan üzerinden geçiyor, kum petekler arasına düşüyor."
+            />
+          </blockquote>
+          <figcaption>
+            <span class="review__name">Ayşe K.</span>
+            <span class="review__meta"><Trans en="Ankara · Cat mom" tr="Ankara · Kedi annesi" /></span>
+          </figcaption>
+        </figure>
+        <figure class="review">
+          <div class="review__stars" aria-label="5 out of 5">★★★★★</div>
+          <blockquote>
+            <Trans
+              en="Put the scratching pad on the sofa arm and my cat used it the same day. The couch has looked untouched for two weeks."
+              tr="Tırmalama pedini koltuğun koluna koydum, kedim aynı gün kullandı. İki haftadır koltuğa dokunulmamış gibi."
+            />
+          </blockquote>
+          <figcaption>
+            <span class="review__name">Mert D.</span>
+            <span class="review__meta"><Trans en="Istanbul · Cat dad" tr="İstanbul · Kedi babası" /></span>
+          </figcaption>
+        </figure>
+        <figure class="review">
+          <div class="review__stars" aria-label="5 out of 5">★★★★★</div>
+          <blockquote>
+            <Trans
+              en="It looks like a rug, not a pet product. My guests didn't even notice it under the food bowls."
+              tr="Halı gibi görünüyor, evcil hayvan ürünü değil. Misafirlerim mama kaplarının altında olduğunu fark etmedi bile."
+            />
+          </blockquote>
+          <figcaption>
+            <span class="review__name">Elif A.</span>
+            <span class="review__meta"><Trans en="Izmir · Dog & cat home" tr="İzmir · Kedi ve köpekli ev" /></span>
+          </figcaption>
+        </figure>
+      </div>
+      <p class="reviews__note">
+        <span class="placeholder-note"><Trans en="Placeholder" tr="Yer tutucu" /></span>
+        <Trans en="These are sample reviews for layout. We'll swap them for real customer quotes as they arrive." tr="Bu yorumlar düzen için örnektir. Gerçek müşteri yorumları geldikçe değiştirilecek." />
+      </p>
+    </div>
+  </section>
+
+  {/* ---------- Wholesale / retailer CTA ---------- */}
+  <section class="section" style="background: var(--color-ink); color: var(--color-bg);">
+    <div class="container">
+      <div class="cta-band">
+        <div class="cta-band__copy">
+          <p class="eyebrow" style="color: var(--color-sunshine);"><Trans en="For retailers" tr="Perakendeciler için" /></p>
+          <h2><Trans en="Selling pet accessories?" tr="Evcil hayvan aksesuarı mı satıyorsunuz?" /></h2>
+          <p>
+            <Trans
+              en="We produce direct from Ankara. Wholesale, private label, and custom prints all start with the same conversation."
+              tr="Ankara'dan doğrudan üretim yaparız. Toptan, özel marka ve özel baskı, hepsi aynı görüşmeyle başlar."
+            />
+          </p>
+        </div>
+        <div class="cta-band__ctas">
+          <a class="btn btn--primary" href="/wholesale" style="background: var(--color-coral);"><Trans en="Wholesale details" tr="Toptan detayları" /></a>
+          <a class="btn btn--ghost" href="/contact" style="border-color: white; color: white;"><Trans en="Contact us" tr="Bize ulaşın" /></a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero-line-2 { color: var(--color-coral); }
+  .home-hero__lede {
+    font-size: 1.15rem;
+    color: var(--color-ink-soft);
+    max-width: 52ch;
+    margin-block: var(--space-4) var(--space-5);
+  }
+  .home-hero__ctas {
+    display: flex;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+    margin-bottom: var(--space-5);
+  }
+  .home-hero__badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px 28px;
+    font-family: var(--font-accent);
+    font-size: 13px;
+    color: var(--color-ink-soft);
+  }
+  .home-hero__badges div { display: inline-flex; align-items: center; gap: 8px; }
+  .home-hero__badges strong { font-size: 18px; }
+
+  .section-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-4);
+    margin-bottom: var(--space-5);
+    flex-wrap: wrap;
+  }
+  .link-cta {
+    text-decoration: none;
+    font-family: var(--font-accent);
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--color-coral);
+    letter-spacing: 0.5px;
+  }
+  .link-cta:hover { color: var(--color-ink); }
+
+  .cat-tiles {
+    display: grid;
+    gap: var(--space-4);
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 720px) {
+    .cat-tiles { grid-template-columns: repeat(3, 1fr); }
+  }
+  .cat-tile {
+    position: relative;
+    display: block;
+    text-decoration: none;
+    color: var(--color-ink);
+    background: white;
+    border: 1.5px solid var(--color-line);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    aspect-ratio: 4 / 5;
+    transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+  }
+  .cat-tile img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 500ms ease;
+  }
+  .cat-tile:hover img { transform: scale(1.06); }
+  .cat-tile:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-hover);
+    border-color: var(--tile);
+    color: var(--color-ink);
+  }
+  .cat-tile__body {
+    position: absolute;
+    inset: auto 0 0 0;
+    padding: var(--space-4);
+    background: linear-gradient(to top, rgba(27,27,36,0.85), transparent);
+    color: white;
+  }
+  .cat-tile__eyebrow {
+    font-family: var(--font-accent);
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    display: block;
+    color: var(--tile);
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .cat-tile h3 {
+    color: white;
+    margin: 0 0 8px 0;
+    font-size: 1.75rem;
+  }
+  .cat-tile__cta {
+    font-family: var(--font-accent);
+    font-size: 13px;
+    font-weight: 700;
+    opacity: 0.9;
+  }
+
+  .benefits {
+    display: grid;
+    gap: var(--space-4);
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 720px) {
+    .benefits { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (min-width: 1000px) {
+    .benefits { grid-template-columns: repeat(4, 1fr); }
+  }
+  .benefit {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: var(--space-4);
+    background: white;
+    border: 1.5px solid var(--color-line);
+    border-radius: var(--radius-lg);
+  }
+  .benefit__icon {
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--f) 18%, transparent);
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .benefit h4 { margin: 0 0 4px; font-size: 16px; font-weight: 700; }
+  .benefit p { margin: 0; font-size: 13px; color: var(--color-ink-soft); line-height: 1.4; }
+
+  .story {
+    display: grid;
+    gap: var(--space-6);
+    align-items: center;
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 900px) {
+    .story { grid-template-columns: 1fr 1fr; }
+  }
+  .story__media {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: var(--color-bg-soft);
+  }
+  .story__media img { width: 100%; height: 100%; object-fit: cover; }
+  .story__sticker {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    background: var(--color-ink);
+    color: var(--color-sunshine);
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-family: var(--font-accent);
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    font-weight: 700;
+  }
+  .story__copy .btn { margin-top: var(--space-3); }
+
+  .reviews {
+    display: grid;
+    gap: var(--space-4);
+    grid-template-columns: 1fr;
+    margin-top: var(--space-5);
+  }
+  @media (min-width: 720px) {
+    .reviews { grid-template-columns: repeat(3, 1fr); }
+  }
+  .review {
+    margin: 0;
+    padding: var(--space-5);
+    background: white;
+    border: 1.5px solid var(--color-line);
+    border-radius: var(--radius-lg);
+    position: relative;
+  }
+  .review__stars {
+    color: var(--color-sunshine);
+    letter-spacing: 3px;
+    font-size: 16px;
+    margin-bottom: 12px;
+  }
+  .review blockquote {
+    margin: 0 0 16px 0;
+    font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--color-ink);
+  }
+  .review figcaption {
+    display: flex;
+    flex-direction: column;
+    font-size: 13px;
+  }
+  .review__name { font-weight: 700; color: var(--color-ink); }
+  .review__meta { color: var(--color-muted); }
+  .reviews__note {
+    text-align: center;
+    margin-top: var(--space-5);
+    color: var(--color-muted);
+    font-size: 13px;
+  }
+
+  .cta-band {
+    display: grid;
+    gap: var(--space-5);
+    align-items: center;
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 720px) {
+    .cta-band { grid-template-columns: 1.4fr auto; }
+  }
+  .cta-band__copy h2 { color: var(--color-bg); }
+  .cta-band__copy p { color: rgba(255,255,255,0.75); margin: 0; max-width: 60ch; }
+  .cta-band__ctas { display: flex; gap: var(--space-3); flex-wrap: wrap; }
+</style>

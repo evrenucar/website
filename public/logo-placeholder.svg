@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 100" role="img" aria-label="Canico Pets (placeholder logo)">
+  <style>
+    .lw { font-family: "Manrope", "Segoe UI", sans-serif; font-weight: 800; font-size: 60px; letter-spacing: -1.5px; }
+    .sub { font-family: "DM Sans", "Segoe UI", sans-serif; font-size: 11px; letter-spacing: 3px; font-weight: 600; fill: #45454F; }
+  </style>
+  <text x="14" y="62" class="lw" fill="#FF6B58">c</text>
+  <text x="52" y="62" class="lw" fill="#FFC331">a</text>
+  <text x="92" y="62" class="lw" fill="#4FBFA8">n</text>
+  <text x="134" y="62" class="lw" fill="#B08CFF">i</text>
+  <text x="152" y="62" class="lw" fill="#2E5FDA">c</text>
+  <text x="192" y="62" class="lw" fill="#FF80B0">o</text>
+  <g transform="translate(238, 30)">
+    <path d="M0 8 C 0 3, 4 0, 8 0 C 12 0, 16 3, 16 8 C 16 3, 20 0, 24 0 C 28 0, 32 3, 32 8 C 32 16, 16 24, 16 24 C 16 24, 0 16, 0 8 Z" fill="#FF6B58"/>
+  </g>
+  <text x="14" y="86" class="sub">FOR PETS. FOR LIFE.</text>
+</svg>

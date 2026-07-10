@@ -1,0 +1,87 @@
+---
+import Trans from './Trans.astro';
+const path = Astro.url.pathname;
+const isActive = (p: string) => path === p || path.startsWith(p + '/');
+---
+<header class="site-nav">
+  <div class="container site-nav__inner">
+    <a href="/" class="site-nav__brand" aria-label="Canico Pets home">
+      <img src="/logo-placeholder.svg" alt="Canico Pets" width="200" height="50" />
+    </a>
+    <nav aria-label="Primary">
+      <ul class="site-nav__links">
+        <li><a href="/products" class:list={[{ 'is-active': isActive('/products') }]}>
+          <Trans en="Products" tr="Ürünler" />
+        </a></li>
+        <li><a href="/wholesale" class:list={[{ 'is-active': isActive('/wholesale') }]}>
+          <Trans en="Wholesale" tr="Toptan" />
+        </a></li>
+        <li><a href="/private-label" class:list={[{ 'is-active': isActive('/private-label') }]}>
+          <Trans en="Private Label" tr="Özel Marka" />
+        </a></li>
+        <li><a href="/about" class:list={[{ 'is-active': isActive('/about') }]}>
+          <Trans en="About" tr="Hakkımızda" />
+        </a></li>
+        <li><a href="/contact" class:list={[{ 'is-active': isActive('/contact') }]}>
+          <Trans en="Contact" tr="İletişim" />
+        </a></li>
+      </ul>
+    </nav>
+    <div class="lang-toggle" role="group" aria-label="Language">
+      <button type="button" data-lang-switch="en" aria-pressed="true" aria-label="Switch to English">EN</button>
+      <button type="button" data-lang-switch="tr" aria-pressed="false" aria-label="Türkçe'ye geç">TR</button>
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-nav {
+    background: var(--color-bg);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    backdrop-filter: saturate(180%) blur(6px);
+    border-bottom: 1px solid var(--color-line);
+  }
+  .site-nav__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    padding-block: 14px;
+    flex-wrap: wrap;
+  }
+  .site-nav__brand img {
+    height: 46px;
+    width: auto;
+    transition: transform 200ms ease;
+  }
+  .site-nav__brand:hover img {
+    transform: rotate(-2deg) scale(1.05);
+  }
+  .site-nav__links {
+    display: flex;
+    gap: var(--space-4);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex-wrap: wrap;
+  }
+  .site-nav__links a {
+    text-decoration: none;
+    color: var(--color-ink-soft);
+    font-weight: 600;
+    font-size: 15px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    transition: color 140ms ease, background 140ms ease;
+  }
+  .site-nav__links a:hover {
+    color: var(--color-coral);
+    background: color-mix(in srgb, var(--color-coral) 10%, transparent);
+  }
+  .site-nav__links a.is-active {
+    color: var(--color-ink);
+    background: color-mix(in srgb, var(--color-sunshine) 30%, transparent);
+  }
+</style>

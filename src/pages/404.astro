@@ -1,0 +1,19 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Trans from '../components/Trans.astro';
+---
+<BaseLayout title="Not found" titleTr="Bulunamadı" description="Page not found." descriptionTr="Sayfa bulunamadı.">
+  <section class="section">
+    <div class="container container--narrow">
+      <p class="eyebrow">404</p>
+      <h1><Trans en="Page not found." tr="Sayfa bulunamadı." /></h1>
+      <p>
+        <Trans en="The URL may be old or misspelled." tr="Bağlantı eski ya da yanlış yazılmış olabilir." />
+        <Trans en="Go to the" tr="Şu adrese gidin:" />
+        <a href="/"><Trans en="home page" tr="ana sayfa" /></a>
+        <Trans en="or the" tr="ya da" />
+        <a href="/products"><Trans en="product list" tr="ürün listesi" /></a>.
+      </p>
+    </div>
+  </section>
+</BaseLayout>

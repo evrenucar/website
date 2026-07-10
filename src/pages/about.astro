@@ -1,0 +1,53 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Trans from '../components/Trans.astro';
+---
+<BaseLayout
+  title="About"
+  titleTr="Hakkımızda"
+  description="Canico Pets is a pet-accessories brand of Aktunc Tekstil, based in Ankara, Turkiye."
+  descriptionTr="Canico Pets, Ankara merkezli Aktunc Tekstil'in evcil hayvan aksesuarları markasıdır."
+>
+  <section class="section">
+    <div class="container container--narrow">
+      <p class="eyebrow"><Trans en="About" tr="Hakkımızda" /></p>
+      <h1><Trans en="About Canico Pets." tr="Canico Pets hakkında." /></h1>
+      <p class="lede">
+        <Trans
+          en="Canico Pets is a brand of Aktunc Tekstil, a textile manufacturer in Ankara. We make mats and pads for cats and dogs."
+          tr="Canico Pets, Ankara'daki tekstil üreticisi Aktunc Tekstil'in markasıdır. Kediler ve köpekler için paspas ve ped üretiyoruz."
+        />
+      </p>
+
+      <h2><Trans en="How we work" tr="Nasıl çalışıyoruz" /></h2>
+      <p>
+        <Trans
+          en="Aktunc Tekstil handles printing, cutting, sewing, and finishing at one facility in Ankara. Canico Pets runs on that same workflow. Sublimation printing plus punching and edge binding is what defines the current product line."
+          tr="Aktunc Tekstil'in Ankara'daki tesisinde baskı, kesim, dikim ve bitirme birlikte yapılır. Canico Pets aynı süreci kullanır. Süblimasyon baskı, punç ve kenar bantlama mevcut ürün hattımızı belirler."
+        />
+      </p>
+
+      <h2><Trans en="What we make now and next" tr="Şu an ne var, sırada ne var" /></h2>
+      <p>
+        <Trans
+          en="Two products ship today: the Cat Litter Collecting Mat and the Couch-Arm Scratching Pad. Feeding mats, water mats, and floor protection mats are in production. Beds, bowls, and other categories are further out on the roadmap."
+          tr="Bugün iki ürün gönderime hazır: Kedi Kumu Toplama Paspası ve Koltuk Kolu Tırmalama Pedi. Mama paspası, su paspası ve zemin koruma paspası üretim aşamasında. Yatak, kap ve diğer kategoriler yol haritasında daha ileride."
+        />
+      </p>
+
+      <p class="note">
+        <span class="placeholder-note"><Trans en="Placeholder" tr="Yer tutucu" /></span>
+        <Trans
+          en="Team names, factory photos, and a longer company history will replace this note."
+          tr="Ekip isimleri, fabrika fotoğrafları ve daha uzun bir şirket geçmişi bu notun yerine geçecek."
+        />
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .lede { font-size: 1.15rem; color: var(--color-ink-soft); max-width: 60ch; }
+  h2 { margin-top: var(--space-6); }
+  .note { color: var(--color-muted); font-size: 13px; margin-top: var(--space-5); }
+</style>

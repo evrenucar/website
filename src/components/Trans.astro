@@ -1,0 +1,34 @@
+---
+/**
+ * Trans — inline translation helper.
+ *
+ * Renders both EN and TR spans on the page. CSS in global.css hides the one
+ * that isn't currently active, based on `html.lang-tr`. That means switching
+ * languages is instant (no reload, no fetch, no rerender).
+ *
+ * Two usage patterns are supported:
+ *
+ *   Props (single-line strings, most common):
+ *     <Trans en="Products" tr="Ürünler" />
+ *
+ *   Named slots (rich content — links, emphasis, multi-line):
+ *     <Trans>
+ *       <Fragment slot="en">See our <a href="/products">products</a>.</Fragment>
+ *       <Fragment slot="tr">Ürünlerimize <a href="/products">bakın</a>.</Fragment>
+ *     </Trans>
+ *
+ * Block-level content (whole sections, paragraphs) can just use raw
+ * <div lang="en"> ... </div><div lang="tr"> ... </div>. The CSS handles it.
+ */
+interface Props {
+  en?: string;
+  tr?: string;
+  as?: 'span' | 'div';
+}
+
+const { en, tr, as = 'span' } = Astro.props;
+const Tag = as;
+const hasEnSlot = Astro.slots.has('en');
+const hasTrSlot = Astro.slots.has('tr');
+---
+<Tag lang="en">{en}{hasEnSlot && <slot name="en" />}</Tag><Tag lang="tr">{tr}{hasTrSlot && <slot name="tr" />}</Tag>

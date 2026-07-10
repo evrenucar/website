@@ -1,0 +1,55 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Trans from '../components/Trans.astro';
+import ContactChannels from '../components/ContactChannels.astro';
+---
+<BaseLayout
+  title="Wholesale"
+  titleTr="Toptan"
+  description="Buy Canico Pets textile mats and pads direct from our Ankara factory. Wholesale and private-label."
+  descriptionTr="Canico Pets tekstil paspaslarını ve pedlerini Ankara'daki fabrikamızdan doğrudan alın. Toptan ve özel marka."
+>
+  <section class="section">
+    <div class="container container--narrow">
+      <p class="eyebrow"><Trans en="Wholesale" tr="Toptan" /></p>
+      <h1><Trans en="Buy direct from our Ankara factory." tr="Doğrudan Ankara'daki fabrikamızdan alın." /></h1>
+      <p class="lede">
+        <Trans
+          en="We produce mats and pads at Aktunc Tekstil in Ankara. Printing, cutting, sewing, and finishing all happen at one facility."
+          tr="Paspas ve pedleri Ankara'daki Aktunc Tekstil'de üretiriz. Baskı, kesim, dikim ve bitirme tek bir tesiste yapılır."
+        />
+      </p>
+
+      <h2><Trans en="What we offer" tr="Sunduklarımız" /></h2>
+      <ul>
+        <li><Trans en="Estimated monthly capacity of about 25,000 units on the flat-textile line. Exact figure confirmed by SKU on your quote." tr="Düz tekstil hattında yaklaşık aylık 25.000 adet kapasite. Kesin rakam teklifte SKU bazında paylaşılır." /></li>
+        <li><Trans en="Customization on sizes, colors, prints, and packaging." tr="Boyut, renk, baskı ve ambalajda özelleştirme." /></li>
+        <li><Trans en="MOQs agreed per order. Small first runs are common." tr="MOQ sipariş bazında belirlenir. Küçük ilk üretimler standarttır." /></li>
+        <li><Trans en="Direct shipping from Ankara to your warehouse." tr="Ankara'dan doğrudan deponuza sevkiyat." /></li>
+      </ul>
+
+      <h2><Trans en="What we need from you" tr="Sizden isteyeceklerimiz" /></h2>
+      <ul>
+        <li><Trans en="Your company name and country." tr="Şirket adınız ve ülkeniz." /></li>
+        <li><Trans en="Products you want to buy." tr="Almak istediğiniz ürünler." /></li>
+        <li><Trans en="Estimated order size and timing." tr="Tahmini sipariş miktarı ve zamanlaması." /></li>
+        <li><Trans en="Your own brand or the Canico Pets brand." tr="Kendi markanız mı, Canico Pets markası mı." /></li>
+      </ul>
+
+      <h2><Trans en="Get in touch" tr="İletişime geçin" /></h2>
+      <p>
+        <Trans
+          en="Pick the channel that fits you."
+          tr="Size uygun kanalı seçin."
+        />
+      </p>
+
+      <ContactChannels variant="wholesale" />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .lede { font-size: 1.15rem; color: var(--color-ink-soft); max-width: 60ch; }
+  h2 { margin-top: var(--space-6); }
+</style>

@@ -1,0 +1,163 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Trans from '../../components/Trans.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+
+export async function getStaticPaths() {
+  const products = await getCollection('products');
+  return products.map((product) => ({
+    params: { slug: product.slug },
+    props: { product },
+  }));
+}
+
+interface Props {
+  product: CollectionEntry<'products'>;
+}
+
+const { product } = Astro.props;
+const { Content } = await product.render();
+const hero = product.data.images[0] ?? '/product-placeholder.svg';
+const d = product.data;
+---
+<BaseLayout
+  title={d.name}
+  titleTr={d.name_tr}
+  description={d.tagline ?? d.description}
+  descriptionTr={d.tagline_tr ?? d.description_tr}
+>
+  <article class="section">
+    <div class="container">
+      <a href="/products" class="back-link">← <Trans en="All products" tr="Tüm ürünler" /></a>
+
+      <div class="product-hero">
+        <div class="product-hero__media">
+          <img src={hero} alt={`${d.name} hero image`} />
+          {d.status === 'available' && (
+            <span class="product-hero__badge product-hero__badge--available">
+              <Trans en="Available now" tr="Şimdi satışta" />
+            </span>
+          )}
+          {d.status === 'coming-soon' && (
+            <span class="product-hero__badge">
+              <Trans en="Coming soon" tr="Yakında" />
+            </span>
+          )}
+        </div>
+        <div class="product-hero__body">
+          <p class="eyebrow">SKU {d.sku}</p>
+          <h1>
+            <span lang="en">{d.name}</span>{d.name_tr && <span lang="tr">{d.name_tr}</span>}
+          </h1>
+          {d.tagline && (
+            <p class="lede">
+              <span lang="en">{d.tagline}</span>{d.tagline_tr && <span lang="tr">{d.tagline_tr}</span>}
+            </p>
+          )}
+
+          {d.sizes.length > 0 && (
+            <div class="spec">
+              <span class="spec__label"><Trans en="Sizes" tr="Boyutlar" /></span>
+              <span class="spec__value">{d.sizes.join(' · ')}</span>
+            </div>
+          )}
+          {d.materials.length > 0 && (
+            <div class="spec">
+              <span class="spec__label"><Trans en="Materials" tr="Malzemeler" /></span>
+              <span class="spec__value">{d.materials.join(', ')}</span>
+            </div>
+          )}
+          {d.private_label_ready && (
+            <div class="spec">
+              <span class="spec__label"><Trans en="Private label" tr="Özel marka" /></span>
+              <span class="spec__value">
+                <Trans en="Available from your first order" tr="İlk siparişinizden itibaren mümkün" />
+              </span>
+            </div>
+          )}
+
+          <div class="product-hero__ctas">
+            <a class="btn btn--primary" href="/wholesale"><Trans en="Wholesale inquiry" tr="Toptan talebi" /></a>
+            <a class="btn btn--ghost" href="/contact"><Trans en="Contact us" tr="Bize ulaşın" /></a>
+          </div>
+          <p class="note">
+            <Trans
+              en="Online checkout is not live yet. Contact us for samples or bulk quotes."
+              tr="Çevrimiçi ödeme henüz aktif değil. Numune veya toplu teklif için bize ulaşın."
+            />
+          </p>
+        </div>
+      </div>
+
+      <hr class="divider" />
+
+      <div class="prose container--narrow">
+        <Content />
+      </div>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .back-link {
+    display: inline-block;
+    margin-bottom: var(--space-4);
+    text-decoration: none;
+    color: var(--color-muted);
+    font-size: 14px;
+  }
+  .product-hero {
+    display: grid;
+    gap: var(--space-6);
+  }
+  @media (min-width: 900px) {
+    .product-hero { grid-template-columns: 1.1fr 1fr; align-items: start; }
+  }
+  .product-hero__media {
+    position: relative;
+    background: var(--color-bg-soft);
+    border-radius: var(--radius);
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
+  }
+  .product-hero__media img { width: 100%; height: 100%; object-fit: cover; }
+  .product-hero__badge {
+    position: absolute;
+    top: var(--space-3);
+    left: var(--space-3);
+    background: var(--color-ink);
+    color: var(--color-bg);
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 4px 8px;
+    border-radius: 4px;
+  }
+  .product-hero__badge--available { background: var(--color-accent); }
+  .lede {
+    font-size: 1.15rem;
+    color: var(--color-ink-soft);
+  }
+  .spec {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--space-3) 0;
+    border-top: 1px solid var(--color-line);
+    font-size: 15px;
+    gap: var(--space-3);
+  }
+  .spec__label { color: var(--color-muted); }
+  .spec__value { color: var(--color-ink); font-weight: 500; text-align: right; }
+  .product-hero__ctas {
+    display: flex;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+    margin-top: var(--space-4);
+  }
+  .note {
+    margin-top: var(--space-3);
+    color: var(--color-muted);
+    font-size: 13px;
+  }
+  .prose h2 { margin-top: var(--space-5); }
+</style>

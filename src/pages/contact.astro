@@ -1,0 +1,30 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Trans from '../components/Trans.astro';
+import ContactChannels from '../components/ContactChannels.astro';
+---
+<BaseLayout
+  title="Contact"
+  titleTr="İletişim"
+  description="Contact Canico Pets for samples, wholesale, private label, or product questions."
+  descriptionTr="Numune, toptan, özel marka veya ürün soruları için Canico Pets ile iletişime geçin."
+>
+  <section class="section">
+    <div class="container container--narrow">
+      <p class="eyebrow"><Trans en="Contact" tr="İletişim" /></p>
+      <h1><Trans en="Contact us." tr="Bize ulaşın." /></h1>
+      <p class="lede">
+        <Trans
+          en="For samples, wholesale pricing, private-label projects, or product questions, pick a channel below."
+          tr="Numune, toptan fiyat, özel marka projeleri veya ürün soruları için aşağıdan bir kanal seçin."
+        />
+      </p>
+
+      <ContactChannels variant="general" />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .lede { font-size: 1.15rem; color: var(--color-ink-soft); max-width: 60ch; }
+</style>

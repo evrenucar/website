@@ -88,6 +88,18 @@ a:hover { text-decoration-color: var(--color-accent); color: var(--color-accent)
 
 img, svg { max-width: 100%; height: auto; display: block; }
 
+/* Never show default disc bullets inside header/nav/footer. Content lists
+   inside <main> that opt into bullets are unaffected. */
+header ul,
+nav ul,
+.site-nav ul,
+.site-nav__mobile ul,
+.site-foot ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
 .container {
   width: 100%;
   max-width: var(--w-content);

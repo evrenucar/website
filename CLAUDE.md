@@ -25,8 +25,9 @@ The whole point of this repo is public-facing copy. Every Trans component, every
 ### Code (Astro components, pages, styles)
 
 - **`ponytail`** — YAGNI. Do not add a component, dependency, or CSS layer unless it earns its keep. One line over fifty. Reuse what is already here.
+- **`frontend-design`** — invoke before starting any new UI section, layout, or visual restyle. Rejects templated defaults; forces deliberate choices about palette, type, and structure that fit *this* brand (Canico Pets pet lifestyle, not a generic SaaS aesthetic).
 
-Trigger words: refactor, abstraction, dependency, install, "let me add a helper".
+Trigger words: refactor, abstraction, dependency, install, "let me add a helper", new section, new page, restyle, redesign, layout, hero, palette, typography.
 
 ### Order of operations
 

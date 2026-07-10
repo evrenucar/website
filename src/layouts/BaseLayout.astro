@@ -1,6 +1,7 @@
 ---
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
+import { base } from '../lib/paths';
 import '../styles/global.css';
 
 interface Props {
@@ -16,7 +17,7 @@ const {
   titleTr,
   description = 'Textile mats and pads for cats and dogs. Made at Aktunc Tekstil in Ankara, Turkiye.',
   descriptionTr,
-  ogImage = '/logo-placeholder.svg',
+  ogImage = `${base}/logo-placeholder.svg`,
 } = Astro.props;
 
 const fullTitle = title === 'Canico Pets' ? title : `${title} · Canico Pets`;
@@ -32,15 +33,15 @@ const canonical = new URL(Astro.url.pathname, Astro.site).toString();
     <meta name="description" content={description} />
     {descriptionTr && <meta name="description" data-lang="tr" content={descriptionTr} />}
     <link rel="canonical" href={canonical} />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png" />
-    <link rel="icon" type="image/png" sizes="256x256" href="/favicon-256x256.png" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/favicon-180x180.png" />
+    <link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
+    <link rel="icon" type="image/png" sizes="16x16" href={`${base}/favicon-16x16.png`} />
+    <link rel="icon" type="image/png" sizes="32x32" href={`${base}/favicon-32x32.png`} />
+    <link rel="icon" type="image/png" sizes="48x48" href={`${base}/favicon-48x48.png`} />
+    <link rel="icon" type="image/png" sizes="256x256" href={`${base}/favicon-256x256.png`} />
+    <link rel="apple-touch-icon" sizes="180x180" href={`${base}/favicon-180x180.png`} />
 
-    <link rel="preload" as="image" href="/caniko_logo_dark_color1080.png" fetchpriority="high" />
-    <link rel="preload" as="image" href="/caniko_logo_light1080.png" />
+    <link rel="preload" as="image" href={`${base}/caniko_logo_dark_color1080.png`} fetchpriority="high" />
+    <link rel="preload" as="image" href={`${base}/caniko_logo_light1080.png`} />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

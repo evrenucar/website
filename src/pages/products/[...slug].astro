@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Trans from '../../components/Trans.astro';
+import { base } from '../../lib/paths';
 import { getCollection, type CollectionEntry } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -17,7 +18,7 @@ interface Props {
 
 const { product } = Astro.props;
 const { Content } = await product.render();
-const hero = product.data.images[0] ?? '/product-placeholder.svg';
+const hero = product.data.images[0] ?? `${base}/product-placeholder.svg`;
 const d = product.data;
 ---
 <BaseLayout
@@ -28,7 +29,7 @@ const d = product.data;
 >
   <article class="section">
     <div class="container">
-      <a href="/products" class="back-link">← <Trans en="All products" tr="Tüm ürünler" /></a>
+      <a href={`${base}/products`} class="back-link">← <Trans en="All products" tr="Tüm ürünler" /></a>
 
       <div class="product-hero">
         <div class="product-hero__media">
@@ -77,8 +78,8 @@ const d = product.data;
           )}
 
           <div class="product-hero__ctas">
-            <a class="btn btn--primary" href="/wholesale"><Trans en="Wholesale inquiry" tr="Toptan talebi" /></a>
-            <a class="btn btn--ghost" href="/contact"><Trans en="Contact us" tr="Bize ulaşın" /></a>
+            <a class="btn btn--primary" href={`${base}/wholesale`}><Trans en="Wholesale inquiry" tr="Toptan talebi" /></a>
+            <a class="btn btn--ghost" href={`${base}/contact`}><Trans en="Contact us" tr="Bize ulaşın" /></a>
           </div>
           <p class="note">
             <Trans

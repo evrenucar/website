@@ -32,6 +32,10 @@ jobs:
 
       - name: Build with Astro
         run: npm run build
+        env:
+          # Serving from evrenucar.github.io/website/ until canicopets.com DNS
+          # is live. Delete this env block when the custom domain works.
+          BASE_PATH: /website
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

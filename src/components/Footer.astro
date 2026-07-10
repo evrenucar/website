@@ -1,5 +1,6 @@
 ---
 import Trans from './Trans.astro';
+import { base } from '../lib/paths';
 const year = new Date().getFullYear();
 ---
 <footer class="site-foot">
@@ -26,7 +27,7 @@ const year = new Date().getFullYear();
 
     <div class="site-foot__grid">
       <div class="site-foot__brand">
-        <img src="/caniko_logo_light1080.png" alt="Canico Pets" width="200" height="50" decoding="sync" />
+        <img src={`${base}/caniko_logo_light1080.png`} alt="Canico Pets" width="200" height="50" decoding="sync" />
         <p class="site-foot__tag">
           <Trans en="Designed for pets. Made for modern homes." tr="Evcil hayvanlar için tasarlandı. Modern evler için üretildi." />
         </p>
@@ -49,29 +50,29 @@ const year = new Date().getFullYear();
       <div class="site-foot__col">
         <h4><Trans en="Shop" tr="Alışveriş" /></h4>
         <ul>
-          <li><a href="/products"><Trans en="All products" tr="Tüm ürünler" /></a></li>
-          <li><a href="/products/litter-mat"><Trans en="Cat Litter Collecting Mat" tr="Kedi Kumu Toplama Paspası" /></a></li>
-          <li><a href="/products/scratching-pad"><Trans en="Couch-Arm Scratching Pad" tr="Koltuk Kolu Tırmalama Pedi" /></a></li>
-          <li><a href="/products"><Trans en="For dogs (coming soon)" tr="Köpekler için (yakında)" /></a></li>
+          <li><a href={`${base}/products`}><Trans en="All products" tr="Tüm ürünler" /></a></li>
+          <li><a href={`${base}/products/litter-mat`}><Trans en="Cat Litter Collecting Mat" tr="Kedi Kumu Toplama Paspası" /></a></li>
+          <li><a href={`${base}/products/scratching-pad`}><Trans en="Couch-Arm Scratching Pad" tr="Koltuk Kolu Tırmalama Pedi" /></a></li>
+          <li><a href={`${base}/products`}><Trans en="For dogs (coming soon)" tr="Köpekler için (yakında)" /></a></li>
         </ul>
       </div>
 
       <div class="site-foot__col">
         <h4><Trans en="Business" tr="İş" /></h4>
         <ul>
-          <li><a href="/wholesale"><Trans en="Wholesale" tr="Toptan" /></a></li>
-          <li><a href="/private-label"><Trans en="Private label" tr="Özel marka" /></a></li>
-          <li><a href="/contact"><Trans en="Request samples" tr="Numune talep et" /></a></li>
+          <li><a href={`${base}/wholesale`}><Trans en="Wholesale" tr="Toptan" /></a></li>
+          <li><a href={`${base}/private-label`}><Trans en="Private label" tr="Özel marka" /></a></li>
+          <li><a href={`${base}/contact`}><Trans en="Request samples" tr="Numune talep et" /></a></li>
         </ul>
       </div>
 
       <div class="site-foot__col">
         <h4><Trans en="Company" tr="Şirket" /></h4>
         <ul>
-          <li><a href="/about"><Trans en="About" tr="Hakkımızda" /></a></li>
-          <li><a href="/contact"><Trans en="Contact" tr="İletişim" /></a></li>
-          <li><a href="/privacy"><Trans en="Privacy" tr="Gizlilik" /></a></li>
-          <li><a href="/imprint"><Trans en="Imprint" tr="Künye" /></a></li>
+          <li><a href={`${base}/about`}><Trans en="About" tr="Hakkımızda" /></a></li>
+          <li><a href={`${base}/contact`}><Trans en="Contact" tr="İletişim" /></a></li>
+          <li><a href={`${base}/privacy`}><Trans en="Privacy" tr="Gizlilik" /></a></li>
+          <li><a href={`${base}/imprint`}><Trans en="Imprint" tr="Künye" /></a></li>
         </ul>
       </div>
     </div>

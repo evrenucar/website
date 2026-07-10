@@ -1,5 +1,6 @@
 ---
 import Trans from './Trans.astro';
+import { base } from '../lib/paths';
 
 interface Props {
   href: string;
@@ -18,7 +19,7 @@ const {
   nameTr,
   tagline,
   taglineTr,
-  image = '/product-placeholder.svg',
+  image = `${base}/product-placeholder.svg`,
   price,
   status = 'coming-soon',
 } = Astro.props;

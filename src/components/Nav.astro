@@ -1,29 +1,32 @@
 ---
 import Trans from './Trans.astro';
-const path = Astro.url.pathname;
+import { base } from '../lib/paths';
+// Strip the base prefix so isActive() compares clean route paths regardless
+// of whether the site is served from the domain root or a Pages subpath.
+const path = Astro.url.pathname.replace(new RegExp('^' + base), '') || '/';
 const isActive = (p: string) => path === p || path.startsWith(p + '/');
 ---
 <header class="site-nav">
   <div class="container site-nav__inner">
-    <a href="/" class="site-nav__brand" aria-label="Canico Pets home">
-      <img src="/caniko_logo_dark_color1080.png" alt="Canico Pets" width="200" height="50" fetchpriority="high" decoding="sync" />
+    <a href={`${base}/`} class="site-nav__brand" aria-label="Canico Pets home">
+      <img src={`${base}/caniko_logo_dark_color1080.png`} alt="Canico Pets" width="200" height="50" fetchpriority="high" decoding="sync" />
     </a>
 
     <nav id="site-nav-menu" class="site-nav__nav" data-open="false" aria-label="Primary">
       <ul class="site-nav__links">
-        <li><a href="/products" class:list={[{ 'is-active': isActive('/products') }]}>
+        <li><a href={`${base}/products`} class:list={[{ 'is-active': isActive('/products') }]}>
           <Trans en="Products" tr="Ürünler" />
         </a></li>
-        <li><a href="/wholesale" class:list={[{ 'is-active': isActive('/wholesale') }]}>
+        <li><a href={`${base}/wholesale`} class:list={[{ 'is-active': isActive('/wholesale') }]}>
           <Trans en="Wholesale" tr="Toptan" />
         </a></li>
-        <li><a href="/private-label" class:list={[{ 'is-active': isActive('/private-label') }]}>
+        <li><a href={`${base}/private-label`} class:list={[{ 'is-active': isActive('/private-label') }]}>
           <Trans en="Private Label" tr="Özel Marka" />
         </a></li>
-        <li><a href="/about" class:list={[{ 'is-active': isActive('/about') }]}>
+        <li><a href={`${base}/about`} class:list={[{ 'is-active': isActive('/about') }]}>
           <Trans en="About" tr="Hakkımızda" />
         </a></li>
-        <li><a href="/contact" class:list={[{ 'is-active': isActive('/contact') }]}>
+        <li><a href={`${base}/contact`} class:list={[{ 'is-active': isActive('/contact') }]}>
           <Trans en="Contact" tr="İletişim" />
         </a></li>
       </ul>

@@ -24,9 +24,19 @@ const d = product.data;
 <BaseLayout
   title={d.name}
   titleTr={d.name_tr}
-  description={d.tagline ?? d.description}
-  descriptionTr={d.tagline_tr ?? d.description_tr}
+  description={d.description ?? d.tagline}
+  descriptionTr={d.description_tr ?? d.tagline_tr}
 >
+  {/* ponytail: no `offers` block until public pricing exists; add it then for rich results */}
+  <script is:inline type="application/ld+json" set:html={JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: d.name,
+    description: d.description,
+    image: d.images,
+    sku: d.sku,
+    brand: { '@type': 'Brand', name: 'Canico Pet' },
+  })} />
   <article class="section">
     <div class="container">
       <a href={`${base}/products`} class="back-link">← <Trans en="All products" tr="Tüm ürünler" /></a>

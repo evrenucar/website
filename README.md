@@ -6,7 +6,7 @@ Static Astro build, hosted on GitHub Pages. Structured to grow into a real websh
 
 ## Stack
 
-- [Astro 5](https://astro.build/) — content-first, static-by-default, islands for interactivity when needed.
+- [Astro 7.1.6](https://astro.build/) — content-first, static-by-default, islands for interactivity when needed.
 - Vanilla CSS (custom properties). No framework lock-in.
 - Content Collections for products (typed schema in `src/content/config.ts`).
 - Deploys to GitHub Pages via `.github/workflows/deploy.yml`.
@@ -21,7 +21,7 @@ npm run build     # static build to ./dist
 npm run preview   # preview the built site
 ```
 
-Requires Node 20+.
+Requires Node 22.12.0+.
 
 ## Deploy
 
@@ -48,9 +48,9 @@ website/
 │   ├── product-placeholder.svg
 │   └── robots.txt
 ├── src/
+│   ├── content.config.ts      # products collection schema
 │   ├── components/        # Nav, Footer, Hero, ProductCard
 │   ├── content/
-│   │   ├── config.ts      # products collection schema
 │   │   └── products/      # one markdown file per product
 │   ├── layouts/
 │   │   └── BaseLayout.astro
@@ -76,7 +76,7 @@ website/
 2. Update frontmatter (`sku`, `name`, `tagline`, `price`, `sizes`, etc.).
 3. Save. The product appears on `/products` and gets a page at `/products/<slug>`.
 
-The schema is defined in `src/content/config.ts`. It already includes `sku`, `price`, `sizes`, `materials`, and `status` — the fields a future cart layer will read.
+The schema is defined in `src/content.config.ts`. It already includes `sku`, `price`, `sizes`, `materials`, and `status` — the fields a future cart layer will read.
 
 ## Grow into a webshop later
 

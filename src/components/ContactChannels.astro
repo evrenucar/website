@@ -8,12 +8,12 @@ interface Props {
 const { variant = 'general' } = Astro.props;
 
 // Placeholder values — replace when real handles / numbers are set up.
-const whatsapp = 'https://wa.me/905555555555'; // TODO: replace with real WA Business number
-const emailGeneral = 'hello@canicopet.com';
-const emailWholesale = 'wholesale@canicopet.com';
+const whatsapp = 'https://wa.me/905423494229'; // TODO: replace with real WA Business number
+const emailGeneral = 'info@canicopet.com';
+const emailWholesale = 'info@canicopet.com';
 const email = variant === 'wholesale' ? emailWholesale : emailGeneral;
-const instagram = 'https://instagram.com/canicopets'; // TODO: confirm final handle
-const linkedin = 'https://linkedin.com/company/canicopets'; // TODO: confirm final handle
+const instagram = 'https://instagram.com/canicopet'; // TODO: confirm final handle
+const linkedin = 'https://linkedin.com/company/canicopet'; // TODO: confirm final handle
 ---
 <div class="channels">
   <a class="channel" href={whatsapp} target="_blank" rel="noopener">
@@ -55,7 +55,7 @@ const linkedin = 'https://linkedin.com/company/canicopets'; // TODO: confirm fin
     </div>
     <div class="channel__body">
       <p class="channel__label">Instagram</p>
-      <p class="channel__value">@canicopets</p>
+      <p class="channel__value">@canicopet</p>
     </div>
   </a>
 

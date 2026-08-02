@@ -2,12 +2,12 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Trans from '../../components/Trans.astro';
 import { base } from '../../lib/paths';
-import { getCollection, type CollectionEntry } from 'astro:content';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
 
 export async function getStaticPaths() {
   const products = await getCollection('products');
   return products.map((product) => ({
-    params: { slug: product.slug },
+    params: { slug: product.id },
     props: { product },
   }));
 }
@@ -17,7 +17,7 @@ interface Props {
 }
 
 const { product } = Astro.props;
-const { Content } = await product.render();
+const { Content } = await render(product);
 const hero = product.data.images[0] ?? `${base}/product-placeholder.svg`;
 const d = product.data;
 ---

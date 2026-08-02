@@ -29,7 +29,7 @@ const products = (await getCollection('products'))
       <div class="grid grid--3" style="margin-top: 40px;">
         {products.map((p) => (
           <ProductCard
-            href={`${base}/products/${p.slug}`}
+            href={`${base}/products/${p.id}`}
             name={p.data.name}
             nameTr={p.data.name_tr}
             tagline={p.data.tagline}

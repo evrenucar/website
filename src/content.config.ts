@@ -1,11 +1,13 @@
-import { defineCollection, z } from 'astro:content';
+import { defineCollection } from 'astro:content';
+import { z } from 'astro/zod';
+import { glob } from 'astro/loaders';
 
 // Products collection.
 // This shape is intentionally webshop-ready: sku, price, sizes, and status
 // exist today so a future cart/checkout layer can read directly from here
 // without touching page code.
 const products = defineCollection({
-  type: 'content',
+  loader: glob({ pattern: '*.md', base: './src/content/products' }),
   schema: z.object({
     sku: z.string(),
     // English (default) fields

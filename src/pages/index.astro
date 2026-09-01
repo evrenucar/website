@@ -37,12 +37,23 @@ const featuredProducts = rawProducts.map((p) => {
     status: (p.data.status === 'available' ? 'available' : 'coming-soon') as 'available' | 'coming-soon',
   };
 });
+
+const siteUrl = Astro.site ? new URL(base + '/', Astro.site).toString() : '';
+const logoUrl = Astro.site ? new URL(`${base}/caniko_logo_dark_color1080.png`, Astro.site).toString() : '';
 ---
 <BaseLayout
-  title="Canico Pets"
-  description="Textile mats and pads for cats and dogs. Made at Aktunc Tekstil in Ankara."
-  descriptionTr="Kedi ve köpekler için dayanıklı tekstil paspasları ve pedler. Ankara'da üretiyoruz."
+  title="Washable cat litter mats and pet textiles"
+  titleTr="Yıkanabilir kedi kumu paspasları ve tekstil ürünleri"
+  description="Machine-washable cat litter mats and couch-arm scratching pads. Textile, not plastic. Made at Aktunc Tekstil in Ankara."
+  descriptionTr="Makinede yıkanabilir kedi kumu paspasları ve koltuk kolu tırmalama pedleri. Plastik değil, tekstil. Ankara'daki Aktunc Tekstil'de üretilir."
 >
+  <script is:inline type="application/ld+json" set:html={JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'Canico Pet',
+    url: siteUrl,
+    logo: logoUrl,
+  })} />
 
   {/* ---------- Full-width carousel ---------- */}
   <section class="home-carousel" aria-roledescription="carousel" aria-label="Featured">

@@ -3,11 +3,11 @@
 # ─────────────────────────────────────────────────────────────────────────────
 # HOW TO USE
 # 1. Copy this entire folder to: src/content/products/<your-slug>/
-# 2. Fill in the fields below
+# 2. Fill in the frontmatter fields below
 # 3. Create subfolders in variants/<SKU>/ for each variation:
-#    - variants/<SKU>/thumbnail.jpg  (Product photo for this SKU)
-#    - variants/<SKU>/design.jpg     (Print / pattern graphic for picker)
-#    - variants/<SKU>/extra-1.jpg... (Optional extra angle/lifestyle photos)
+#    - variants/<SKU>/thumbnail.webp  (Front product photo for this SKU)
+#    - variants/<SKU>/design.webp     (Print / pattern graphic for swatch picker)
+#    - variants/<SKU>/extra-1.webp... (Optional extra angle / lifestyle photos)
 # 4. Run: npm run build
 # ─────────────────────────────────────────────────────────────────────────────
 
@@ -23,7 +23,7 @@ description_tr: >-
   Ürünün daha uzun Türkçe açıklaması. İki ila üç cümle;
   ne olduğunu ve neden var olduğunu kapsayacak şekilde.
 
-status: coming-soon               # available | coming-soon | archived
+status: available                 # available | coming-soon | archived
 order: 100                        # Lower number = appears first in listings
 
 # Categories — reference IDs from src/content/categories/*.yaml
@@ -33,7 +33,7 @@ categories:
 
 # Fallback / umbrella hero image (in the product folder)
 images:
-  - ./hero.jpg
+  - ./hero.webp
 
 # Price — optional, for when webshop goes live
 # price:
@@ -46,14 +46,15 @@ sizes:
   - { id: 2, w: 60, l: 90 }
 
 materials:
-  - Material One
-  - Material Two
+  - Microfiber textile
+  - Waterproof backing
+materials_tr:
+  - Mikrofiber tekstil
+  - Sıvı geçirmez taban
 
 tags:
   - cat
   - home
-
-private_label_ready: true
 
 # Variants — define SKUs and link to size IDs
 # Images are automatically linked from variants/<SKU>/ folder
@@ -87,8 +88,8 @@ Describe the product itself — materials, construction, how it works.
 
 ## For retailers
 
-Available for wholesale orders and private-label projects. See the
-[Wholesale](/wholesale) or [Private Label](/private-label) pages.
+Available for volume wholesale orders and custom OEM production. See the
+[Wholesale](/wholesale) page for capacity, minimum order quantities, and custom print options.
 
 </div>
 <div lang="tr">
@@ -97,19 +98,18 @@ Available for wholesale orders and private-label projects. See the
 
 Bu ürünün çözdüğü sorunu açıklayın. Bir ila üç cümle.
 
-## Ürün
+## Ürün Detayları
 
-Ürünün kendisini açıklayın — malzemeler, yapı, nasıl çalışır.
+Ürünün kendisini, kullanılan malzemeleri ve çalışma prensibini açıklayın.
 
-## Detaylar
+## Özellikler
 
-- Birinci önemli özellik.
-- İkinci önemli özellik.
-- Üçüncü önemli özellik.
+- Öne çıkan özellik 1.
+- Öne çıkan özellik 2.
+- Öne çıkan özellik 3.
 
-## Perakendeciler için
+## Toptan ve Kurumsal
 
-Toptan siparişler ve özel marka projeleri için mevcut.
-[Toptan](/wholesale) veya [Özel Marka](/private-label) sayfalarını inceleyin.
+Toptan alımlar ve özel desen/ebat üretimleri için [Toptan Satış](/wholesale) sayfamızı ziyaret edebilirsiniz.
 
 </div>

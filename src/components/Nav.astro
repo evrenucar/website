@@ -20,15 +20,18 @@ const isActive = (p: string) => path === p || path.startsWith(p + '/');
         <li><a href={`${base}/wholesale`} class:list={[{ 'is-active': isActive('/wholesale') }]}>
           <Trans en="Wholesale" tr="Toptan" />
         </a></li>
-        <li><a href={`${base}/private-label`} class:list={[{ 'is-active': isActive('/private-label') }]}>
-          <Trans en="Private Label" tr="Özel Marka" />
-        </a></li>
         <li><a href={`${base}/about`} class:list={[{ 'is-active': isActive('/about') }]}>
           <Trans en="About" tr="Hakkımızda" />
         </a></li>
         <li><a href={`${base}/contact`} class:list={[{ 'is-active': isActive('/contact') }]}>
           <Trans en="Contact" tr="İletişim" />
         </a></li>
+        <li class="site-nav__mobile-lang">
+          <div class="lang-toggle" role="group" aria-label="Language">
+            <button type="button" data-lang-switch="en" aria-pressed="true" aria-label="Switch to English">EN</button>
+            <button type="button" data-lang-switch="tr" aria-pressed="false" aria-label="Türkçe'ye geç">TR</button>
+          </div>
+        </li>
       </ul>
     </nav>
 
@@ -152,9 +155,17 @@ const isActive = (p: string) => path === p || path.startsWith(p + '/');
     color: var(--color-ink);
   }
 
+  .site-nav__mobile-lang {
+    padding-top: var(--space-3);
+    margin-top: var(--space-2);
+    border-top: 1px solid var(--color-line);
+    padding-inline: 16px;
+  }
+
   .site-nav__lang { display: none; }
 
   @media (min-width: 900px) {
+    .site-nav__mobile-lang { display: none; }
     .site-nav__nav {
       position: static;
       max-height: none;

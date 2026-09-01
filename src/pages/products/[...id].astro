@@ -1,0 +1,1192 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Trans from '../../components/Trans.astro';
+import { Image, getImage } from 'astro:assets';
+import { base } from '../../lib/paths';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import { formatDimension } from '../../lib/dimensions';
+import { getVariantAssets } from '../../lib/variants';
+
+export async function getStaticPaths() {
+  const products = await getCollection('products');
+  return products.map((product) => ({
+    params: { id: product.id },
+    props: { product },
+  }));
+}
+
+interface Props {
+  product: CollectionEntry<'products'>;
+}
+
+const { product } = Astro.props;
+const { Content } = await render(product);
+const d = product.data;
+const heroImage = d.images[0];
+
+// Prepare all variants with resolved assets and formatted dimensions
+const variantsWithAssets = d.variants.map((v) => {
+  const sizeObj = d.sizes.find((s) => s.id === v.size_id);
+  const assets = getVariantAssets(product.id, v.sku, heroImage);
+  const swatchAspect = sizeObj
+    ? `${Math.max(sizeObj.w, sizeObj.l)} / ${Math.min(sizeObj.w, sizeObj.l)}`
+    : '1 / 1';
+
+  return {
+    sku: v.sku,
+    size_id: v.size_id,
+    size_cm: sizeObj ? `${sizeObj.w}×${sizeObj.l}` : '',
+    size_label: sizeObj ? formatDimension(sizeObj, 'cm') : '',
+    size_label_in: sizeObj ? formatDimension(sizeObj, 'in') : '',
+    status: v.status,
+    price: v.price,
+    swatch_aspect: swatchAspect,
+    thumbnail: assets.thumbnail,
+    design: assets.design,
+    gallery: assets.gallery,
+  };
+});
+
+// Initial active variant (first variant or fallback)
+const initialVariant = variantsWithAssets[0];
+const initialSizeId = initialVariant ? initialVariant.size_id : d.sizes[0]?.id;
+const fallbackGallery = initialVariant ? initialVariant.gallery : (d.images.length > 0 ? d.images : [heroImage].filter(Boolean));
+
+// Sizes defined on the product
+const allSizes = d.sizes;
+
+// Pre-optimize gallery images for ultra-fast client-side switching (only optimized WebP URLs passed to client)
+const variantsPayload = await Promise.all(
+  variantsWithAssets.map(async (v) => {
+    const optimizedGallery = await Promise.all(
+      v.gallery.map(async (img) => {
+        if (!img) return '';
+        if (typeof img === 'string') return img;
+        const opt = await getImage({ src: img, width: 800, height: 800, quality: 80, format: 'webp' });
+        return opt.src;
+      })
+    );
+    return {
+      sku: v.sku,
+      size_id: v.size_id,
+      gallery: optimizedGallery,
+    };
+  })
+);
+---
+<BaseLayout
+  title={d.name}
+  titleTr={d.name_tr}
+  description={d.tagline ?? d.description}
+  descriptionTr={d.tagline_tr ?? d.description_tr}
+>
+  <article class="section">
+    <div class="container">
+      <a href={`${base}/products`} class="back-link">← <Trans en="All products" tr="Tüm Ürünler" /></a>
+
+      <!-- Pre-rendered variant gallery JSON payload for instant synchronous client rendering -->
+      <script is:inline type="application/json" id="variants-data" set:html={JSON.stringify(variantsPayload)} />
+
+      <div class="product-hero" id="product-root">
+        <!-- Media Hero & Gallery Carousel -->
+        <div class="product-hero__media-col">
+          <div class="product-hero__media" id="hero-media-container">
+            <div class="variant-gallery is-active" id="active-gallery" data-sku={initialVariant?.sku}>
+              {fallbackGallery.map((img, idx) => (
+                <div class={`gallery-slide ${idx === 0 ? 'is-active' : ''}`} data-slide-idx={idx}>
+                  {img && (
+                    <Image
+                      src={img}
+                      alt={`${d.name} ${initialVariant?.sku ?? d.sku} photo ${idx + 1}`}
+                      width={800}
+                      height={800}
+                      quality={80}
+                      loading="lazy"
+                      fetchpriority={idx === 0 ? 'high' : 'auto'}
+                      decoding="async"
+                    />
+                  )}
+                </div>
+              ))}
+            </div>
+
+            <div
+              class="gallery-controls"
+              id="gallery-controls"
+              style={fallbackGallery.length > 1 ? '' : 'display: none;'}
+            >
+              <button type="button" class="gallery-btn gallery-btn--prev" id="gallery-prev-btn" aria-label="Previous image">‹</button>
+              <div class="gallery-dots" id="gallery-dots">
+                {fallbackGallery.map((_, idx) => (
+                  <button
+                    type="button"
+                    class={`dot ${idx === 0 ? 'is-active' : ''}`}
+                    data-dot-idx={idx}
+                    aria-label={`Go to slide ${idx + 1}`}
+                  />
+                ))}
+              </div>
+              <button type="button" class="gallery-btn gallery-btn--next" id="gallery-next-btn" aria-label="Next image">›</button>
+            </div>
+
+            <span class="product-hero__badge" id="product-badge">
+              {initialVariant?.status === 'available' || d.status === 'available' ? (
+                <span class="badge-available"><Trans en="Available now" tr="Satışta" /></span>
+              ) : (
+                <span class="badge-coming"><Trans en="Coming soon" tr="Yakında" /></span>
+              )}
+            </span>
+          </div>
+        </div>
+
+        <!-- Product Specs & Interactive Pickers -->
+        <div class="product-hero__body">
+          <p class="eyebrow" id="active-sku-display">SKU {initialVariant?.sku ?? d.sku}</p>
+          <h1>
+            <span lang="en">{d.name}</span>{d.name_tr && <span lang="tr">{d.name_tr}</span>}
+          </h1>
+          {d.tagline && (
+            <p class="lede">
+              <span lang="en">{d.tagline}</span>{d.tagline_tr && <span lang="tr">{d.tagline_tr}</span>}
+            </p>
+          )}
+
+          <!-- Size Selector (only rendered if there are multiple sizes to choose from) -->
+          {allSizes.length > 1 && (
+            <div class="picker-section">
+              <label class="picker-label">
+                <Trans en="1. Select Size" tr="1. Ölçü Seçin" />
+              </label>
+              <div class="size-pill-group" role="radiogroup" aria-label="Product size">
+                {allSizes.map((s) => {
+                  const isAvailable = variantsWithAssets.length === 0 || variantsWithAssets.some((v) => v.size_id === s.id);
+                  const isSelected = isAvailable && s.id === initialSizeId;
+                  return (
+                    <button
+                      type="button"
+                      class={`size-pill ${isSelected ? 'is-selected' : ''} ${!isAvailable ? 'size-pill--disabled' : ''}`}
+                      data-size-id={s.id}
+                      disabled={!isAvailable}
+                      role="radio"
+                      aria-checked={isSelected ? 'true' : 'false'}
+                      aria-disabled={!isAvailable ? 'true' : 'false'}
+                      tabindex={!isAvailable ? -1 : 0}
+                    >
+                      <span class="size-pill__cm">{formatDimension(s, 'cm')}</span>
+                      <span class="size-pill__in">{formatDimension(s, 'in')}</span>
+                      {!isAvailable && (
+                        <span class="size-pill__tooltip" aria-hidden="true">
+                          <Trans en="Coming soon" tr="Yakında" />
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          <!-- Visual Design Palette -->
+          {variantsWithAssets.length > 0 && (
+            <div class="picker-section">
+              <label class="picker-label">
+                {allSizes.length > 1 ? (
+                  <Trans en="2. Select Print Design" tr="2. Desen Seçin" />
+                ) : (
+                  <Trans en="Select Print Design" tr="Desen Seçin" />
+                )}
+              </label>
+              <div class="design-swatch-grid" role="radiogroup" aria-label="Print design">
+                {variantsWithAssets.map((v) => {
+                  const isSelected = v.sku === initialVariant?.sku;
+                  const isVisible = v.size_id === initialSizeId;
+                  return (
+                    <button
+                      type="button"
+                      class={`design-swatch ${isSelected ? 'is-selected' : ''} ${!isVisible ? 'is-hidden' : ''}`}
+                      data-sku={v.sku}
+                      data-size-id={v.size_id}
+                      role="radio"
+                      aria-checked={isSelected ? 'true' : 'false'}
+                      title={`SKU ${v.sku}`}
+                      style={`--swatch-aspect: ${v.swatch_aspect};`}
+                    >
+                      <div class="design-swatch__thumb" style={`aspect-ratio: ${v.swatch_aspect};`}>
+                        {v.design && (
+                          <Image
+                            src={v.design}
+                            alt={`Design swatch for ${v.sku}`}
+                            width={160}
+                            quality={80}
+                            loading="lazy"
+                            decoding="async"
+                          />
+                        )}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {allSizes.length === 1 && (
+            <div class="spec">
+              <span class="spec__label"><Trans en="Dimensions" tr="Ölçüler" /></span>
+              <span class="spec__value">
+                {formatDimension(allSizes[0], 'cm')} ({formatDimension(allSizes[0], 'in')})
+              </span>
+            </div>
+          )}
+
+          {d.materials.length > 0 && (
+            <div class="spec">
+              <span class="spec__label"><Trans en="Materials" tr="Malzemeler" /></span>
+              <span class="spec__value">
+                <span lang="en">{d.materials.join(', ')}</span>
+                <span lang="tr">{(d.materials_tr && d.materials_tr.length > 0 ? d.materials_tr : d.materials).join(', ')}</span>
+              </span>
+            </div>
+          )}
+
+          <div class="product-hero__ctas">
+            <a class="btn btn--primary" href={`${base}/wholesale`}><Trans en="Wholesale inquiry" tr="Toptan Bilgisi Alın" /></a>
+            <a class="btn btn--ghost" href={`${base}/contact`}><Trans en="Contact us" tr="İletişime Geçin" /></a>
+          </div>
+          <p class="note">
+            <Trans
+              en="Online checkout is not live yet. Contact us for samples or bulk quotes."
+              tr="Perakende online satışımız henüz aktif değildir. Numune veya toptan sipariş talepleriniz için bizimle iletişime geçebilirsiniz."
+            />
+          </p>
+        </div>
+
+        <!-- Inline synchronous parser script: Immediately updates gallery, SKU, size pills, and swatches BEFORE first paint -->
+        <script is:inline>
+          (function() {
+            try {
+              var sku = new URLSearchParams(window.location.search).get('sku');
+              if (!sku) return;
+              var dataEl = document.getElementById('variants-data');
+              if (!dataEl) return;
+              var variants = JSON.parse(dataEl.textContent || '[]');
+              var v = variants.find(function(item) { return item.sku === sku; });
+              if (!v) return;
+
+              // 1. Immediately replace active gallery slides with target SKU slides before paint
+              if (v.gallery && v.gallery.length > 0) {
+                var gal = document.getElementById('active-gallery');
+                if (gal) {
+                  var html = '';
+                  v.gallery.forEach(function(url, i) {
+                    html += '<div class="gallery-slide' + (i === 0 ? ' is-active' : '') + '" data-slide-idx="' + i + '">' +
+                      '<img src="' + url + '" alt="' + sku + ' photo ' + (i + 1) + '" ' + (i === 0 ? 'loading="eager" fetchpriority="high"' : 'loading="lazy"') + ' decoding="async" />' +
+                      '</div>';
+                  });
+                  gal.innerHTML = html;
+                  gal.setAttribute('data-sku', sku);
+                }
+
+                // 2. Immediately update controls / dots
+                var ctrl = document.getElementById('gallery-controls');
+                var dots = document.getElementById('gallery-dots');
+                if (ctrl && dots) {
+                  if (v.gallery.length > 1) {
+                    ctrl.style.display = 'flex';
+                    var dotsHtml = '';
+                    for (var i = 0; i < v.gallery.length; i++) {
+                      dotsHtml += '<button type="button" class="dot' + (i === 0 ? ' is-active' : '') + '" data-dot-idx="' + i + '" aria-label="Go to slide ' + (i + 1) + '"></button>';
+                    }
+                    dots.innerHTML = dotsHtml;
+                  } else {
+                    ctrl.style.display = 'none';
+                    dots.innerHTML = '';
+                  }
+                }
+              }
+
+              // 3. Immediately update SKU text display
+              var skuEl = document.getElementById('active-sku-display');
+              if (skuEl) skuEl.textContent = 'SKU ' + sku;
+
+              // 4. Immediately update size pills and swatches
+              var sizeId = v.size_id;
+              if (sizeId) {
+                var pills = document.querySelectorAll('.size-pill:not([disabled])');
+                pills.forEach(function(p) {
+                  var isSel = Number(p.getAttribute('data-size-id')) === sizeId;
+                  p.classList.toggle('is-selected', isSel);
+                  p.setAttribute('aria-checked', isSel ? 'true' : 'false');
+                });
+
+                var swatches = document.querySelectorAll('.design-swatch');
+                swatches.forEach(function(s) {
+                  var matchesSize = Number(s.getAttribute('data-size-id')) === sizeId;
+                  var isSel = s.getAttribute('data-sku') === sku;
+                  s.classList.toggle('is-hidden', !matchesSize);
+                  s.classList.toggle('is-selected', isSel);
+                  s.setAttribute('aria-checked', isSel ? 'true' : 'false');
+                });
+              }
+            } catch(e) {}
+          })();
+        </script>
+      </div>
+
+      <hr class="divider" />
+
+      <div class="prose container--narrow">
+        <Content />
+      </div>
+    </div>
+  </article>
+
+</BaseLayout>
+
+<script>
+  // High-performance client-side variant picker and dynamic gallery controller
+  function initVariantPicker() {
+    const root = document.getElementById('product-root');
+    if (!root) return;
+
+    const variantsDataEl = document.getElementById('variants-data');
+    const rawData = variantsDataEl ? JSON.parse(variantsDataEl.textContent || '[]') : [];
+    const variantsMap = new Map<string, { sku: string; size_id: number; gallery: string[] }>();
+    rawData.forEach((item: any) => variantsMap.set(item.sku, item));
+
+    const sizePills = root.querySelectorAll<HTMLButtonElement>('.size-pill:not([disabled])');
+    const designSwatches = root.querySelectorAll<HTMLButtonElement>('.design-swatch');
+    const mediaContainer = document.getElementById('hero-media-container');
+    let activeGalleryContainer = document.getElementById('active-gallery');
+    const controlsContainer = document.getElementById('gallery-controls');
+    const dotsContainer = document.getElementById('gallery-dots');
+    const prevBtn = document.getElementById('gallery-prev-btn');
+    const nextBtn = document.getElementById('gallery-next-btn');
+    const skuDisplay = document.getElementById('active-sku-display');
+
+    let activeSizeId: number = Number(root.querySelector('.size-pill.is-selected')?.getAttribute('data-size-id')) || 1;
+    let activeSku: string = root.querySelector('.design-swatch.is-selected')?.getAttribute('data-sku') || '';
+
+    let currentSlideIdx = 0;
+
+    function showSlide(idx: number, animated = true) {
+      const slides = activeGalleryContainer ? Array.from(activeGalleryContainer.querySelectorAll<HTMLElement>('.gallery-slide')) : [];
+      const count = slides.length;
+      if (count <= 0) return;
+      currentSlideIdx = Math.max(0, Math.min(idx, count - 1));
+      
+      if (activeGalleryContainer) {
+        activeGalleryContainer.style.transition = animated ? 'transform 320ms cubic-bezier(0.25, 1, 0.5, 1)' : 'none';
+        activeGalleryContainer.style.transform = `translateX(-${currentSlideIdx * 100}%)`;
+      }
+
+      slides.forEach((s, i) => s.classList.toggle('is-active', i === currentSlideIdx));
+      
+      const dots = dotsContainer ? Array.from(dotsContainer.querySelectorAll<HTMLButtonElement>('.dot')) : [];
+      dots.forEach((d, i) => d.classList.toggle('is-active', i === currentSlideIdx));
+
+      if (prevBtn) {
+        (prevBtn as HTMLButtonElement).disabled = currentSlideIdx === 0;
+        prevBtn.classList.toggle('is-disabled', currentSlideIdx === 0);
+      }
+      if (nextBtn) {
+        (nextBtn as HTMLButtonElement).disabled = currentSlideIdx === count - 1;
+        nextBtn.classList.toggle('is-disabled', currentSlideIdx === count - 1);
+      }
+    }
+
+    function rebindDots() {
+      if (!dotsContainer) return;
+      dotsContainer.querySelectorAll<HTMLButtonElement>('.dot').forEach((dot) => {
+        dot.onclick = (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const idx = Number(dot.getAttribute('data-dot-idx'));
+          if (!isNaN(idx)) showSlide(idx, true);
+        };
+      });
+    }
+
+    const preloadedUrls = new Set<string>();
+
+    function preloadImage(url: string): Promise<void> {
+      if (!url) return Promise.resolve();
+      if (preloadedUrls.has(url)) return Promise.resolve();
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.src = url;
+        if (img.decode) {
+          img.decode().then(() => {
+            preloadedUrls.add(url);
+            resolve();
+          }).catch(() => {
+            preloadedUrls.add(url);
+            resolve();
+          });
+        } else {
+          img.onload = () => {
+            preloadedUrls.add(url);
+            resolve();
+          };
+          img.onerror = () => {
+            preloadedUrls.add(url);
+            resolve();
+          };
+        }
+      });
+    }
+
+    function preloadVariant(sku: string) {
+      const variant = variantsMap.get(sku);
+      if (!variant) return;
+      variant.gallery.forEach((url) => {
+        if (url) preloadImage(url);
+      });
+    }
+
+    // Attach hover and focus precaching to design swatches and size pills
+    designSwatches.forEach((swatch) => {
+      const sku = swatch.getAttribute('data-sku');
+      if (sku) {
+        swatch.addEventListener('pointerenter', () => preloadVariant(sku));
+        swatch.addEventListener('focus', () => preloadVariant(sku));
+      }
+    });
+
+    sizePills.forEach((pill) => {
+      pill.addEventListener('pointerenter', () => {
+        const sizeId = Number(pill.getAttribute('data-size-id'));
+        designSwatches.forEach((swatch) => {
+          if (Number(swatch.getAttribute('data-size-id')) === sizeId) {
+            const sku = swatch.getAttribute('data-sku');
+            if (sku) preloadVariant(sku);
+          }
+        });
+      });
+    });
+
+    // Background idle preload of primary thumbnails across all variants
+    if ('requestIdleCallback' in window) {
+      (window as any).requestIdleCallback(() => {
+        variantsMap.forEach((v) => {
+          if (v.gallery[0]) preloadImage(v.gallery[0]);
+        });
+      }, { timeout: 2000 });
+    } else {
+      setTimeout(() => {
+        variantsMap.forEach((v) => {
+          if (v.gallery[0]) preloadImage(v.gallery[0]);
+        });
+      }, 500);
+    }
+
+    let activeSwitchToken = 0;
+
+    async function renderGalleryForVariant(sku: string) {
+      const variant = variantsMap.get(sku);
+      if (!variant || !mediaContainer) return;
+
+      const switchToken = ++activeSwitchToken;
+      const primaryUrl = variant.gallery[0];
+
+      // Decode the primary image first so the previous variant stays displayed
+      if (primaryUrl) {
+        await preloadImage(primaryUrl);
+      }
+
+      // If user switched to another variant while loading, discard this render
+      if (switchToken !== activeSwitchToken) return;
+
+      currentSlideIdx = 0;
+
+      // Create incoming gallery layer placed on top of the old gallery
+      const newGallery = document.createElement('div');
+      newGallery.className = 'variant-gallery is-incoming';
+      newGallery.setAttribute('data-sku', sku);
+      newGallery.style.opacity = '0';
+      newGallery.style.transition = 'opacity 180ms ease';
+      newGallery.style.transform = 'translateX(0%)';
+
+      // Build slide elements
+      variant.gallery.forEach((url, idx) => {
+        const slide = document.createElement('div');
+        slide.className = `gallery-slide ${idx === 0 ? 'is-active' : ''}`;
+        slide.setAttribute('data-slide-idx', String(idx));
+        
+        const img = document.createElement('img');
+        img.src = url;
+        img.alt = `${sku} photo ${idx + 1}`;
+        img.loading = idx === 0 ? 'eager' : 'lazy';
+        img.decoding = 'async';
+        
+        slide.appendChild(img);
+        newGallery.appendChild(slide);
+      });
+
+      // Insert before controls so controls remain on top
+      if (controlsContainer && controlsContainer.parentElement === mediaContainer) {
+        mediaContainer.insertBefore(newGallery, controlsContainer);
+      } else {
+        mediaContainer.appendChild(newGallery);
+      }
+
+      // Set as active gallery immediately for click/dot events
+      activeGalleryContainer = newGallery;
+
+      // Trigger seamless opacity fade-in over the old variant
+      requestAnimationFrame(() => {
+        newGallery.style.opacity = '1';
+      });
+
+      // Clean up previous galleries only AFTER the new layer is fully opaque
+      setTimeout(() => {
+        if (switchToken === activeSwitchToken) {
+          const allGalleries = mediaContainer.querySelectorAll('.variant-gallery');
+          allGalleries.forEach((g) => {
+            if (g !== newGallery) {
+              g.remove();
+            }
+          });
+          newGallery.classList.remove('is-incoming');
+          newGallery.id = 'active-gallery';
+          newGallery.style.opacity = '';
+          newGallery.style.transition = '';
+        }
+      }, 200);
+
+      // Update dots and controls visibility
+      if (controlsContainer && dotsContainer) {
+        if (variant.gallery.length > 1) {
+          mediaContainer.classList.add('has-multiple-slides');
+          controlsContainer.style.display = 'flex';
+          let dotsHtml = '';
+          for (let i = 0; i < variant.gallery.length; i++) {
+            dotsHtml += `<button type="button" class="dot ${i === 0 ? 'is-active' : ''}" data-dot-idx="${i}" aria-label="Go to slide ${i + 1}"></button>`;
+          }
+          dotsContainer.innerHTML = dotsHtml;
+          rebindDots();
+        } else {
+          mediaContainer.classList.remove('has-multiple-slides');
+          controlsContainer.style.display = 'none';
+          dotsContainer.innerHTML = '';
+        }
+      }
+
+      showSlide(0, false);
+    }
+
+    // Attach navigation button handlers
+    if (prevBtn) {
+      prevBtn.onclick = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (currentSlideIdx > 0) {
+          showSlide(currentSlideIdx - 1, true);
+        }
+      };
+    }
+
+    if (nextBtn) {
+      nextBtn.onclick = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const slides = activeGalleryContainer ? activeGalleryContainer.querySelectorAll('.gallery-slide') : [];
+        if (currentSlideIdx < slides.length - 1) {
+          showSlide(currentSlideIdx + 1, true);
+        }
+      };
+    }
+
+    // Keyboard Arrow navigation
+    window.addEventListener('keydown', (e) => {
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+      const slides = activeGalleryContainer ? activeGalleryContainer.querySelectorAll('.gallery-slide') : [];
+      if (e.key === 'ArrowLeft' && currentSlideIdx > 0) {
+        showSlide(currentSlideIdx - 1, true);
+      } else if (e.key === 'ArrowRight' && currentSlideIdx < slides.length - 1) {
+        showSlide(currentSlideIdx + 1, true);
+      }
+    });
+
+    // Unified Drag & Slide handling for continuous carousel track
+    let isPointerDown = false;
+    let pointerStartX = 0;
+    let pointerStartY = 0;
+    let dragDeltaX = 0;
+    let isHorizontalDrag = false;
+    let dragStartTime = 0;
+
+    function hasMultipleSlides(): boolean {
+      const slides = activeGalleryContainer ? activeGalleryContainer.querySelectorAll('.gallery-slide') : [];
+      return slides.length > 1;
+    }
+
+    if (mediaContainer) {
+      mediaContainer.classList.toggle('has-multiple-slides', hasMultipleSlides());
+
+      mediaContainer.addEventListener('pointerdown', (e: PointerEvent) => {
+        if (!hasMultipleSlides() || !activeGalleryContainer) return;
+        if ((e.target as HTMLElement)?.closest('#gallery-controls, .product-hero__badge')) return;
+
+        isPointerDown = true;
+        isHorizontalDrag = false;
+        pointerStartX = e.clientX;
+        pointerStartY = e.clientY;
+        dragDeltaX = 0;
+        dragStartTime = Date.now();
+
+        try {
+          mediaContainer.setPointerCapture(e.pointerId);
+        } catch (_) {}
+      });
+
+      mediaContainer.addEventListener('pointermove', (e: PointerEvent) => {
+        if (!isPointerDown || !hasMultipleSlides() || !activeGalleryContainer) return;
+
+        const deltaX = e.clientX - pointerStartX;
+        const deltaY = e.clientY - pointerStartY;
+
+        if (!isHorizontalDrag) {
+          if (Math.abs(deltaY) > 8 && Math.abs(deltaY) > Math.abs(deltaX)) {
+            // User is scrolling the page vertically -> cancel drag
+            isPointerDown = false;
+            mediaContainer.classList.remove('is-dragging');
+            try {
+              if (mediaContainer.hasPointerCapture(e.pointerId)) {
+                mediaContainer.releasePointerCapture(e.pointerId);
+              }
+            } catch (_) {}
+            return;
+          }
+          if (Math.abs(deltaX) > 6) {
+            isHorizontalDrag = true;
+            mediaContainer.classList.add('is-dragging');
+          }
+        }
+
+        if (isHorizontalDrag) {
+          e.preventDefault();
+          dragDeltaX = deltaX;
+          const containerWidth = mediaContainer.clientWidth || 1;
+          const slides = activeGalleryContainer.querySelectorAll('.gallery-slide');
+          const count = slides.length;
+
+          // Boundary constraints:
+          // The first image cannot be dragged to the right (deltaX > 0),
+          // The last image cannot be dragged to the left (deltaX < 0)
+          let effectiveDeltaX = deltaX;
+          if (currentSlideIdx === 0 && deltaX > 0) {
+            effectiveDeltaX = deltaX * 0.15; // Rubber-band resistance on right-drag of first slide
+          } else if (currentSlideIdx === count - 1 && deltaX < 0) {
+            effectiveDeltaX = deltaX * 0.15; // Rubber-band resistance on left-drag of last slide
+          }
+
+          // Move the entire track in real-time so adjacent images slide together
+          activeGalleryContainer.style.transition = 'none';
+          const baseOffsetPx = -currentSlideIdx * containerWidth;
+          activeGalleryContainer.style.transform = `translateX(${baseOffsetPx + effectiveDeltaX}px)`;
+        }
+      });
+
+      const finishDrag = (e: PointerEvent) => {
+        if (!isPointerDown) return;
+        isPointerDown = false;
+        mediaContainer.classList.remove('is-dragging');
+
+        try {
+          if (mediaContainer.hasPointerCapture(e.pointerId)) {
+            mediaContainer.releasePointerCapture(e.pointerId);
+          }
+        } catch (_) {}
+
+        if (isHorizontalDrag && activeGalleryContainer) {
+          const slides = activeGalleryContainer.querySelectorAll('.gallery-slide');
+          const count = slides.length;
+          const duration = Date.now() - dragStartTime;
+          const velocity = Math.abs(dragDeltaX) / Math.max(duration, 1);
+
+          if (dragDeltaX < -45 || (dragDeltaX < -20 && velocity > 0.3)) {
+            // Dragged left -> advance to next if available, else bounce back
+            if (currentSlideIdx < count - 1) {
+              showSlide(currentSlideIdx + 1, true);
+            } else {
+              showSlide(currentSlideIdx, true);
+            }
+          } else if (dragDeltaX > 45 || (dragDeltaX > 20 && velocity > 0.3)) {
+            // Dragged right -> advance to prev if available, else bounce back
+            if (currentSlideIdx > 0) {
+              showSlide(currentSlideIdx - 1, true);
+            } else {
+              showSlide(currentSlideIdx, true);
+            }
+          } else {
+            // Did not cross threshold -> snap back to current
+            showSlide(currentSlideIdx, true);
+          }
+        }
+
+        isHorizontalDrag = false;
+        dragDeltaX = 0;
+      };
+
+      mediaContainer.addEventListener('pointerup', finishDrag);
+      mediaContainer.addEventListener('pointercancel', finishDrag);
+    }
+
+    window.addEventListener('resize', () => {
+      if (activeGalleryContainer) {
+        showSlide(currentSlideIdx, false);
+      }
+    });
+
+    // Initial setup
+    showSlide(0, false);
+    rebindDots();
+
+    function activateSku(sku: string) {
+      if (sku === activeSku && activeGalleryContainer?.getAttribute('data-sku') === sku) return;
+      activeSku = sku;
+      
+      // Update design swatches
+      designSwatches.forEach((swatch) => {
+        const isSelected = swatch.getAttribute('data-sku') === sku;
+        swatch.classList.toggle('is-selected', isSelected);
+        swatch.setAttribute('aria-checked', isSelected ? 'true' : 'false');
+      });
+
+      // Dynamically load gallery images for selected SKU
+      renderGalleryForVariant(sku);
+
+      // Update SKU display
+      if (skuDisplay && sku) {
+        skuDisplay.textContent = `SKU ${sku}`;
+      }
+
+      // Sync URL without reload
+      if (window.history.replaceState && sku) {
+        const url = new URL(window.location.href);
+        url.searchParams.set('sku', sku);
+        window.history.replaceState({}, '', url.toString());
+      }
+    }
+
+    function selectSize(sizeId: number) {
+      activeSizeId = sizeId;
+
+      // Update size pills
+      sizePills.forEach((pill) => {
+        const isSelected = Number(pill.getAttribute('data-size-id')) === sizeId;
+        pill.classList.toggle('is-selected', isSelected);
+        pill.setAttribute('aria-checked', isSelected ? 'true' : 'false');
+      });
+
+      // Filter design swatches
+      let firstVisibleSku: string | null = null;
+      let currentSkuStillVisible = false;
+
+      designSwatches.forEach((swatch) => {
+        const matchesSize = Number(swatch.getAttribute('data-size-id')) === sizeId;
+        swatch.classList.toggle('is-hidden', !matchesSize);
+
+        if (matchesSize) {
+          const sku = swatch.getAttribute('data-sku');
+          if (!firstVisibleSku && sku) firstVisibleSku = sku;
+          if (sku === activeSku) currentSkuStillVisible = true;
+        }
+      });
+
+      // If current selected design is not in this size, switch to first visible
+      if (!currentSkuStillVisible && firstVisibleSku) {
+        activateSku(firstVisibleSku);
+      }
+    }
+
+    // Size pill click handlers
+    sizePills.forEach((pill) => {
+      pill.addEventListener('click', () => {
+        const sizeId = Number(pill.getAttribute('data-size-id'));
+        if (sizeId) selectSize(sizeId);
+      });
+    });
+
+    // Design swatch click handlers
+    designSwatches.forEach((swatch) => {
+      swatch.addEventListener('click', () => {
+        const sku = swatch.getAttribute('data-sku');
+        if (sku) activateSku(sku);
+      });
+    });
+
+    // Deep linking on load: check ?sku= in URL
+    const params = new URLSearchParams(window.location.search);
+    const skuParam = params.get('sku');
+    if (skuParam && skuParam !== activeSku) {
+      const targetSwatch = root.querySelector<HTMLButtonElement>(`.design-swatch[data-sku="${skuParam}"]`);
+      if (targetSwatch) {
+        const sizeId = Number(targetSwatch.getAttribute('data-size-id'));
+        if (sizeId && sizeId !== activeSizeId) selectSize(sizeId);
+        activateSku(skuParam);
+      }
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initVariantPicker);
+  } else {
+    initVariantPicker();
+  }
+</script>
+
+<style>
+  .back-link {
+    display: inline-block;
+    margin-bottom: var(--space-4);
+    text-decoration: none;
+    color: var(--color-muted);
+    font-size: 14px;
+  }
+  .product-hero {
+    display: grid;
+    gap: var(--space-6);
+  }
+  @media (min-width: 900px) {
+    .product-hero {
+      grid-template-columns: 1.1fr 1fr;
+      align-items: start;
+    }
+  }
+  
+  /* Mobile: Media is in natural flow (not sticky) to avoid covering scrolled content */
+  .product-hero__media-col {
+    position: relative;
+    z-index: 1;
+  }
+  
+  /* Desktop (>= 900px): Sticky with clearance for the 70px+ sticky navbar */
+  @media (min-width: 900px) {
+    .product-hero__media-col {
+      position: sticky;
+      top: 96px; /* Clears sticky header (70px) + 26px breathing margin */
+      z-index: 5;
+    }
+  }
+
+  .product-hero__media {
+    position: relative;
+    background: var(--color-bg-soft);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    aspect-ratio: 1 / 1;
+    box-shadow: var(--shadow-soft);
+    border: 1.5px solid var(--color-line);
+    touch-action: pan-y;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .product-hero__media.has-multiple-slides {
+    cursor: grab;
+  }
+  .product-hero__media.is-dragging {
+    cursor: grabbing !important;
+  }
+  .variant-gallery,
+  :global(.variant-gallery) {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    opacity: 1;
+    visibility: visible;
+    z-index: 1;
+    will-change: transform;
+    transition: transform 320ms cubic-bezier(0.25, 1, 0.5, 1);
+  }
+  .variant-gallery.is-incoming,
+  :global(.variant-gallery.is-incoming) {
+    z-index: 2;
+  }
+  .gallery-slide,
+  :global(.gallery-slide) {
+    flex: 0 0 100%;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+  }
+  .gallery-slide img,
+  :global(.gallery-slide img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    pointer-events: none;
+    -webkit-user-drag: none;
+    user-select: none;
+  }
+  .gallery-controls,
+  :global(.gallery-controls) {
+    position: absolute;
+    bottom: 14px;
+    left: 14px;
+    right: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 10;
+  }
+  .gallery-btn,
+  :global(.gallery-btn) {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(0,0,0,0.1);
+    color: var(--color-ink);
+    font-size: 18px;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    transition: transform 150ms ease, background 150ms ease, opacity 150ms ease;
+  }
+  .gallery-btn:hover:not(:disabled),
+  :global(.gallery-btn:hover:not(:disabled)) {
+    background: white;
+    transform: scale(1.1);
+  }
+  .gallery-btn:disabled,
+  .gallery-btn.is-disabled,
+  :global(.gallery-btn:disabled),
+  :global(.gallery-btn.is-disabled) {
+    opacity: 0.25;
+    cursor: not-allowed;
+    pointer-events: none;
+    transform: none !important;
+  }
+  .gallery-dots,
+  :global(.gallery-dots) {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .gallery-dots .dot,
+  :global(.gallery-dots .dot) {
+    width: 8px;
+    height: 8px;
+    min-width: 8px;
+    min-height: 8px;
+    aspect-ratio: 1 / 1;
+    padding: 0;
+    margin: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.6);
+    border: none;
+    display: block;
+    flex-shrink: 0;
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    transition: transform 180ms ease, background 180ms ease;
+  }
+  .gallery-dots .dot.is-active,
+  :global(.gallery-dots .dot.is-active) {
+    background: white;
+    transform: scale(1.35);
+  }
+  .product-hero__badge {
+    position: absolute;
+    top: var(--space-3);
+    left: var(--space-3);
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-weight: 700;
+    z-index: 3;
+  }
+  .badge-available {
+    background: var(--color-coral);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+  }
+  .badge-coming {
+    background: var(--color-ink);
+    color: var(--color-bg);
+    padding: 5px 10px;
+    border-radius: 4px;
+  }
+  .lede {
+    font-size: 1.15rem;
+    color: var(--color-ink-soft);
+  }
+
+  /* Picker Sections */
+  .picker-section {
+    margin: var(--space-4) 0;
+    padding: var(--space-3) 0;
+    border-top: 1px solid var(--color-line);
+  }
+  .picker-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--color-ink);
+    margin-bottom: var(--space-2);
+  }
+  .size-pill-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .size-pill {
+    position: relative;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px 14px;
+    background: white;
+    border: 1.5px solid var(--color-line);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: border-color 150ms ease, background 150ms ease, transform 150ms ease;
+  }
+  .size-pill:hover:not(:disabled) {
+    border-color: var(--color-coral);
+    transform: translateY(-1px);
+  }
+  .size-pill.is-selected {
+    border-color: var(--color-coral);
+    background: color-mix(in srgb, var(--color-coral) 8%, white);
+    box-shadow: 0 0 0 2px var(--color-coral);
+  }
+  .size-pill--disabled {
+    opacity: 0.5;
+    background: var(--color-bg-soft);
+    border-color: var(--color-line);
+    border-style: dashed;
+    cursor: not-allowed;
+    user-select: none;
+  }
+  .size-pill--disabled:hover {
+    transform: none;
+    border-color: var(--color-muted);
+  }
+  .size-pill__tooltip {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    background: var(--color-ink);
+    color: white;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+    padding: 4px 8px;
+    border-radius: 4px;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 180ms ease, transform 180ms ease, visibility 180ms;
+    box-shadow: var(--shadow-soft);
+    z-index: 10;
+  }
+  .size-pill__tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 4px solid transparent;
+    border-top-color: var(--color-ink);
+  }
+  .size-pill--disabled:hover .size-pill__tooltip,
+  .size-pill--disabled:focus-visible .size-pill__tooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+  }
+  .size-pill__cm {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--color-ink);
+  }
+  .size-pill__in {
+    font-size: 11px;
+    color: var(--color-muted);
+  }
+
+  /* Visual Design Swatches */
+  .design-swatch-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .design-swatch {
+    padding: 3px;
+    background: white;
+    border: 2px solid var(--color-line);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: border-color 160ms ease, box-shadow 160ms ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .design-swatch:hover {
+    border-color: var(--color-coral);
+  }
+  .design-swatch.is-selected {
+    border-color: var(--color-coral);
+    box-shadow: 0 0 0 2px var(--color-coral);
+  }
+  .design-swatch.is-hidden {
+    display: none;
+  }
+  .design-swatch__thumb {
+    height: 48px;
+    width: auto;
+    aspect-ratio: var(--swatch-aspect, 4 / 3);
+    border-radius: 5px;
+    overflow: hidden;
+    background: var(--color-bg-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .design-swatch__thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .spec {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--space-3) 0;
+    border-top: 1px solid var(--color-line);
+    font-size: 15px;
+    gap: var(--space-3);
+  }
+  .spec__label { color: var(--color-muted); }
+  .spec__value { color: var(--color-ink); font-weight: 500; text-align: right; }
+  .product-hero__ctas {
+    display: flex;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+    margin-top: var(--space-4);
+  }
+  .note {
+    margin-top: var(--space-3);
+    color: var(--color-muted);
+    font-size: 13px;
+  }
+  .prose h2 { margin-top: var(--space-5); }
+</style>

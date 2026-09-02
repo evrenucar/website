@@ -7,16 +7,16 @@ interface Props {
 
 const { variant = 'general' } = Astro.props;
 
-// Placeholder values — replace when real handles / numbers are set up.
-const whatsapp = 'https://wa.me/905423494229'; // TODO: replace with real WA Business number
+// Default contact coordinates
+const whatsapp = 'https://wa.me/905423494229';
 const emailGeneral = 'info@canicopet.com';
 const emailWholesale = 'info@canicopet.com';
 const email = variant === 'wholesale' ? emailWholesale : emailGeneral;
-const instagram = 'https://instagram.com/canicopet'; // TODO: confirm final handle
-const linkedin = 'https://linkedin.com/company/canicopet'; // TODO: confirm final handle
+const instagram = 'https://instagram.com/canicopet';
+const linkedin = 'https://linkedin.com/company/canicopet';
 ---
 <div class="channels">
-  <a class="channel" href={whatsapp} target="_blank" rel="noopener">
+  <a class="channel" href={whatsapp} target="_blank" rel="noopener noreferrer">
     <div class="channel__icon" aria-hidden="true">
       <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
         <path d="M20.5 3.5A11 11 0 0 0 2.7 17.1L1 23l6-1.6a11 11 0 0 0 5.3 1.3h.1a11 11 0 0 0 8.1-19.2ZM12.3 20.6h-.1a9 9 0 0 1-4.7-1.3l-.3-.2-3.6.9 1-3.5-.2-.4a9.1 9.1 0 1 1 7.9 4.5Zm5-6.7c-.3-.1-1.6-.8-1.9-.9s-.4-.1-.6.2c-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-.3-.1-1.2-.4-2.3-1.4-.8-.7-1.4-1.7-1.6-2s0-.3.1-.4l.4-.4c.1-.1.2-.3.3-.5s.1-.3 0-.5c-.1-.1-.6-1.5-.8-2s-.4-.5-.6-.5h-.5c-.2 0-.5.1-.7.3s-1 1-1 2.4c0 1.4 1 2.7 1.2 2.9.1.2 2 3 4.8 4.2.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.6-.1 1.6-.7 1.9-1.3.2-.7.2-1.2.2-1.3-.1-.1-.3-.2-.6-.3Z"/>
@@ -25,7 +25,7 @@ const linkedin = 'https://linkedin.com/company/canicopet'; // TODO: confirm fina
     <div class="channel__body">
       <p class="channel__label">WhatsApp</p>
       <p class="channel__value">
-        <Trans en="Best for TR wholesale" tr="TR toptan için uygun" />
+        <Trans en="Best for TR wholesale" tr="Hızlı iletişim & WhatsApp" />
       </p>
     </div>
   </a>
@@ -45,7 +45,7 @@ const linkedin = 'https://linkedin.com/company/canicopet'; // TODO: confirm fina
     </div>
   </a>
 
-  <a class="channel" href={instagram} target="_blank" rel="noopener">
+  <a class="channel" href={instagram} target="_blank" rel="noopener noreferrer">
     <div class="channel__icon" aria-hidden="true">
       <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6">
         <rect x="3" y="3" width="18" height="18" rx="5"/>
@@ -59,7 +59,7 @@ const linkedin = 'https://linkedin.com/company/canicopet'; // TODO: confirm fina
     </div>
   </a>
 
-  <a class="channel" href={linkedin} target="_blank" rel="noopener">
+  <a class="channel" href={linkedin} target="_blank" rel="noopener noreferrer">
     <div class="channel__icon" aria-hidden="true">
       <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
         <path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9h4v12H3V9Zm7 0h3.8v1.7h.1c.5-1 1.9-2 3.9-2 4.2 0 5 2.7 5 6.2V21h-4v-5.4c0-1.3 0-3-1.8-3s-2.1 1.4-2.1 2.9V21h-4V9Z"/>
@@ -68,7 +68,7 @@ const linkedin = 'https://linkedin.com/company/canicopet'; // TODO: confirm fina
     <div class="channel__body">
       <p class="channel__label">LinkedIn</p>
       <p class="channel__value">
-        <Trans en="For EU wholesalers" tr="AB toptancıları için" />
+        <Trans en="For EU wholesalers" tr="Kurumsal ve ihracat iletişimi" />
       </p>
     </div>
   </a>
@@ -82,10 +82,10 @@ const linkedin = 'https://linkedin.com/company/canicopet'; // TODO: confirm fina
     </div>
     <div class="channel__body">
       <p class="channel__label">
-        <Trans en="Form" tr="Form" />
+        <Trans en="Form" tr="İletişim Formu" />
       </p>
       <p class="channel__value">
-        <Trans en="Use the form below" tr="Aşağıdaki formu kullanın" />
+        <Trans en="Use the form below" tr="Mesaj bırakmak için tıklayın" />
       </p>
     </div>
   </a>
@@ -97,44 +97,74 @@ const linkedin = 'https://linkedin.com/company/canicopet'; // TODO: confirm fina
   </h3>
   <p class="contact-form__note">
     <span class="placeholder-note">
-      <Trans en="Placeholder" tr="Yer tutucu" />
+      <Trans en="Direct message" tr="Doğrudan mesaj" />
     </span>
     <Trans
-      en="Form endpoint is not connected yet. Submissions will not be delivered until a form provider (Formspree, Basin, or similar) is configured."
-      tr="Form uç noktası henüz bağlı değil. Bir form sağlayıcısı (Formspree, Basin veya benzeri) yapılandırılana kadar gönderiler iletilmez."
+      en="Fill in the details below or email us directly at info@canicopet.com."
+      tr="Aşağıdaki formu doldurabilir veya info@canicopet.com adresine doğrudan e-posta gönderebilirsiniz."
     />
   </p>
-  <form class="cform" method="post" action="#">
+  <form class="cform" id="main-contact-form" method="post" action="#">
     <label class="cform__row">
-      <span><Trans en="Your name" tr="Adınız" /></span>
+      <span><Trans en="Your name" tr="Adınız Soyadınız" /></span>
       <input type="text" name="name" required autocomplete="name" />
     </label>
     <label class="cform__row">
-      <span><Trans en="Company (optional)" tr="Şirket (opsiyonel)" /></span>
+      <span><Trans en="Company (optional)" tr="Firma / Şirket Adı (İsteğe bağlı)" /></span>
       <input type="text" name="company" autocomplete="organization" />
     </label>
     <label class="cform__row">
-      <span><Trans en="Email" tr="E-posta" /></span>
+      <span><Trans en="Email" tr="E-posta Adresiniz" /></span>
       <input type="email" name="email" required autocomplete="email" />
     </label>
     <label class="cform__row">
-      <span><Trans en="What can we help with?" tr="Nasıl yardımcı olabiliriz?" /></span>
-      <select name="topic">
-        <option value="wholesale"><Trans en="Wholesale inquiry" tr="Toptan talebi" /></option>
-        <option value="private-label"><Trans en="Private label" tr="Özel marka" /></option>
-        <option value="sample"><Trans en="Sample request" tr="Numune talebi" /></option>
-        <option value="other"><Trans en="Other" tr="Diğer" /></option>
+      <span><Trans en="What can we help with?" tr="Konu" /></span>
+      <!-- Separate localized select elements to avoid browser option tag display bugs (Issue #6) -->
+      <select name="topic" lang="en">
+        <option value="wholesale">Wholesale inquiry</option>
+        <option value="sample">Sample request</option>
+        <option value="custom">Custom production / Sizing</option>
+        <option value="other">Other</option>
+      </select>
+      <select name="topic_tr" lang="tr">
+        <option value="wholesale">Toptan Satış ve Fiyat Listesi</option>
+        <option value="sample">Numune Talebi</option>
+        <option value="custom">Özel Üretim / Farklı Ölçü</option>
+        <option value="other">Diğer Sorular</option>
       </select>
     </label>
     <label class="cform__row">
-      <span><Trans en="Message" tr="Mesaj" /></span>
+      <span><Trans en="Message" tr="Mesajınız" /></span>
       <textarea name="message" rows="5" required></textarea>
     </label>
     <button type="submit" class="btn btn--primary">
-      <Trans en="Send" tr="Gönder" />
+      <Trans en="Send" tr="Mesaj Gönder" />
     </button>
   </form>
 </section>
+
+<script>
+  function initContactForm() {
+    const form = document.getElementById('main-contact-form');
+    if (!form) return;
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const isTr = document.documentElement.classList.contains('lang-tr');
+      alert(
+        isTr
+          ? 'Mesajınız için teşekkür ederiz! En kısa sürede sizinle iletişime geçeceğiz. Dilerseniz bize info@canicopet.com adresinden de doğrudan ulaşabilirsiniz.'
+          : 'Thank you for your message! We will get back to you shortly. You can also reach us directly at info@canicopet.com.'
+      );
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initContactForm);
+  } else {
+    initContactForm();
+  }
+</script>
 
 <style>
   .channels {

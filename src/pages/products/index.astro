@@ -4,10 +4,80 @@ import ProductCard from '../../components/ProductCard.astro';
 import Trans from '../../components/Trans.astro';
 import { base } from '../../lib/paths';
 import { getCollection } from 'astro:content';
+import { formatShortDimension } from '../../lib/dimensions';
+import { getVariantAssets } from '../../lib/variants';
 
 const products = (await getCollection('products'))
   .filter((p) => p.data.status !== 'archived')
   .sort((a, b) => a.data.order - b.data.order);
+
+const groupedProducts = products.map((p) => {
+  const heroImage = p.data.images[0];
+  const variantItems = p.data.variants
+    .map((v) => {
+      const assets = getVariantAssets(p.id, v.sku, heroImage);
+      return assets.thumbnail ? { image: assets.thumbnail, sku: v.sku } : null;
+    })
+    .filter((item): item is NonNullable<typeof item> => Boolean(item));
+
+  return {
+    id: p.id,
+    name: p.data.name,
+    nameTr: p.data.name_tr,
+    tagline: p.data.tagline,
+    taglineTr: p.data.tagline_tr,
+    heroImage,
+    variantItems,
+    sizeCount: p.data.sizes.length,
+    variantCount: p.data.variants.length,
+    status: (p.data.status === 'available' ? 'available' : 'coming-soon') as 'available' | 'coming-soon',
+  };
+});
+
+// Build flattened variants list
+const allVariants = products.flatMap((p) => {
+  const heroImage = p.data.images[0];
+  if (p.data.variants.length === 0) {
+    const sizeObj = p.data.sizes[0];
+    return [
+      {
+        productId: p.id,
+        productName: p.data.name,
+        productNameTr: p.data.name_tr,
+        sku: p.data.sku,
+        size_id: sizeObj?.id ?? 1,
+        sizeLabel: sizeObj ? formatShortDimension(sizeObj) : '',
+        designAspectRatio: sizeObj ? `${sizeObj.w} / ${sizeObj.l}` : undefined,
+        categories: p.data.categories,
+        status: (p.data.status === 'available' ? 'available' : 'coming-soon') as 'available' | 'coming-soon',
+        price: p.data.price ? `${p.data.price.amount} ${p.data.price.currency}` : undefined,
+        thumbnail: heroImage,
+        design: undefined,
+        gallery: p.data.images.length > 0 ? p.data.images : [heroImage].filter(Boolean),
+      },
+    ];
+  }
+
+  return p.data.variants.map((v) => {
+    const sizeObj = p.data.sizes.find((s) => s.id === v.size_id);
+    const assets = getVariantAssets(p.id, v.sku, heroImage);
+    return {
+      productId: p.id,
+      productName: p.data.name,
+      productNameTr: p.data.name_tr,
+      sku: v.sku,
+      size_id: v.size_id,
+      sizeLabel: sizeObj ? formatShortDimension(sizeObj) : '',
+      designAspectRatio: sizeObj ? `${sizeObj.w} / ${sizeObj.l}` : undefined,
+      categories: p.data.categories,
+      status: (v.status === 'available' ? 'available' : 'coming-soon') as 'available' | 'coming-soon',
+      price: v.price ? `${v.price.amount} ${v.price.currency}` : undefined,
+      thumbnail: assets.thumbnail,
+      design: assets.design,
+      gallery: assets.gallery,
+    };
+  });
+});
 ---
 <BaseLayout
   title="Cat litter mats and scratching pads"
@@ -17,28 +87,183 @@ const products = (await getCollection('products'))
 >
   <section class="section">
     <div class="container">
-      <p class="eyebrow"><Trans en="Products" tr="Ürünler" /></p>
-      <h1><Trans en="Our products." tr="Ürünlerimiz." /></h1>
-      <p style="max-width: 60ch; color: var(--color-ink-soft);">
-        <Trans
-          en="Textile mats and pads for cats and dogs. Two products ship today. Feeding mats, water mats, and floor protection mats are in production."
-          tr="Kediler ve köpekler için tekstil paspaslar ve pedler. İki ürün bugün gönderime hazır. Mama paspası, su paspası ve zemin koruma paspası üretim aşamasında."
-        />
-      </p>
+      <div class="products-header">
+        <div>
+          <p class="eyebrow"><Trans en="Products" tr="Ürünler" /></p>
+          <h1><Trans en="Our collection." tr="Koleksiyonumuz" /></h1>
+          <p class="products-desc">
+            <Trans
+              en="Functional textile mats and scratching pads for pets. Designed and manufactured at our Ankara workshop."
+              tr="Kedi ve köpekler için dayanıklı, pratik ve şık tekstil paspasları. Ankara'daki atölyemizde üretiyoruz."
+            />
+          </p>
+        </div>
 
-      <div class="grid grid--3" style="margin-top: 40px;">
-        {products.map((p) => (
+        <!-- View Mode Toggle -->
+        <div class="view-toggle" role="tablist" aria-label="Catalog view mode">
+          <button
+            type="button"
+            class="view-toggle__btn is-active"
+            id="btn-view-grouped"
+            role="tab"
+            aria-selected="true"
+          >
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+              <rect x="3" y="3" width="8" height="8" rx="2" />
+              <rect x="13" y="3" width="8" height="8" rx="2" />
+              <rect x="3" y="13" width="8" height="8" rx="2" />
+              <rect x="13" y="13" width="8" height="8" rx="2" />
+            </svg>
+            <Trans en="Product Models" tr="Ürün Modelleri" />
+          </button>
+          <button
+            type="button"
+            class="view-toggle__btn"
+            id="btn-view-flattened"
+            role="tab"
+            aria-selected="false"
+          >
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+              <rect x="3" y="4" width="18" height="4" rx="1" />
+              <rect x="3" y="10" width="18" height="4" rx="1" />
+              <rect x="3" y="16" width="18" height="4" rx="1" />
+            </svg>
+            <Trans en="All Variations" tr="Tüm Desenler" />
+          </button>
+        </div>
+      </div>
+
+      <!-- Grouped View (Default) -->
+      <div class="grid grid--3 catalog-grid" id="grid-grouped" style="margin-top: 40px;">
+        {groupedProducts.map((p) => (
           <ProductCard
             href={`${base}/products/${p.id}`}
-            name={p.data.name}
-            nameTr={p.data.name_tr}
-            tagline={p.data.tagline}
-            taglineTr={p.data.tagline_tr}
-            image={p.data.images[0]}
-            status={p.data.status === 'available' ? 'available' : 'coming-soon'}
+            name={p.name}
+            nameTr={p.nameTr}
+            tagline={p.tagline}
+            taglineTr={p.taglineTr}
+            image={p.heroImage}
+            gallery={p.variantItems}
+            showDots={false}
+            randomCycle={true}
+            cycleOnHoverOnly={false}
+            sizeCount={p.sizeCount}
+            variantCount={p.variantCount}
+            status={p.status}
+          />
+        ))}
+      </div>
+
+      <!-- Flattened View (All Variations) -->
+      <div class="grid grid--3 catalog-grid is-hidden" id="grid-flattened" style="margin-top: 40px;">
+        {allVariants.map((v) => (
+          <ProductCard
+            href={`${base}/products/${v.productId}?sku=${v.sku}`}
+            name={v.productName}
+            nameTr={v.productNameTr}
+            sku={v.sku}
+            image={v.thumbnail}
+            gallery={v.gallery}
+            cycleOnHoverOnly={true}
+            sizeLabel={v.sizeLabel}
+            price={v.price}
+            status={v.status === 'available' ? 'available' : 'coming-soon'}
           />
         ))}
       </div>
     </div>
   </section>
 </BaseLayout>
+
+<script>
+  function initCatalogToggle() {
+    const btnGrouped = document.getElementById('btn-view-grouped');
+    const btnFlattened = document.getElementById('btn-view-flattened');
+    const gridGrouped = document.getElementById('grid-grouped');
+    const gridFlattened = document.getElementById('grid-flattened');
+
+    if (!btnGrouped || !btnFlattened || !gridGrouped || !gridFlattened) return;
+
+    btnGrouped.addEventListener('click', () => {
+      btnGrouped.classList.add('is-active');
+      btnGrouped.setAttribute('aria-selected', 'true');
+      btnFlattened.classList.remove('is-active');
+      btnFlattened.setAttribute('aria-selected', 'false');
+
+      gridGrouped.classList.remove('is-hidden');
+      gridFlattened.classList.add('is-hidden');
+
+      gridGrouped.querySelectorAll('.product-card').forEach((card) => {
+        card.dispatchEvent(new CustomEvent('card-show'));
+      });
+    });
+
+    btnFlattened.addEventListener('click', () => {
+      btnFlattened.classList.add('is-active');
+      btnFlattened.setAttribute('aria-selected', 'true');
+      btnGrouped.classList.remove('is-active');
+      btnGrouped.setAttribute('aria-selected', 'false');
+
+      gridFlattened.classList.remove('is-hidden');
+      gridGrouped.classList.add('is-hidden');
+
+      gridFlattened.querySelectorAll('.product-card').forEach((card) => {
+        card.dispatchEvent(new CustomEvent('card-show'));
+      });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCatalogToggle);
+  } else {
+    initCatalogToggle();
+  }
+</script>
+
+<style>
+  .products-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+  }
+  .products-desc {
+    max-width: 60ch;
+    color: var(--color-ink-soft);
+    margin-bottom: 0;
+  }
+  .view-toggle {
+    display: inline-flex;
+    background: var(--color-bg-soft);
+    padding: 4px;
+    border-radius: var(--radius);
+    border: 1px solid var(--color-line);
+    gap: 4px;
+  }
+  .view-toggle__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-muted);
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: color 150ms ease, background 150ms ease, box-shadow 150ms ease;
+  }
+  .view-toggle__btn:hover {
+    color: var(--color-ink);
+  }
+  .view-toggle__btn.is-active {
+    color: var(--color-ink);
+    background: white;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  }
+  .catalog-grid.is-hidden {
+    display: none !important;
+  }
+</style>

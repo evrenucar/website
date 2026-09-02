@@ -1,0 +1,15 @@
+# CATEGORY TEMPLATE
+# ─────────────────────────────────────────────────────────────────────────────
+# HOW TO USE
+# 1. Copy this file to:  src/content/categories/<slug>.yaml
+#    e.g. src/content/categories/birds.yaml
+# 2. Fill in the fields below
+# 3. Reference from product frontmatter: categories: [<slug>]
+# 4. Optionally create a category page: src/pages/products/<slug>.astro
+# ─────────────────────────────────────────────────────────────────────────────
+
+name: Category Name               # ← REQUIRED. English display name
+name_tr: Kategori Adı             # Optional. Turkish display name
+description: English description of this product category.
+description_tr: Bu ürün kategorisinin Türkçe açıklaması.
+order: 100                        # Lower number = appears first in navigation

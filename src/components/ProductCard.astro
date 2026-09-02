@@ -1,6 +1,13 @@
 ---
 import Trans from './Trans.astro';
+import { Image, getImage } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
 import { base } from '../lib/paths';
+
+export interface GalleryItem {
+  image: ImageMetadata | string;
+  sku?: string;
+}
 
 interface Props {
   href: string;
@@ -8,8 +15,18 @@ interface Props {
   nameTr?: string;
   tagline?: string;
   taglineTr?: string;
-  image?: string;
+  image?: ImageMetadata | string;
+  gallery?: (ImageMetadata | string | GalleryItem)[];
+  showDots?: boolean;
+  randomCycle?: boolean;
+  cycleOnHoverOnly?: boolean;
+  designImage?: ImageMetadata;
+  designAspectRatio?: string;
+  sku?: string;
   price?: string;
+  sizeLabel?: string;
+  sizeCount?: number;
+  variantCount?: number;
   status?: 'available' | 'coming-soon';
 }
 
@@ -20,13 +37,118 @@ const {
   tagline,
   taglineTr,
   image = `${base}/product-placeholder.svg`,
+  gallery = [],
+  showDots = true,
+  randomCycle = false,
+  cycleOnHoverOnly = false,
+  designImage,
+  designAspectRatio,
+  sku,
   price,
+  sizeLabel,
+  sizeCount,
+  variantCount,
   status = 'coming-soon',
 } = Astro.props;
+
+// Normalize slide items with image and optional SKU
+const rawSlides = gallery.length > 0 ? gallery : [image];
+const slidesList = rawSlides.map((item) => {
+  if (typeof item === 'object' && item !== null && 'image' in item) {
+    return { img: (item as GalleryItem).image, sku: (item as GalleryItem).sku };
+  }
+  return { img: item as (ImageMetadata | string), sku: undefined };
+});
+
+// Pre-optimize WebP URLs for all gallery slides at build time
+const optimizedSlides = await Promise.all(
+  slidesList.map(async (item) => {
+    let url = typeof item.img === 'string' ? item.img : '';
+    if (typeof item.img === 'object') {
+      const opt = await getImage({ src: item.img, width: 600, height: 450, quality: 80, format: 'webp' });
+      url = opt.src;
+    }
+    return { url, sku: item.sku };
+  })
+);
+
+const initialSlide = optimizedSlides[0] || { url: `${base}/product-placeholder.svg`, sku: undefined };
 ---
-<a class="product-card" href={href}>
-  <div class="product-card__media">
-    <img src={image} alt={`${name} product image`} loading="lazy" />
+<a
+  class="product-card"
+  href={href}
+  data-base-href={href}
+  data-has-gallery={optimizedSlides.length > 1 ? 'true' : 'false'}
+  data-random-cycle={randomCycle ? 'true' : 'false'}
+  data-cycle-mode={cycleOnHoverOnly ? 'hover-only' : 'auto'}
+>
+  <div
+    class="product-card__media"
+    data-gallery={optimizedSlides.length > 1 ? JSON.stringify(optimizedSlides) : undefined}
+  >
+    <!-- Lightweight dual-layer crossfade container: only 2 img elements instead of dozens -->
+    <div class="product-card__slide is-active" data-layer="front">
+      <img
+        class="product-card__img product-card__img--front"
+        src={initialSlide.url}
+        alt={name}
+        loading="lazy"
+        decoding="async"
+      />
+    </div>
+    <div class="product-card__slide" data-layer="back">
+      <img
+        class="product-card__img product-card__img--back"
+        src={initialSlide.url}
+        alt={name}
+        loading="lazy"
+        decoding="async"
+      />
+    </div>
+
+    <!-- Inline synchronous parser script: Immediately selects random initial variation BEFORE first paint -->
+    {randomCycle && !cycleOnHoverOnly && optimizedSlides.length > 1 && (
+      <script is:inline>
+        (function() {
+          try {
+            var script = document.currentScript;
+            if (!script) return;
+            var card = script.closest('.product-card');
+            if (!card) return;
+            var media = card.querySelector('.product-card__media');
+            if (!media) return;
+            var raw = media.getAttribute('data-gallery');
+            if (!raw) return;
+            var slides = JSON.parse(raw);
+            if (!slides || slides.length <= 1) return;
+            
+            var randIdx = Math.floor(Math.random() * slides.length);
+            var chosen = slides[randIdx];
+            var frontImg = card.querySelector('.product-card__img--front');
+            if (frontImg && chosen && chosen.url) {
+              frontImg.src = chosen.url;
+              card.setAttribute('data-current-idx', randIdx);
+              if (chosen.sku) {
+                var baseHref = card.getAttribute('data-base-href') || card.getAttribute('href') || '';
+                var sep = baseHref.indexOf('?') === -1 ? '?' : '&';
+                card.setAttribute('href', baseHref + sep + 'sku=' + chosen.sku);
+              }
+            }
+          } catch(e) {}
+        })();
+      </script>
+    )}
+
+    {showDots && optimizedSlides.length > 1 && (
+      <div class="product-card__dots-container" aria-hidden="true">
+        <div class="product-card__dots-track">
+          {optimizedSlides.map((_, idx) => (
+            <span class={`dot ${idx === 0 ? 'is-active' : ''}`} data-dot-index={idx} />
+          ))}
+        </div>
+      </div>
+    )}
+
     {status === 'coming-soon' && (
       <span class="product-card__badge">
         <Trans en="Coming soon" tr="Yakında" />
@@ -34,11 +156,23 @@ const {
     )}
     {status === 'available' && (
       <span class="product-card__badge product-card__badge--available">
-        <Trans en="Available now" tr="Şimdi satışta" />
+        <Trans en="Available now" tr="Satışta" />
       </span>
     )}
+
+    {designImage && (
+      <div
+        class="product-card__swatch"
+        title="Print design"
+        style={designAspectRatio ? `aspect-ratio: ${designAspectRatio}; width: auto; height: 38px;` : undefined}
+      >
+        <Image src={designImage} alt="Design swatch" width={80} height={80} quality={80} loading="lazy" decoding="async" />
+      </div>
+    )}
   </div>
+
   <div class="product-card__body">
+    {sku && <p class="product-card__sku">SKU {sku}</p>}
     <h3 class="product-card__name">
       <span lang="en">{name}</span>{nameTr && <span lang="tr">{nameTr}</span>}
     </h3>
@@ -47,24 +181,196 @@ const {
         <span lang="en">{tagline}</span>{taglineTr && <span lang="tr">{taglineTr}</span>}
       </p>
     )}
-    {price && <p class="product-card__price">{price}</p>}
+    
+    <div class="product-card__meta">
+      {sizeCount !== undefined && sizeCount > 0 ? (
+        <span class="product-card__size">
+          {sizeCount} <Trans en={sizeCount > 1 ? "sizes" : "size"} tr="ölçü" />
+        </span>
+      ) : sizeLabel ? (
+        <span class="product-card__size">{sizeLabel}</span>
+      ) : null}
+      {variantCount !== undefined && variantCount > 1 && (
+        <span class="product-card__variants">
+          {variantCount} <Trans en="variations" tr="desen seçeneği" />
+        </span>
+      )}
+      {price && <span class="product-card__price">{price}</span>}
+    </div>
   </div>
 </a>
 
+<script>
+  // Automatic image cycling on cards with pause-on-hover, random transitions, direct variation linking & sliding-window dots
+  function initCardAutoCycles() {
+    const cards = document.querySelectorAll<HTMLElement>('.product-card[data-has-gallery="true"]');
+    
+    cards.forEach((card, cardIdx) => {
+      let intervalId: number | null = null;
+      let activeLayer: 'front' | 'back' = 'front';
+
+      const baseHref = card.getAttribute('data-base-href') || card.getAttribute('href') || '';
+      const isRandom = card.getAttribute('data-random-cycle') === 'true';
+      const cycleMode = card.getAttribute('data-cycle-mode') || 'auto';
+      const isHoverOnly = cycleMode === 'hover-only';
+      const media = card.querySelector<HTMLElement>('.product-card__media');
+      const rawGallery = media?.getAttribute('data-gallery');
+      const slides: { url: string; sku?: string }[] = rawGallery ? JSON.parse(rawGallery) : [];
+      const total = slides.length;
+
+      if (total <= 1) return;
+
+      const slideFront = card.querySelector<HTMLElement>('.product-card__slide[data-layer="front"]');
+      const slideBack = card.querySelector<HTMLElement>('.product-card__slide[data-layer="back"]');
+      const imgFront = card.querySelector<HTMLImageElement>('.product-card__img--front');
+      const imgBack = card.querySelector<HTMLImageElement>('.product-card__img--back');
+      const dotsContainer = card.querySelector<HTMLElement>('.product-card__dots-container');
+      const dotsTrack = card.querySelector<HTMLElement>('.product-card__dots-track');
+      const dots = dotsTrack ? dotsTrack.querySelectorAll<HTMLElement>('.dot') : [];
+
+      let currentIndex = Number(card.getAttribute('data-current-idx')) || 0;
+
+      const fadeWidth = 18;
+      const dotWidth = 6;
+      const dotGap = 5;
+      const step = dotWidth + dotGap;
+
+      function updateDotsPosition(idx: number) {
+        if (!dotsContainer || !dotsTrack || !dots.length) return;
+        
+        dots.forEach((d, i) => d.classList.toggle('is-active', i === idx));
+
+        const containerWidth = dotsContainer.clientWidth;
+        const trackWidth = total * step - dotGap;
+
+        if (!containerWidth || trackWidth <= (containerWidth - 2 * fadeWidth)) {
+          dotsContainer.style.justifyContent = 'center';
+          dotsTrack.style.transform = '';
+        } else {
+          dotsContainer.style.justifyContent = 'flex-start';
+          const maxTrackOffset = fadeWidth;
+          const minTrackOffset = (containerWidth - fadeWidth - dotWidth) - ((total - 1) * step);
+          const idealCenterOffset = (containerWidth / 2 - dotWidth / 2) - (idx * step);
+
+          const clampedOffset = Math.max(minTrackOffset, Math.min(maxTrackOffset, idealCenterOffset));
+          dotsTrack.style.transform = `translateX(${clampedOffset}px)`;
+        }
+      }
+
+      function showSlide(idx: number) {
+        currentIndex = (idx + total) % total;
+        const target = slides[currentIndex];
+        if (!target) return;
+
+        // Crossfade between layers
+        if (activeLayer === 'front') {
+          if (imgBack && slideBack && slideFront) {
+            imgBack.src = target.url;
+            slideBack.classList.add('is-active');
+            slideFront.classList.remove('is-active');
+            activeLayer = 'back';
+          }
+        } else {
+          if (imgFront && slideFront && slideBack) {
+            imgFront.src = target.url;
+            slideFront.classList.add('is-active');
+            slideBack.classList.remove('is-active');
+            activeLayer = 'front';
+          }
+        }
+
+        updateDotsPosition(currentIndex);
+
+        // Update direct SKU link
+        if (target.sku && baseHref) {
+          try {
+            const url = new URL(baseHref, window.location.origin);
+            url.searchParams.set('sku', target.sku);
+            card.setAttribute('href', url.pathname + url.search);
+          } catch {
+            card.setAttribute('href', `${baseHref}?sku=${target.sku}`);
+          }
+        }
+      }
+
+      function getNextIndex() {
+        if (isRandom && total > 1) {
+          const offset = Math.floor(Math.random() * (total - 1)) + 1;
+          return (currentIndex + offset) % total;
+        }
+        return (currentIndex + 1) % total;
+      }
+
+      function startCycle(intervalMs = 2600) {
+        pauseCycle();
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        intervalId = window.setInterval(() => {
+          showSlide(getNextIndex());
+        }, intervalMs);
+      }
+
+      function pauseCycle() {
+        if (intervalId !== null) {
+          clearInterval(intervalId);
+          intervalId = null;
+        }
+      }
+
+      if (isHoverOnly) {
+        // INVERSE BEHAVIOR: Does NOT scroll automatically; only scrolls when hovered over
+        card.addEventListener('pointerenter', () => {
+          showSlide(getNextIndex());
+          startCycle(1300);
+        });
+
+        card.addEventListener('pointerleave', () => {
+          pauseCycle();
+          showSlide(0);
+        });
+      } else {
+        // DEFAULT GROUPED BEHAVIOR: Auto-scrolls continuously, pauses on hover
+        card.addEventListener('pointerenter', () => {
+          pauseCycle();
+        });
+
+        card.addEventListener('pointerleave', () => {
+          startCycle(2600);
+        });
+
+        // Start auto-cycling with a subtle staggered delay per card
+        setTimeout(() => startCycle(2600), 600 + (cardIdx % 4) * 350);
+      }
+
+      // Update dots for current index
+      updateDotsPosition(currentIndex);
+
+      window.addEventListener('resize', () => updateDotsPosition(currentIndex));
+      card.addEventListener('card-show', () => updateDotsPosition(currentIndex));
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCardAutoCycles);
+  } else {
+    initCardAutoCycles();
+  }
+</script>
+
 <style>
   .product-card {
-    display: block;
+    display: flex;
+    flex-direction: column;
     text-decoration: none;
     color: inherit;
     background: white;
     border: 1.5px solid var(--color-line);
     border-radius: var(--radius-lg);
     overflow: hidden;
-    transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
+    transition: transform var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-base);
   }
   .product-card:hover {
+    transform: translateY(-3px);
     border-color: var(--color-coral);
-    transform: translateY(-4px) rotate(-0.4deg);
     box-shadow: var(--shadow-hover);
     color: inherit;
   }
@@ -74,48 +380,147 @@ const {
     aspect-ratio: 4 / 3;
     overflow: hidden;
   }
-  .product-card__media img {
+  .product-card__slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 350ms ease-in-out, visibility 350ms;
+  }
+  .product-card__slide.is-active {
+    opacity: 1;
+    visibility: visible;
+  }
+  .product-card__img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 400ms ease;
+    display: block;
   }
-  .product-card:hover .product-card__media img {
-    transform: scale(1.04);
+  .product-card__dots-container {
+    position: absolute;
+    bottom: 10px;
+    left: 14px;
+    right: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 2;
+    mask-image: linear-gradient(to right, transparent 0%, black 18px, black calc(100% - 18px), transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 18px, black calc(100% - 18px), transparent 100%);
+  }
+  .product-card__dots-track {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: transform 280ms ease;
+    will-change: transform;
+    flex-shrink: 0;
+  }
+  .product-card__dots-track .dot {
+    width: 6px;
+    height: 6px;
+    min-width: 6px;
+    min-height: 6px;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    display: block;
+    flex-shrink: 0;
+    padding: 0;
+    margin: 0;
+    background: rgba(255, 255, 255, 0.6);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    transition: transform 200ms ease, background 200ms ease;
+  }
+  .product-card__dots-track .dot.is-active {
+    background: white;
+    transform: scale(1.4);
+  }
+  .product-card__swatch {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 2px solid white;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+    z-index: 2;
+    background: white;
+  }
+  .product-card__swatch img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
   }
   .product-card__badge {
     position: absolute;
-    top: 14px;
-    left: 14px;
+    top: 10px;
+    left: 10px;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: 700;
     background: var(--color-ink);
     color: var(--color-bg);
-    font-family: var(--font-accent);
-    font-size: 11px;
-    letter-spacing: 1.2px;
-    text-transform: uppercase;
-    font-weight: 700;
-    padding: 6px 12px;
-    border-radius: 999px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    z-index: 2;
   }
   .product-card__badge--available {
     background: var(--color-coral);
+    color: white;
   }
   .product-card__body {
     padding: var(--space-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    flex: 1;
+  }
+  .product-card__sku {
+    font-size: 11px;
+    color: var(--color-muted);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
   }
   .product-card__name {
-    margin: 0 0 4px 0;
     font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--color-ink);
+    margin: 0;
   }
   .product-card__tagline {
-    margin: 0;
+    font-size: 0.9rem;
     color: var(--color-muted);
-    font-size: 14px;
+    margin: 0;
+    line-height: 1.35;
+  }
+  .product-card__meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-top: auto;
+    padding-top: var(--space-2);
+    font-size: 12px;
+    color: var(--color-muted);
+  }
+  .product-card__size {
+    font-weight: 600;
+    color: var(--color-ink-soft);
+  }
+  .product-card__variants {
+    font-size: 12px;
+    color: var(--color-muted);
   }
   .product-card__price {
-    margin: var(--space-3) 0 0 0;
-    color: var(--color-ink);
-    font-weight: 600;
+    margin-left: auto;
+    font-weight: 700;
+    color: var(--color-coral);
   }
 </style>

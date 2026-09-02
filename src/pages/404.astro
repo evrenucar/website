@@ -4,17 +4,21 @@ import Trans from '../components/Trans.astro';
 import { base } from '../lib/paths';
 ---
 <BaseLayout title="Not found" titleTr="Bulunamadı" description="Page not found." descriptionTr="Sayfa bulunamadı.">
+  <meta name="robots" content="noindex, nofollow" slot="head" />
   <section class="section">
     <div class="container container--narrow">
       <p class="eyebrow">404</p>
       <h1><Trans en="Page not found." tr="Sayfa bulunamadı." /></h1>
-      <p>
-        <Trans en="The URL may be old or misspelled." tr="Bağlantı eski ya da yanlış yazılmış olabilir." />
-        <Trans en="Go to the" tr="Şu adrese gidin:" />
-        <a href={`${base}/`}><Trans en="home page" tr="ana sayfa" /></a>
-        <Trans en="or the" tr="ya da" />
-        <a href={`${base}/products`}><Trans en="product list" tr="ürün listesi" /></a>.
-      </p>
+      <div lang="en">
+        <p>
+          The link you followed may be broken or outdated. Return to the <a href={`${base}/`}>home page</a> or browse our <a href={`${base}/products`}>products list</a>.
+        </p>
+      </div>
+      <div lang="tr">
+        <p>
+          Aradığınız sayfa taşınmış veya bağlantı eski olabilir. <a href={`${base}/`}>Ana sayfaya</a> dönebilir veya <a href={`${base}/products`}>ürünlerimize</a> göz atabilirsiniz.
+        </p>
+      </div>
     </div>
   </section>
 </BaseLayout>

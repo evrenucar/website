@@ -43,11 +43,11 @@ Read `.claude/skills/no-ai-slop/SKILL.md` (and `references/ai-writing-detection.
 
 - This directory is its own git repo. `git` commands run inside `website/` only.
 - Never copy internal ops content (leads, pricing, supplier names) from the parent repo — see `AGENTS.md`.
-- Content collection at `src/content/products/` is the product source of truth. The schema in `src/content/config.ts` is intentionally shaped for a future webshop.
+- Content collection at `src/content/products/` is the product source of truth. The schema in `src/content.config.ts` is intentionally shaped for a future webshop.
 
 ## Anchor decisions (from parent repo)
 
-- Primary tagline: **Designed for pets. Made for modern homes.**
+- Primary tagline: **For pets, for life.**
 - Product name: **Cat Litter Collecting Mat**.
 - Typography: Manrope + DM Sans (Google Fonts, loaded in BaseLayout).
 - Palette: from concept style sheet — coral / lavender / sunshine / teal / cobalt / pink on a warm cream base.

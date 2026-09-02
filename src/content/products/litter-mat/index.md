@@ -1,7 +1,7 @@
 ---
 sku: CP-LM-001
 name: Cat Litter Collecting Mat
-name_tr: Kedi Kumu Toplama Paspası
+name_tr: Kedi Kumu Paspası
 tagline: Catches litter before it reaches the floor.
 tagline_tr: Kumu yere dağılmadan yakalar, temizliği kolaylaştırır.
 description: >-
@@ -9,7 +9,7 @@ description: >-
   laminate traps litter off cat paws, while the nonwoven spunbond PP base
   keeps granules from reaching the floor. Made at Aktunc Tekstil in Ankara.
 description_tr: >-
-  Çift katmanlı kedi kumu toplama paspası. Özel petek delikli üst katman
+  Çift katmanlı kedi kumu paspası. Özel petek delikli üst katman
   patilere yapışan kumları hapsederken, alt taban kumların yere dökülmesini
   engeller. Ankara'daki atölyemizde üretilmektedir.
 status: available
@@ -35,6 +35,9 @@ tags:
   - litter
   - cat
   - home
+retail_links:
+  hepsiburada: https://www.hepsiburada.com/canico-kedi-kumu-paspasi-pm-HBC00000EXAMPLE
+  trendyol: https://www.trendyol.com/canico/kedi-kumu-toplama-paspasi-p-EXAMPLE
 variants:
   - sku: CNC450101
     size_id: 1
@@ -42,6 +45,8 @@ variants:
   - sku: CNC450102
     size_id: 1
     status: available
+    retail_links:
+      hepsiburada: https://www.hepsiburada.com/canico-kedi-kumu-paspasi-cnc450102-pm-HBC00000OVERRIDE
   - sku: CNC450103
     size_id: 1
     status: available

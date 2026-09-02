@@ -35,9 +35,6 @@ tags:
   - litter
   - cat
   - home
-retail_links:
-  hepsiburada: https://www.hepsiburada.com/canico-kedi-kumu-paspasi-pm-HBC00000EXAMPLE
-  trendyol: https://www.trendyol.com/canico/kedi-kumu-toplama-paspasi-p-EXAMPLE
 variants:
   - sku: CNC450101
     size_id: 1
@@ -45,8 +42,6 @@ variants:
   - sku: CNC450102
     size_id: 1
     status: available
-    retail_links:
-      hepsiburada: https://www.hepsiburada.com/canico-kedi-kumu-paspasi-cnc450102-pm-HBC00000OVERRIDE
   - sku: CNC450103
     size_id: 1
     status: available
@@ -56,6 +51,9 @@ variants:
   - sku: CNC450105
     size_id: 1
     status: available
+    retail_links:
+      trendyol: https://www.trendyol.com/pd/canico/kedi-kumu-paspasi-desenli-elekli-petek-yapili-yikanabilir-kedi-tuvalet-onu-paspasi-45x60-cm-p-1187472286?merchantId=112634
+      hepsiburada: https://www.hepsiburada.com/kedi-kumu-paspasi-desenli-elekli-petek-yapili-yikanabilir-kedi-tuvalet-onu-paspasi-45x60-cm-pm-HBC0000HYJDW5
   - sku: CNC450106
     size_id: 1
     status: available
@@ -65,6 +63,9 @@ variants:
   - sku: CNC450108
     size_id: 1
     status: available
+    retail_links:
+      trendyol: https://www.trendyol.com/pd/canico/kedi-kumu-paspasi-desenli-elekli-petek-yapili-yikanabilir-kedi-tuvalet-onu-paspasi-45x60-cm-p-1187461889?merchantId=112634
+      hepsiburada: https://www.hepsiburada.com/kedi-kumu-paspasi-desenli-elekli-petek-yapili-yikanabilir-kedi-tuvalet-onu-paspasi-45x60-cm-pm-HBC0000HYIXLM
   - sku: CNC450109
     size_id: 1
     status: available
@@ -74,12 +75,18 @@ variants:
   - sku: CNC450111
     size_id: 1
     status: available
+    retail_links:
+      trendyol: https://www.trendyol.com/pd/canico/kedi-kumu-paspasi-desenli-elekli-petek-yapili-yikanabilir-kedi-tuvalet-onu-paspasi-45x60-cm-p-1187545240?merchantId=112634
+      hepsiburada: https://www.hepsiburada.com/kedi-kumu-paspasi-desenli-elekli-petek-yapili-yikanabilir-kedi-tuvalet-onu-paspasi-45x60-cm-pm-HBC0000HYJFMF
   - sku: CNC450112
     size_id: 1
     status: available
   - sku: CNC450113
     size_id: 1
     status: available
+    retail_links:
+      trendyol: https://www.trendyol.com/pd/canico/kedi-kumu-paspasi-desenli-elekli-petek-yapili-yikanabilir-kedi-tuvalet-onu-paspasi-45x60-cm-p-1187930111?merchantId=112634
+      hepsiburada: https://www.hepsiburada.com/kedi-kumu-paspasi-desenli-elekli-petek-yapili-yikanabilir-kedi-tuvalet-onu-paspasi-45x60-cm-pm-HBC0000HYJ4P2
   - sku: CNC450114
     size_id: 1
     status: available
@@ -92,6 +99,9 @@ variants:
   - sku: CNC450117
     size_id: 1
     status: available
+    retail_links:
+      trendyol: https://www.trendyol.com/pd/canico/kedi-kumu-paspasi-desenli-elekli-petek-yapili-yikanabilir-kedi-tuvalet-onu-paspasi-45x60-cm-p-1187459876?merchantId=112634
+      hepsiburada: https://www.hepsiburada.com/kedi-kumu-paspasi-desenli-elekli-petek-yapili-yikanabilir-kedi-tuvalet-onu-paspasi-45x60-cm-pm-HBC0000HXZEMH
   - sku: CNC450118
     size_id: 1
     status: available
@@ -104,6 +114,8 @@ variants:
   - sku: CNC450121
     size_id: 1
     status: available
+    retail_links:
+      trendyol: https://www.trendyol.com/pd/canico/kedi-kumu-paspasi-desenli-elekli-petek-yapili-yikanabilir-kedi-tuvalet-onu-paspasi-45x60-cm-p-1187473973?merchantId=112634
   - sku: CNC450122
     size_id: 1
     status: available
@@ -116,12 +128,21 @@ variants:
   - sku: CNC450125
     size_id: 1
     status: available
+    retail_links:
+      trendyol: https://www.trendyol.com/pd/canico/kedi-kumu-paspasi-desenli-elekli-petek-yapili-yikanabilir-kedi-tuvalet-onu-paspasi-45x60-cm-p-1187540873?merchantId=112634
+      hepsiburada: https://www.hepsiburada.com/kedi-kumu-paspasi-desenli-elekli-petek-yapili-yikanabilir-kedi-tuvalet-onu-paspasi-45x60-cm-pm-HBC0000HYJRB8
   - sku: CNC450126
     size_id: 1
     status: available
+    retail_links:
+      trendyol: https://www.trendyol.com/pd/canico/kedi-kumu-paspasi-desenli-elekli-petek-yapili-yikanabilir-kedi-tuvalet-onu-paspasi-45x60-cm-p-1187549870?merchantId=112634
+      hepsiburada: https://www.hepsiburada.com/kedi-kumu-paspasi-desenli-elekli-petek-yapili-yikanabilir-kedi-tuvalet-onu-paspasi-45x60-cm-pm-HBC0000HYJB5E
   - sku: CNC450127
     size_id: 1
     status: available
+    retail_links:
+      trendyol: https://www.trendyol.com/pd/canico/kedi-kumu-paspasi-desenli-elekli-petek-yapili-yikanabilir-kedi-tuvalet-onu-paspasi-45x60-cm-p-1187466431?merchantId=112634
+      hepsiburada: https://www.hepsiburada.com/kedi-kumu-paspasi-desenli-elekli-petek-yapili-yikanabilir-kedi-tuvalet-onu-paspasi-45x60-cm-pm-HBC0000HYJCEN
   - sku: CNC450128
     size_id: 1
     status: available
@@ -155,39 +176,74 @@ variants:
   - sku: CNC9001
     size_id: 2
     status: available
+    retail_links:
+      trendyol: https://www.trendyol.com/pd/canico/kedi-kumu-paspasi-desenli-elekli-petek-yapili-yikanabilir-kedi-tuvalet-onu-paspasi-60x90-cm-p-1189328990?merchantId=112634
+      hepsiburada: https://www.hepsiburada.com/kedi-kumu-paspasi-desenli-elekli-petek-yapili-yikanabilir-kedi-tuvalet-onu-paspasi-60x90-cm-pm-HBC0000HYLCIV
   - sku: CNC9002
     size_id: 2
     status: available
+    retail_links:
+      trendyol: https://www.trendyol.com/pd/canico/kedi-kumu-paspasi-desenli-elekli-petek-yapili-yikanabilir-kedi-tuvalet-onu-paspasi-60x90-cm-p-1189333867?merchantId=112634
+      hepsiburada: https://www.hepsiburada.com/kedi-kumu-paspasi-desenli-elekli-petek-yapili-yikanabilir-kedi-tuvalet-onu-paspasi-60x90-cm-pm-HBC0000I0P4U1
   - sku: CNC9003
     size_id: 2
     status: available
+    retail_links:
+      trendyol: https://www.trendyol.com/pd/canico/kedi-kumu-paspasi-desenli-elekli-petek-yapili-yikanabilir-kedi-tuvalet-onu-paspasi-60x90-cm-p-1189334323?merchantId=112634
+      hepsiburada: https://www.hepsiburada.com/kedi-kumu-paspasi-desenli-elekli-petek-yapili-yikanabilir-kedi-tuvalet-onu-paspasi-60x90-cm-pm-HBC0000I0PYBZ
   - sku: CNC9004
     size_id: 2
     status: available
+    retail_links:
+      trendyol: https://www.trendyol.com/pd/canico/kedi-kumu-paspasi-desenli-elekli-petek-yapili-yikanabilir-kedi-tuvalet-onu-paspasi-60x90-cm-p-1189335251?merchantId=112634
+      hepsiburada: https://www.hepsiburada.com/kedi-kumu-paspasi-desenli-elekli-petek-yapili-yikanabilir-kedi-tuvalet-onu-paspasi-60x90-cm-pm-HBC0000I0PP98
   - sku: CNC9005
     size_id: 2
     status: available
+    retail_links:
+      trendyol: https://www.trendyol.com/pd/canico/kedi-kumu-paspasi-desenli-elekli-petek-yapili-yikanabilir-kedi-tuvalet-onu-paspasi-60x90-cm-p-1189335575?merchantId=112634
+      hepsiburada: https://www.hepsiburada.com/kedi-kumu-paspasi-desenli-elekli-petek-yapili-yikanabilir-kedi-tuvalet-onu-paspasi-60x90-cm-pm-HBC0000I0Q1Y3
   - sku: CNC9006
     size_id: 2
     status: available
+    retail_links:
+      trendyol: https://www.trendyol.com/pd/canico/kedi-kumu-paspasi-desenli-elekli-petek-yapili-yikanabilir-kedi-tuvalet-onu-paspasi-60x90-cm-p-1189336124?merchantId=112634
+      hepsiburada: https://www.hepsiburada.com/kedi-kumu-paspasi-desenli-elekli-petek-yapili-yikanabilir-kedi-tuvalet-onu-paspasi-60x90-cm-pm-HBC0000HYLF12
   - sku: CNC9007
     size_id: 2
     status: available
+    retail_links:
+      trendyol: https://www.trendyol.com/pd/canico/kedi-kumu-paspasi-desenli-elekli-petek-yapili-yikanabilir-kedi-tuvalet-onu-paspasi-60x90-cm-p-1189338302?merchantId=112634
+      hepsiburada: https://www.hepsiburada.com/kedi-kumu-paspasi-desenli-elekli-petek-yapili-yikanabilir-kedi-tuvalet-onu-paspasi-60x90-cm-pm-HBC0000HYLG2F
   - sku: CNC9008
     size_id: 2
     status: available
+    retail_links:
+      trendyol: https://www.trendyol.com/pd/canico/kedi-kumu-paspasi-desenli-elekli-petek-yapili-yikanabilir-kedi-tuvalet-onu-paspasi-60x90-cm-p-1189338901?merchantId=112634
+      hepsiburada: https://www.hepsiburada.com/kedi-kumu-paspasi-desenli-elekli-petek-yapili-yikanabilir-kedi-tuvalet-onu-paspasi-60x90-cm-pm-HBC0000I0POW7
   - sku: CNC9009
     size_id: 2
     status: available
+    retail_links:
+      trendyol: https://www.trendyol.com/pd/canico/kedi-kumu-paspasi-desenli-elekli-petek-yapili-yikanabilir-kedi-tuvalet-onu-paspasi-60x90-cm-p-1189339520?merchantId=112634
+      hepsiburada: https://www.hepsiburada.com/kedi-kumu-paspasi-desenli-elekli-petek-yapili-yikanabilir-kedi-tuvalet-onu-paspasi-60x90-cm-pm-HBC0000I0R0BO
   - sku: CNC9010
     size_id: 2
     status: available
+    retail_links:
+      trendyol: https://www.trendyol.com/pd/canico/kedi-kumu-paspasi-desenli-elekli-petek-yapili-yikanabilir-kedi-tuvalet-onu-paspasi-60x90-cm-p-1189340453?merchantId=112634
   - sku: CNC9011
     size_id: 2
     status: available
+    retail_links:
+      trendyol: https://www.trendyol.com/pd/canico/kedi-kumu-paspasi-desenli-elekli-petek-yapili-yikanabilir-kedi-tuvalet-onu-paspasi-60x90-cm-p-1189339960?merchantId=112634
+      hepsiburada: https://www.hepsiburada.com/kedi-kumu-paspasi-desenli-elekli-petek-yapili-yikanabilir-kedi-tuvalet-onu-paspasi-60x90-cm-pm-HBC0000I0PP0Q
   - sku: CNC9012
     size_id: 2
     status: available
+    retail_links:
+      trendyol: https://www.trendyol.com/pd/canico/kedi-kumu-paspasi-desenli-elekli-petek-yapili-yikanabilir-kedi-tuvalet-onu-paspasi-60x90-cm-p-1189340990?merchantId=112634
+      hepsiburada: https://www.hepsiburada.com/kedi-kumu-paspasi-desenli-elekli-petek-yapili-yikanabilir-kedi-tuvalet-onu-paspasi-60x90-cm-pm-HBC0000I0Q371
 ---
 
 <div lang="en">

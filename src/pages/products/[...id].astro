@@ -329,7 +329,7 @@ const productSchema = {
         </div>
 
         <!-- Inline synchronous parser script: Immediately updates gallery, SKU, size pills, and swatches BEFORE first paint -->
-        <script is:inline>
+        <script is:inline data-astro-rerun>
           (function() {
             try {
               var sku = new URLSearchParams(window.location.search).get('sku');
@@ -569,79 +569,54 @@ const productSchema = {
       }, 500);
     }
 
-    let activeSwitchToken = 0;
-
-    async function renderGalleryForVariant(sku: string) {
+    function renderGalleryForVariant(sku: string) {
       const variant = variantsMap.get(sku);
       if (!variant || !mediaContainer) return;
 
-      const switchToken = ++activeSwitchToken;
-      const primaryUrl = variant.gallery[0];
+      // Reset any active drag state
+      isPointerDown = false;
+      isHorizontalDrag = false;
+      dragDeltaX = 0;
+      mediaContainer.classList.remove('is-dragging');
 
-      // Decode the primary image first so the previous variant stays displayed
-      if (primaryUrl) {
-        await preloadImage(primaryUrl);
+      // Find or create the canonical gallery container
+      let gal = document.getElementById('active-gallery') as HTMLElement | null;
+      if (!gal) {
+        gal = mediaContainer.querySelector<HTMLElement>('.variant-gallery');
       }
+      if (!gal) {
+        gal = document.createElement('div');
+        gal.className = 'variant-gallery';
+        if (controlsContainer && controlsContainer.parentElement === mediaContainer) {
+          mediaContainer.insertBefore(gal, controlsContainer);
+        } else {
+          mediaContainer.appendChild(gal);
+        }
+      }
+      gal.id = 'active-gallery';
+      gal.classList.remove('is-incoming');
+      gal.style.opacity = '1';
+      gal.style.transition = 'transform 320ms cubic-bezier(0.25, 1, 0.5, 1)';
+      gal.style.transform = 'translateX(0%)';
+      gal.setAttribute('data-sku', sku);
 
-      // If user switched to another variant while loading, discard this render
-      if (switchToken !== activeSwitchToken) return;
+      // Clean up any extraneous or orphaned gallery elements
+      const allGalleries = mediaContainer.querySelectorAll<HTMLElement>('.variant-gallery');
+      allGalleries.forEach((g) => {
+        if (g !== gal) g.remove();
+      });
 
+      activeGalleryContainer = gal;
       currentSlideIdx = 0;
 
-      // Create incoming gallery layer placed on top of the old gallery
-      const newGallery = document.createElement('div');
-      newGallery.className = 'variant-gallery is-incoming';
-      newGallery.setAttribute('data-sku', sku);
-      newGallery.style.opacity = '0';
-      newGallery.style.transition = 'opacity 180ms ease';
-      newGallery.style.transform = 'translateX(0%)';
-
-      // Build slide elements
+      // Build slide elements synchronously
+      let html = '';
       variant.gallery.forEach((url, idx) => {
-        const slide = document.createElement('div');
-        slide.className = `gallery-slide ${idx === 0 ? 'is-active' : ''}`;
-        slide.setAttribute('data-slide-idx', String(idx));
-        
-        const img = document.createElement('img');
-        img.src = url;
-        img.alt = `${sku} photo ${idx + 1}`;
-        img.loading = idx === 0 ? 'eager' : 'lazy';
-        img.decoding = 'async';
-        
-        slide.appendChild(img);
-        newGallery.appendChild(slide);
+        html += `<div class="gallery-slide ${idx === 0 ? 'is-active' : ''}" data-slide-idx="${idx}">` +
+          `<img src="${url}" alt="${sku} photo ${idx + 1}" ${idx === 0 ? 'loading="eager" fetchpriority="high"' : 'loading="lazy"'} decoding="async" />` +
+          `</div>`;
       });
-
-      // Insert before controls so controls remain on top
-      if (controlsContainer && controlsContainer.parentElement === mediaContainer) {
-        mediaContainer.insertBefore(newGallery, controlsContainer);
-      } else {
-        mediaContainer.appendChild(newGallery);
-      }
-
-      // Set as active gallery immediately for click/dot events
-      activeGalleryContainer = newGallery;
-
-      // Trigger seamless opacity fade-in over the old variant
-      requestAnimationFrame(() => {
-        newGallery.style.opacity = '1';
-      });
-
-      // Clean up previous galleries only AFTER the new layer is fully opaque
-      setTimeout(() => {
-        if (switchToken === activeSwitchToken) {
-          const allGalleries = mediaContainer.querySelectorAll('.variant-gallery');
-          allGalleries.forEach((g) => {
-            if (g !== newGallery) {
-              g.remove();
-            }
-          });
-          newGallery.classList.remove('is-incoming');
-          newGallery.id = 'active-gallery';
-          newGallery.style.opacity = '';
-          newGallery.style.transition = '';
-        }
-      }, 200);
+      gal.innerHTML = html;
 
       // Update dots and controls visibility
       if (controlsContainer && dotsContainer) {
@@ -1001,6 +976,7 @@ const productSchema = {
     }
   }
 
+  document.addEventListener('astro:page-load', initVariantPicker);
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initVariantPicker);
   } else {

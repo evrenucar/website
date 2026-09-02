@@ -2,6 +2,7 @@
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import { base } from '../lib/paths';
+import { ClientRouter } from 'astro:transitions';
 import '../styles/global.css';
 
 interface Props {
@@ -45,14 +46,11 @@ const ogImageAbs = new URL(ogImage, Astro.site).toString();
 
     <link rel="preload" as="image" href={`${base}/caniko_logo_dark_color1080.png`} fetchpriority="high" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;700&display=swap"
-    />
+    <!-- Preload local variable fonts -->
+    <link rel="preload" href={`${base}/fonts/manrope-latin.woff2`} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={`${base}/fonts/dmsans-latin.woff2`} as="font" type="font/woff2" crossorigin />
+
+    <ClientRouter />
 
     <meta property="og:type" content="website" />
     <meta property="og:title" content={fullTitle} />
@@ -101,7 +99,7 @@ const ogImageAbs = new URL(ogImage, Astro.site).toString();
     <div id="egg-toast" class="egg-toast" role="status" aria-live="polite"></div>
 
     <script is:inline>
-      (function () {
+      function initLangSwitch() {
         var buttons = document.querySelectorAll('[data-lang-switch]');
         var defaultTitle = document.title;
         var metaTitleTr = document.querySelector('meta[name="title"][data-lang="tr"]');
@@ -130,7 +128,21 @@ const ogImageAbs = new URL(ogImage, Astro.site).toString();
           b.addEventListener('click', function () { setLang(b.getAttribute('data-lang-switch')); });
         });
         setLang(document.documentElement.classList.contains('lang-tr') ? 'tr' : 'en');
-      })();
+      }
+
+      document.addEventListener('astro:page-load', initLangSwitch);
+      document.addEventListener('astro:after-swap', function () {
+        try {
+          var saved = localStorage.getItem('canico-lang');
+          if (saved === 'tr') {
+            document.documentElement.classList.add('lang-tr');
+            document.documentElement.lang = 'tr';
+          } else if (saved === 'en') {
+            document.documentElement.classList.remove('lang-tr');
+            document.documentElement.lang = 'en';
+          }
+        } catch (e) {}
+      });
     </script>
 
     <script is:inline>

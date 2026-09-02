@@ -128,7 +128,7 @@ const logoUrl = Astro.site ? new URL(`${base}/caniko_logo_dark_color1080.png`, A
     </div>
   </section>
 
-  <script is:inline>
+  <script is:inline data-astro-rerun>
     (function () {
       var track = document.querySelector('.home-carousel__track');
       var dots = document.querySelectorAll('.home-carousel__dots button');
@@ -302,6 +302,10 @@ const logoUrl = Astro.site ? new URL(`${base}/caniko_logo_dark_color1080.png`, A
       }, { passive: true });
 
       start();
+
+      document.addEventListener('astro:before-swap', function () {
+        stop();
+      }, { once: true });
     })();
   </script>
 

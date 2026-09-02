@@ -14,16 +14,16 @@ const isActive = (p: string) => path === p || path.startsWith(p + '/');
 
     <nav id="site-nav-menu" class="site-nav__nav" data-open="false" aria-label="Primary">
       <ul class="site-nav__links">
-        <li><a href={`${base}/products`} class:list={[{ 'is-active': isActive('/products') }]}>
+        <li><a href={`${base}/products`} class:list={[{ 'is-active': isActive('/products') }]} aria-current={isActive('/products') ? 'page' : undefined}>
           <Trans en="Products" tr="Ürünler" />
         </a></li>
-        <li><a href={`${base}/wholesale`} class:list={[{ 'is-active': isActive('/wholesale') }]}>
+        <li><a href={`${base}/wholesale`} class:list={[{ 'is-active': isActive('/wholesale') }]} aria-current={isActive('/wholesale') ? 'page' : undefined}>
           <Trans en="Wholesale" tr="Toptan" />
         </a></li>
-        <li><a href={`${base}/about`} class:list={[{ 'is-active': isActive('/about') }]}>
+        <li><a href={`${base}/about`} class:list={[{ 'is-active': isActive('/about') }]} aria-current={isActive('/about') ? 'page' : undefined}>
           <Trans en="About" tr="Hakkımızda" />
         </a></li>
-        <li><a href={`${base}/contact`} class:list={[{ 'is-active': isActive('/contact') }]}>
+        <li><a href={`${base}/contact`} class:list={[{ 'is-active': isActive('/contact') }]} aria-current={isActive('/contact') ? 'page' : undefined}>
           <Trans en="Contact" tr="İletişim" />
         </a></li>
         <li class="site-nav__mobile-lang">
@@ -54,7 +54,7 @@ const isActive = (p: string) => path === p || path.startsWith(p + '/');
   </div>
 </header>
 
-<script is:inline>
+<script is:inline data-astro-rerun>
   (function () {
     var btn = document.querySelector('.site-nav__toggle');
     var panel = document.getElementById('site-nav-menu');
@@ -122,12 +122,14 @@ const isActive = (p: string) => path === p || path.startsWith(p + '/');
     max-height: 0;
     overflow: hidden;
     opacity: 0;
-    transition: max-height 260ms ease, opacity 200ms ease;
+    visibility: hidden;
+    transition: max-height 260ms ease, opacity 200ms ease, visibility 260ms ease;
     pointer-events: none;
   }
   .site-nav__nav[data-open="true"] {
     max-height: 560px;
     opacity: 1;
+    visibility: visible;
     pointer-events: auto;
     box-shadow: 0 10px 30px rgba(27,27,36,0.06);
   }
@@ -171,6 +173,7 @@ const isActive = (p: string) => path === p || path.startsWith(p + '/');
       max-height: none;
       overflow: visible;
       opacity: 1;
+      visibility: visible;
       pointer-events: auto;
       background: transparent;
       border: 0;

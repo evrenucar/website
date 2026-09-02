@@ -2,6 +2,7 @@
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import { base } from '../lib/paths';
+import { ClientRouter } from 'astro:transitions';
 import '../styles/global.css';
 
 interface Props {
@@ -21,17 +22,18 @@ const {
 } = Astro.props;
 
 const fullTitle = title === 'Canico Pet' ? title : `${title} · Canico Pet`;
+const fullTitleTr = titleTr ? (titleTr === 'Canico Pet' ? titleTr : `${titleTr} · Canico Pet`) : undefined;
 const canonical = new URL(Astro.url.pathname, Astro.site).toString();
 // og:image must be an absolute URL; most platforms also refuse SVG previews.
 const ogImageAbs = new URL(ogImage, Astro.site).toString();
 ---
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{fullTitle}</title>
-    {titleTr && <meta name="title" data-lang="tr" content={`${titleTr} · Canico Pet`} />}
+    {fullTitleTr && <meta name="title" data-lang="tr" content={fullTitleTr} />}
     <meta name="description" content={description} />
     {descriptionTr && <meta name="description" data-lang="tr" content={descriptionTr} />}
     <link rel="canonical" href={canonical} />
@@ -44,12 +46,11 @@ const ogImageAbs = new URL(ogImage, Astro.site).toString();
 
     <link rel="preload" as="image" href={`${base}/caniko_logo_dark_color1080.png`} fetchpriority="high" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;700&display=swap"
-    />
+    <!-- Preload local variable fonts -->
+    <link rel="preload" href={`${base}/fonts/manrope-latin.woff2`} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={`${base}/fonts/dmsans-latin.woff2`} as="font" type="font/woff2" crossorigin />
+
+    <ClientRouter />
 
     <meta property="og:type" content="website" />
     <meta property="og:title" content={fullTitle} />
@@ -85,8 +86,12 @@ const ogImageAbs = new URL(ogImage, Astro.site).toString();
     <slot name="head" />
   </head>
   <body>
+    <a href="#content" class="skip-link">
+      <span lang="en">Skip to content</span>
+      <span lang="tr">İçeriğe atla</span>
+    </a>
     <Nav />
-    <main id="content">
+    <main id="content" tabindex="-1">
       <slot />
     </main>
     <Footer />
@@ -94,8 +99,14 @@ const ogImageAbs = new URL(ogImage, Astro.site).toString();
     <div id="egg-toast" class="egg-toast" role="status" aria-live="polite"></div>
 
     <script is:inline>
-      (function () {
+      function initLangSwitch() {
         var buttons = document.querySelectorAll('[data-lang-switch]');
+        var defaultTitle = document.title;
+        var metaTitleTr = document.querySelector('meta[name="title"][data-lang="tr"]');
+        var metaDesc = document.querySelector('meta[name="description"]:not([data-lang])');
+        var metaDescTr = document.querySelector('meta[name="description"][data-lang="tr"]');
+        var defaultDesc = metaDesc ? metaDesc.getAttribute('content') : '';
+
         function setLang(lang) {
           var isTr = lang === 'tr';
           document.documentElement.classList.toggle('lang-tr', isTr);
@@ -104,12 +115,34 @@ const ogImageAbs = new URL(ogImage, Astro.site).toString();
           buttons.forEach(function (b) {
             b.setAttribute('aria-pressed', b.getAttribute('data-lang-switch') === (isTr ? 'tr' : 'en') ? 'true' : 'false');
           });
+          if (isTr && metaTitleTr) {
+            document.title = metaTitleTr.getAttribute('content') || defaultTitle;
+          } else {
+            document.title = defaultTitle;
+          }
+          if (metaDesc) {
+            metaDesc.setAttribute('content', (isTr && metaDescTr) ? (metaDescTr.getAttribute('content') || defaultDesc) : defaultDesc);
+          }
         }
         buttons.forEach(function (b) {
           b.addEventListener('click', function () { setLang(b.getAttribute('data-lang-switch')); });
         });
         setLang(document.documentElement.classList.contains('lang-tr') ? 'tr' : 'en');
-      })();
+      }
+
+      document.addEventListener('astro:page-load', initLangSwitch);
+      document.addEventListener('astro:after-swap', function () {
+        try {
+          var saved = localStorage.getItem('canico-lang');
+          if (saved === 'tr') {
+            document.documentElement.classList.add('lang-tr');
+            document.documentElement.lang = 'tr';
+          } else if (saved === 'en') {
+            document.documentElement.classList.remove('lang-tr');
+            document.documentElement.lang = 'en';
+          }
+        } catch (e) {}
+      });
     </script>
 
     <script is:inline>

@@ -21,10 +21,38 @@ import ContactChannels from '../components/ContactChannels.astro';
       </p>
 
       <ContactChannels variant="general" />
+
+      <address class="contact-location">
+        <h2><Trans en="Workshop and office" tr="Atölye ve İletişim Bilgileri" /></h2>
+        <p>
+          <strong>Aktunç Mefruşat Dekorasyon Tekstil İnşaat Taahhüt San. ve Tic. Ltd. Şti.</strong><br />
+          Batı Sitesi Mah. Gersan Sanayi Sitesi, Tahsin Kahraman Cad. No: 75<br />
+          Yenimahalle / Ankara, <Trans en="Türkiye" tr="Türkiye" />
+        </p>
+        <p>
+          <Trans en="Phone" tr="Telefon" />: <a href="tel:+905333308484">+90 533 330 84 84</a><br />
+          <Trans en="Email" tr="E-posta" />: <a href="mailto:info@canicopet.com">info@canicopet.com</a>
+        </p>
+      </address>
     </div>
   </section>
 </BaseLayout>
 
 <style>
   .lede { font-size: 1.15rem; color: var(--color-ink-soft); max-width: 60ch; }
+  .contact-location {
+    display: block;
+    font-style: normal;
+    margin-top: var(--space-6);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--color-line);
+  }
+  .contact-location h2 {
+    font-size: 1.25rem;
+    margin-bottom: var(--space-2);
+  }
+  .contact-location p {
+    color: var(--color-ink-soft);
+    line-height: 1.6;
+  }
 </style>

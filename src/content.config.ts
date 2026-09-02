@@ -56,6 +56,8 @@ const products = defineCollection({
       materials: z.array(z.string()).default([]),
       materials_tr: z.array(z.string()).optional(),
       tags: z.array(z.string()).default([]),
+      // Optional retail / marketplace links (e.g. hepsiburada, trendyol, or future platforms)
+      retail_links: z.record(z.string(), z.string()).optional(),
       // Variants — each SKU combination references a size_id
       // Variant assets are auto-discovered from variants/<sku>/ folder
       variants: z
@@ -72,6 +74,8 @@ const products = defineCollection({
             status: z
               .enum(['available', 'coming-soon', 'archived'])
               .default('available'),
+            // Variant-specific retail link overrides (inherits hero links when omitted)
+            retail_links: z.record(z.string(), z.string()).optional(),
           })
         )
         .default([]),

@@ -6,23 +6,43 @@ import Trans from '../components/Trans.astro';
   <section class="section">
     <div class="container container--narrow">
       <p class="eyebrow"><Trans en="Imprint" tr="Künye" /></p>
-      <h1><Trans en="Imprint" tr="Künye" /></h1>
-      <p class="placeholder-note">
-        <Trans en="Placeholder. Fill in confirmed legal entity details before launch." tr="Yer tutucu. Yayın öncesi doğrulanmış yasal şirket bilgileriyle doldurulacak." />
-      </p>
+      <h1><Trans en="Legal Notice" tr="Künye ve Şirket Bilgileri" /></h1>
 
-      <h2><Trans en="Publisher" tr="Firma / Yayıncı" /></h2>
+      <h2><Trans en="Company name" tr="Ticaret Unvanı" /></h2>
       <p>
-        Canico Pets<br />
-        c/o Aktunc Tekstil<br />
-        Ankara, <Trans en="Turkiye" tr="Türkiye" />
+        <strong>Aktunç Mefruşat Dekorasyon Tekstil İnşaat Taahhüt Sanayi ve Ticaret Limited Şirketi</strong><br />
+        <Trans en="Brand" tr="Marka" />: Canico Pet
       </p>
 
-      <h2><Trans en="Contact" tr="İletişim" /></h2>
-      <p><a href="mailto:info@canicopet.com">info@canicopet.com</a></p>
+      <address class="imprint-contact">
+        <h2><Trans en="Registered address" tr="Kayıtlı Şirket Adresi" /></h2>
+        <p>
+          Batı Sitesi Mah. Gersan Sanayi Sitesi, Tahsin Kahraman Cad. No: 75<br />
+          Yenimahalle / Ankara, <Trans en="Türkiye" tr="Türkiye" />
+        </p>
 
-      <h2><Trans en="Responsible for content" tr="İçerik Sorumlusu" /></h2>
-      <p><Trans en="TBD. Add responsible person and address per applicable law." tr="Yasal düzenlemelere uygun olarak yetkili kişi ve adres bilgisi eklenecektir." /></p>
+        <h2><Trans en="Contact" tr="İletişim Bilgileri" /></h2>
+        <p>
+          <Trans en="Phone" tr="Telefon" />: <a href="tel:+905333308484">+90 533 330 84 84</a><br />
+          <Trans en="Email" tr="E-posta" />: <a href="mailto:info@canicopet.com">info@canicopet.com</a><br />
+          <Trans en="Website" tr="Web Sitesi" />: <a href="https://canicopet.com">canicopet.com</a>
+        </p>
+      </address>
+
+      <h2><Trans en="Business activity" tr="Faaliyet Alanı" /></h2>
+      <p>
+        <Trans
+          en="Design, manufacturing, and wholesale of functional pet textiles, washable litter mats, furniture protectors, and industrial matting systems."
+          tr="Evcil hayvan tekstili, yıkanabilir kedi kumu paspasları, koltuk koruyucu tırmalama matları ve endüstriyel paspas sistemleri tasarımı, üretimi ve toptan satışı."
+        />
+      </p>
     </div>
   </section>
 </BaseLayout>
+
+<style>
+  .imprint-contact {
+    display: block;
+    font-style: normal;
+  }
+</style>

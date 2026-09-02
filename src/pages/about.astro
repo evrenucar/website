@@ -1,38 +1,82 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Trans from '../components/Trans.astro';
+import { base } from '../lib/paths';
 ---
 <BaseLayout
   title="About"
   titleTr="Hakkımızda"
-  description="Canico Pet is the pet lifestyle brand of Aktunc Tekstil, manufacturing in Ankara since 1968."
-  descriptionTr="Canico Pet, 1968 yılından bu yana Ankara'da tekstil üretimi yapan Aktunç Tekstil'in evcil hayvan markasıdır."
+  description="Canico Pet is the pet brand of Aktunc Tekstil, manufacturing textile mats and pads since 1968."
+  descriptionTr="Canico Pet, 1968 yılından bu yana üretim yapan Aktunç Tekstil'in evcil hayvan markasıdır."
 >
   <section class="section">
     <div class="container container--narrow">
       <p class="eyebrow"><Trans en="About" tr="Hakkımızda" /></p>
-      <h1><Trans en="Made in Ankara since 1968." tr="1968'den bu yana Ankara'da üretiyoruz." /></h1>
+      <h1><Trans en="Manufacturing textile pet accessories since 1968." tr="1968'den bu yana tekstil üretimi yapıyoruz." /></h1>
       <p class="lede">
         <Trans
-          en="Canico Pets is the pet brand of Aktunc Tekstil, a family textile workshop operating in Ankara for over five decades. We produce practical mats and pads for cats and dogs."
-          tr="Canico Pets; yarım asrı aşkın tekstil tecrübesine sahip Aktunç Tekstil bünyesinde doğdu. Evlerimizde birlikte yaşadığımız kedi ve köpekler için hem kullanışlı hem de dayanıklı tekstil ürünleri tasarlıyor ve üretiyoruz."
+          en="Canico Pet is the pet brand of Aktunc Tekstil. We manufacture functional, machine-washable textile accessories for cats and dogs, produced entirely at our facility."
+          tr="Canico Pet, Aktunç Tekstil bünyesinde kurulan evcil hayvan markasıdır. Kedi ve köpekler için işlevsel ve yıkanabilir tekstil ürünlerini kendi tesisimizde üretiyoruz."
         />
       </p>
 
-      <h2><Trans en="How we manufacture" tr="Üretim Gücümüz" /></h2>
+      <h2><Trans en="Company history" tr="Tarihçemiz" /></h2>
+      <ol class="milestones" role="list">
+        <li class="milestone">
+          <span class="milestone__year">1968</span>
+          <div>
+            <h3><Trans en="Foundations in home textiles" tr="Mefruşat ve ev tekstiliyle başlangıç" /></h3>
+            <p>
+              <Trans
+                en="Founded as a family enterprise focused on home furnishings and interior textile sales."
+                tr="Bir aile işletmesi olarak kuruldu; mefruşat ve ev tekstili satışı üzerine faaliyet gösterdi."
+              />
+            </p>
+          </div>
+        </li>
+        <li class="milestone">
+          <span class="milestone__year">1997</span>
+          <div>
+            <h3><Trans en="Contract flooring and industrial matting" tr="Zemin kaplamaları ve endüstriyel paspaslar" /></h3>
+            <p>
+              <Trans
+                en="Incorporated as a limited company. Expanded into contract flooring installations and custom industrial indoor and outdoor mat production."
+                tr="Limited şirket yapısına geçerek yer döşemesi, zemin kaplaması uygulamaları ve özel üretim endüstriyel iç ve dış paspas sistemlerinde uzmanlaştı."
+              />
+            </p>
+          </div>
+        </li>
+        <li class="milestone">
+          <span class="milestone__year">2020</span>
+          <div>
+            <h3><Trans en="Pet accessory manufacturing" tr="Evcil hayvan tekstili ve Canico Pet" /></h3>
+            <p>
+              <Trans
+                en="Applied decades of flooring, matting, and heavy-duty textile experience to pet accessories, launching our washable litter mat and furniture protector lines."
+                tr="Yarım asırlık zemin kaplama, paspas ve dayanıklı tekstil tecrübesini evcil hayvan sektörüne aktararak yıkanabilir kedi kumu paspası ve koltuk koruyucu tırmalama matı hatlarını kurdu."
+              />
+            </p>
+          </div>
+        </li>
+      </ol>
+
+      <h2><Trans en="Our workshop and capacity" tr="Üretim Altyapımız ve Kapasitemiz" /></h2>
       <p>
         <Trans
-          en="We manage sublimation printing, precision cutting, laminating, and edge binding under one roof at our Ankara facility. Keeping each step in-house gives us close control over stitching quality, material durability, and lead times."
-          tr="Süblimasyon baskıdan hassas kesime, laminasyondan kenar biye dikişine kadar tüm üretim adımlarını Ankara'daki tesisimizde kendimiz yapıyoruz. Sürecin her anında işin başında olmak; ürünlerimizin dikiş sağlamlığını, malzeme kalitesini ve teslimat hızını en üst düzeyde tutmamızı sağlıyor."
+          en="Textile printing, precision die-cutting, and edge binding all run under one roof at our workshop. This integrated production line delivers a monthly capacity of up to 20,000 mats on our standard sizing runs."
+          tr="Tekstil baskısı, hassas kalıp kesim ve kenar biye dikişi adımlarının tamamını atölyemizde tek çatı altında yürütüyoruz. Bu entegre üretim hattımız, standart ebatlarda aylık 20.000 adede varan üretim kapasitesi sunmaktadır."
         />
       </p>
 
-      <h2><Trans en="Our products" tr="Koleksiyonumuz" /></h2>
+      <h2><Trans en="Product line" tr="Ürün Gruplarımız" /></h2>
       <p>
         <Trans
-          en="Our core catalog includes the Cat Litter Collecting Mat and the Couch-Arm Scratching Pad. Feeding mats, crate pads, and floor protection textiles are currently in development."
-          tr="Şu anda öne çıkan ürünlerimiz; kedi kumu dağılmasını önleyen çift katmanlı paspasımız ve mobilyaları koruyan koltuk tırmalama pedimizdir. Besleme matları, kafes pedleri ve zemin koruyucu tekstil örtülerimiz de yakında koleksiyonumuza eklenecektir."
+          en="Our core products are the Cat Litter Collecting Mat (Kedi Kumu Paspası) and the Couch-Arm Scratching Pad (Kedi Koltuk Tırmalama Koruyucu Matı). Feeding mats, crate pads, and floor protection textiles are currently in development."
+          tr="Koleksiyonumuzun temelini Kedi Kumu Paspası ve mobilyaları koruyan Kedi Koltuk Tırmalama Koruyucu Matı oluşturmaktadır. Besleme matları, kafes pedleri ve zemin koruyucu tekstil örtüleri geliştirme aşamasındadır."
         />
+      </p>
+      <p>
+        <a class="btn btn--primary" href={`${base}/wholesale`}><Trans en="Wholesale details" tr="Toptan Satış Bilgisi" /></a>
       </p>
     </div>
   </section>
@@ -41,5 +85,4 @@ import Trans from '../components/Trans.astro';
 <style>
   .lede { font-size: 1.15rem; color: var(--color-ink-soft); max-width: 60ch; }
   h2 { margin-top: var(--space-6); }
-  .note { color: var(--color-muted); font-size: 13px; margin-top: var(--space-5); }
 </style>

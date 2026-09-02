@@ -1,7 +1,7 @@
 ---
 sku: CP-SP-001
 name: Couch-Arm Scratching Pad
-name_tr: Koltuk Kolu Tırmalama Pedi
+name_tr: Kedi Koltuk Tırmalama Koruyucu Matı
 tagline: A scratcher that sits on the corner your cat already picks.
 tagline_tr: Kedinizin zaten tırmaladığı koltuk köşeleri için özel koruyucu ped.
 description: >-
@@ -10,7 +10,7 @@ description: >-
   furniture at the spot the cat is already targeting.
 description_tr: >-
   Doğal lifli dayanıklı yüzeyiyle koltuk kolları ve mobilya köşeleri için
-  tasarlanmış tırmalama pedi. Kedilerin tırmalama ihtiyacını karşılarken
+  tasarlanmış koruyucu tırmalama matı. Kedilerin tırmalama ihtiyacını karşılarken
   mobilyalarınızı hasardan korur.
 status: coming-soon
 order: 20

@@ -329,16 +329,27 @@ const initialSlide = optimizedSlides[0] || { url: `${base}/product-placeholder.s
         });
       } else {
         // DEFAULT GROUPED BEHAVIOR: Auto-scrolls continuously, pauses on hover
+        let initialTimerId: number | null = null;
+
         card.addEventListener('pointerenter', () => {
+          if (initialTimerId !== null) {
+            clearTimeout(initialTimerId);
+            initialTimerId = null;
+          }
           pauseCycle();
         });
 
         card.addEventListener('pointerleave', () => {
-          startCycle(2600);
+          startCycle(2400);
         });
 
-        // Start auto-cycling with a subtle staggered delay per card
-        setTimeout(() => startCycle(2600), 600 + (cardIdx % 4) * 350);
+        // Start auto-cycling: trigger the first transition promptly after a brief staggered delay, then continue periodically
+        const initialDelay = 700 + (cardIdx % 3) * 250;
+        initialTimerId = window.setTimeout(() => {
+          initialTimerId = null;
+          showSlide(getNextIndex());
+          startCycle(2400);
+        }, initialDelay);
       }
 
       // Update dots for current index
@@ -346,9 +357,14 @@ const initialSlide = optimizedSlides[0] || { url: `${base}/product-placeholder.s
 
       window.addEventListener('resize', () => updateDotsPosition(currentIndex));
       card.addEventListener('card-show', () => updateDotsPosition(currentIndex));
+
+      document.addEventListener('astro:before-swap', () => {
+        pauseCycle();
+      }, { once: true });
     });
   }
 
+  document.addEventListener('astro:page-load', initCardAutoCycles);
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initCardAutoCycles);
   } else {

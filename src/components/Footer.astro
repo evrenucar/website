@@ -17,21 +17,23 @@ const year = new Date().getFullYear();
         </p>
       </div>
       <form class="nlform" method="post" action="#">
-        <label for="nl-email" class="visually-hidden">
-          <Trans en="Email address" tr="E-posta adresi" />
-        </label>
-        <input id="nl-email" type="email" name="email" required placeholder="you@example.com" autocomplete="email" />
-        <button type="submit"><Trans en="Sign up" tr="Kaydol" /></button>
+        <fieldset disabled>
+          <label for="nl-email" class="visually-hidden">
+            <Trans en="Email address" tr="E-posta adresi" />
+          </label>
+          <input id="nl-email" type="email" name="email" required placeholder="you@example.com" autocomplete="email" />
+          <button type="submit"><Trans en="Sign up" tr="Kaydol" /></button>
+        </fieldset>
       </form>
     </div>
 
     <div class="site-foot__grid">
       <div class="site-foot__brand">
-        <img src={`${base}/caniko_logo_light1080.png`} alt="Canico Pets" width="200" height="50" decoding="sync" />
+        <img src={`${base}/caniko_logo_light1080.png`} alt="Canico Pets" width="200" height="50" loading="lazy" decoding="async" />
         <p class="site-foot__tag">
           <Trans en="For pets, for life." tr="For pets, for life." />
         </p>
-        <div class="site-foot__social" aria-label="Social">
+        <div class="site-foot__social" role="group" aria-label="Social media">
           <a href="https://instagram.com/canicopet" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
             <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
           </a>
@@ -49,17 +51,17 @@ const year = new Date().getFullYear();
 
       <div class="site-foot__col">
         <h4><Trans en="Shop" tr="Ürünler" /></h4>
-        <ul>
+        <ul role="list">
           <li><a href={`${base}/products`}><Trans en="All products" tr="Tüm Ürünler" /></a></li>
-          <li><a href={`${base}/products/litter-mat`}><Trans en="Cat Litter Collecting Mat" tr="Kedi Kumu Toplama Paspası" /></a></li>
-          <li><a href={`${base}/products/scratching-pad`}><Trans en="Couch-Arm Scratching Pad" tr="Koltuk Kolu Tırmalama Pedi" /></a></li>
+          <li><a href={`${base}/products/litter-mat`}><Trans en="Cat Litter Collecting Mat" tr="Kedi Kumu Paspası" /></a></li>
+          <li><a href={`${base}/products/scratching-pad`}><Trans en="Couch-Arm Scratching Pad" tr="Kedi Koltuk Tırmalama Koruyucu Matı" /></a></li>
           <li><a href={`${base}/products`}><Trans en="For dogs (coming soon)" tr="Köpek Ürünleri (Yakında)" /></a></li>
         </ul>
       </div>
 
       <div class="site-foot__col">
         <h4><Trans en="Business" tr="Kurumsal" /></h4>
-        <ul>
+        <ul role="list">
           <li><a href={`${base}/wholesale`}><Trans en="Wholesale" tr="Toptan Satış" /></a></li>
           <li><a href={`${base}/contact`}><Trans en="Request samples" tr="Numune Talebi" /></a></li>
         </ul>
@@ -67,7 +69,7 @@ const year = new Date().getFullYear();
 
       <div class="site-foot__col">
         <h4><Trans en="Company" tr="Canico Pets" /></h4>
-        <ul>
+        <ul role="list">
           <li><a href={`${base}/about`}><Trans en="About" tr="Hakkımızda" /></a></li>
           <li><a href={`${base}/contact`}><Trans en="Contact" tr="İletişim" /></a></li>
           <li><a href={`${base}/privacy`}><Trans en="Privacy" tr="Gizlilik" /></a></li>
@@ -139,6 +141,11 @@ const year = new Date().getFullYear();
     border-radius: 999px;
     border: 1.5px solid rgba(255,255,255,0.15);
     min-width: 0;
+  }
+  .nlform:focus-within {
+    border-color: var(--color-coral);
+    outline: 2px solid var(--color-coral);
+    outline-offset: 2px;
   }
   .nlform input {
     flex: 1;
@@ -252,16 +259,4 @@ const year = new Date().getFullYear();
     opacity: 0.75;
   }
   .site-foot__region select option { color: var(--color-ink); }
-
-  .visually-hidden {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0,0,0,0);
-    white-space: nowrap;
-    border: 0;
-  }
 </style>

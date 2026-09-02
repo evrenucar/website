@@ -42,8 +42,8 @@ const siteUrl = Astro.site ? new URL(base + '/', Astro.site).toString() : '';
 const logoUrl = Astro.site ? new URL(`${base}/caniko_logo_dark_color1080.png`, Astro.site).toString() : '';
 ---
 <BaseLayout
-  title="Washable cat litter mats and pet textiles"
-  titleTr="Yıkanabilir kedi kumu paspasları ve tekstil ürünleri"
+  title="Canico Pet"
+  titleTr="Canico Pet"
   description="Machine-washable cat litter mats and couch-arm scratching pads. Textile, not plastic. Made at Aktunc Tekstil in Ankara."
   descriptionTr="Makinede yıkanabilir kedi kumu paspasları ve koltuk kolu tırmalama pedleri. Plastik değil, tekstil. Ankara'daki Aktunc Tekstil'de üretilir."
 >
@@ -57,40 +57,61 @@ const logoUrl = Astro.site ? new URL(`${base}/caniko_logo_dark_color1080.png`, A
 
   {/* ---------- Full-width carousel ---------- */}
   <section class="home-carousel" aria-roledescription="carousel" aria-label="Featured">
+    <h1 class="visually-hidden">
+      <Trans
+        en="Canico Pet · Machine-washable cat litter mats and scratching pads"
+        tr="Canico Pet · Yıkanabilir kedi kumu paspasları ve tekstil ürünleri"
+      />
+    </h1>
     <ul class="home-carousel__track" tabindex="0">
-      <li class="home-carousel__slide" aria-roledescription="slide" aria-label="1 of 3">
-        <Image
-          src={carouselScratchingPad}
-          alt="Cat scratching a textile pad on a sofa arm"
-          loading="eager"
-          fetchpriority="high"
-        />
+      <li class="home-carousel__slide" id="home-slide-0" role="tabpanel" aria-labelledby="home-dot-0" aria-roledescription="slide" aria-label="1 of 3">
+        <a href={`${base}/products/litter-mat`} class="home-carousel__link" aria-label="Cat Litter Collecting Mat" draggable="false">
+          <Image
+            src={carouselLitterMat}
+            alt="Cat stepping off a textile mat next to a litter box"
+            loading="eager"
+            fetchpriority="high"
+            draggable="false"
+          />
+        </a>
         <div class="home-carousel__caption">
-          <h2><Trans en="Couch-Arm Scratching Pad" tr="Koltuk Kolu Tırmalama Pedi" /></h2>
-          <p><Trans en="A scratcher that sits on the corner your cat already picks." tr="Kedinizin zaten tırmaladığı koltuk köşeleri için özel koruyucu ped." /></p>
-        </div>
-      </li>
-      <li class="home-carousel__slide" aria-roledescription="slide" aria-label="2 of 3">
-        <Image
-          src={carouselLitterMat}
-          alt="Cat stepping off a textile mat next to a litter box"
-          loading="lazy"
-        />
-        <div class="home-carousel__caption">
-          <h2><Trans en="Cat Litter Collecting Mat" tr="Kedi Kumu Toplama Paspası" /></h2>
+          <h2>
+            <a href={`${base}/products/litter-mat`}>
+              <Trans en="Cat Litter Collecting Mat" tr="Kedi Kumu Paspası" />
+            </a>
+          </h2>
           <p><Trans en="Catches litter before it reaches the floor." tr="Kumu yere dağılmadan yakalar, temizliği kolaylaştırır." /></p>
         </div>
       </li>
-      <li class="home-carousel__slide" aria-roledescription="slide" aria-label="3 of 3">
+      <li class="home-carousel__slide" id="home-slide-1" role="tabpanel" aria-labelledby="home-dot-1" aria-roledescription="slide" aria-label="2 of 3">
+        <a href={`${base}/products/scratching-pad`} class="home-carousel__link" aria-label="Couch-Arm Scratching Pad" draggable="false">
+          <Image
+            src={carouselScratchingPad}
+            alt="Cat scratching a textile pad on a sofa arm"
+            loading="lazy"
+            draggable="false"
+          />
+        </a>
+        <div class="home-carousel__caption">
+          <h2>
+            <a href={`${base}/products/scratching-pad`}>
+              <Trans en="Couch-Arm Scratching Pad" tr="Kedi Koltuk Tırmalama Koruyucu Matı" />
+            </a>
+          </h2>
+          <p><Trans en="A scratcher that sits on the corner your cat already picks." tr="Kedinizin zaten tırmaladığı koltuk köşeleri için özel koruyucu ped." /></p>
+        </div>
+      </li>
+      <li class="home-carousel__slide" id="home-slide-2" role="tabpanel" aria-labelledby="home-dot-2" aria-roledescription="slide" aria-label="3 of 3">
         <Image
           src={carouselTabbyCat}
           alt="Tabby cat under a warm interior lamp"
           loading="lazy"
+          draggable="false"
         />
         <div class="home-carousel__caption">
-          <h1>
+          <h2>
             <Trans en="For pets, for life." tr="For pets, for life." />
-          </h1>
+          </h2>
           <p>
             <Trans
               en="Textile mats and pads for cats and dogs. Made at Aktunc Tekstil in Ankara."
@@ -101,16 +122,17 @@ const logoUrl = Astro.site ? new URL(`${base}/caniko_logo_dark_color1080.png`, A
       </li>
     </ul>
     <div class="home-carousel__dots" role="tablist" aria-label="Select slide">
-      <button type="button" role="tab" aria-label="Slide 1" aria-selected="true" data-slide="0"></button>
-      <button type="button" role="tab" aria-label="Slide 2" aria-selected="false" data-slide="1"></button>
-      <button type="button" role="tab" aria-label="Slide 3" aria-selected="false" data-slide="2"></button>
+      <button type="button" role="tab" id="home-dot-0" aria-controls="home-slide-0" aria-label="Slide 1" aria-selected="true" tabindex="0" data-slide="0"></button>
+      <button type="button" role="tab" id="home-dot-1" aria-controls="home-slide-1" aria-label="Slide 2" aria-selected="false" tabindex="-1" data-slide="1"></button>
+      <button type="button" role="tab" id="home-dot-2" aria-controls="home-slide-2" aria-label="Slide 3" aria-selected="false" tabindex="-1" data-slide="2"></button>
     </div>
   </section>
 
-  <script is:inline>
+  <script is:inline data-astro-rerun>
     (function () {
       var track = document.querySelector('.home-carousel__track');
       var dots = document.querySelectorAll('.home-carousel__dots button');
+      var dotsContainer = document.querySelector('.home-carousel__dots');
       if (!track || !dots.length) return;
       var slides = track.children.length;
       var i = 0;
@@ -121,10 +143,15 @@ const logoUrl = Astro.site ? new URL(`${base}/caniko_logo_dark_color1080.png`, A
       var dragDelta = 0;
       var startTime = 0;
 
-      function go(n) {
+      function go(n, focusTab) {
         i = (n + slides) % slides;
         track.scrollTo({ left: i * track.clientWidth, behavior: 'smooth' });
-        dots.forEach(function (d, k) { d.setAttribute('aria-selected', k === i ? 'true' : 'false'); });
+        dots.forEach(function (d, k) {
+          var isSelected = k === i;
+          d.setAttribute('aria-selected', isSelected ? 'true' : 'false');
+          d.setAttribute('tabindex', isSelected ? '0' : '-1');
+          if (isSelected && focusTab) d.focus();
+        });
       }
 
       function start() {
@@ -138,54 +165,128 @@ const logoUrl = Astro.site ? new URL(`${base}/caniko_logo_dark_color1080.png`, A
         d.addEventListener('click', function () { go(parseInt(d.dataset.slide, 10)); start(); });
       });
 
+      if (dotsContainer) {
+        dotsContainer.addEventListener('keydown', function (e) {
+          if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+            e.preventDefault();
+            go(i + 1, true);
+            start();
+          } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+            e.preventDefault();
+            go(i - 1, true);
+            start();
+          } else if (e.key === 'Home') {
+            e.preventDefault();
+            go(0, true);
+            start();
+          } else if (e.key === 'End') {
+            e.preventDefault();
+            go(slides - 1, true);
+            start();
+          }
+        });
+      }
+
       track.addEventListener('focusin', stop);
       track.addEventListener('focusout', start);
 
-      // Drag & slide interaction for mouse and touch
+      var isDown = false;
+      var isDragging = false;
+      var hasDragged = false;
+      var startX = 0;
+      var scrollStart = 0;
+      var dragDelta = 0;
+      var startTime = 0;
+      var rafId = null;
+
+      // Prevent native browser drag-and-drop on images/links so custom pointer dragging works
+      track.addEventListener('dragstart', function (e) {
+        e.preventDefault();
+      });
+
+      // Pointer interaction: distinguish clean clicks from intentional drags
       track.addEventListener('pointerdown', function (e) {
+        if (e.button !== 0) return;
+        if (e.target.closest('button')) return;
         stop();
-        if (e.target.closest('a, button')) return;
-        isDragging = true;
+        isDown = true;
+        isDragging = false;
+        hasDragged = false;
         startX = e.clientX;
         scrollStart = track.scrollLeft;
         dragDelta = 0;
         startTime = Date.now();
-        track.style.cursor = 'grabbing';
-        track.style.scrollBehavior = 'auto';
-        track.style.scrollSnapType = 'none';
-        try { track.setPointerCapture(e.pointerId); } catch (_) {}
       });
 
       track.addEventListener('pointermove', function (e) {
-        if (!isDragging) return;
+        if (!isDown) return;
         var delta = e.clientX - startX;
         dragDelta = delta;
-        track.scrollLeft = scrollStart - delta;
+
+        // Engage drag mode only once movement exceeds 8px threshold
+        if (!isDragging) {
+          if (Math.abs(delta) > 8) {
+            isDragging = true;
+            hasDragged = true;
+            track.style.cursor = 'grabbing';
+            track.style.scrollBehavior = 'auto';
+            track.style.scrollSnapType = 'none';
+            try { track.setPointerCapture(e.pointerId); } catch (_) {}
+          } else {
+            return;
+          }
+        }
+
+        if (!rafId) {
+          rafId = requestAnimationFrame(function () {
+            track.scrollLeft = scrollStart - dragDelta;
+            rafId = null;
+          });
+        }
       });
 
       function endDrag(e) {
-        if (!isDragging) return;
-        isDragging = false;
-        track.style.cursor = '';
-        track.style.scrollBehavior = 'smooth';
-        track.style.scrollSnapType = 'x mandatory';
-        try { if (track.hasPointerCapture(e.pointerId)) track.releasePointerCapture(e.pointerId); } catch (_) {}
+        if (!isDown) return;
+        isDown = false;
 
-        var duration = Date.now() - startTime;
-        var velocity = Math.abs(dragDelta) / Math.max(duration, 1);
-
-        if (dragDelta < -40 || (dragDelta < -20 && velocity > 0.3)) {
-          go(i + 1);
-        } else if (dragDelta > 40 || (dragDelta > 20 && velocity > 0.3)) {
-          go(i - 1);
-        } else {
-          go(i);
+        if (rafId) {
+          cancelAnimationFrame(rafId);
+          rafId = null;
         }
-        start();
+
+        // Only snap/scroll if user was actually dragging
+        if (isDragging) {
+          isDragging = false;
+          track.style.cursor = '';
+          track.style.scrollBehavior = 'smooth';
+          track.style.scrollSnapType = 'x mandatory';
+          try { if (track.hasPointerCapture(e.pointerId)) track.releasePointerCapture(e.pointerId); } catch (_) {}
+
+          var duration = Date.now() - startTime;
+          var velocity = Math.abs(dragDelta) / Math.max(duration, 1);
+
+          if (dragDelta < -40 || (dragDelta < -20 && velocity > 0.3)) {
+            go(i + 1);
+          } else if (dragDelta > 40 || (dragDelta > 20 && velocity > 0.3)) {
+            go(i - 1);
+          } else {
+            go(i);
+          }
+          start();
+        }
       }
 
       track.addEventListener('pointerup', endDrag);
       track.addEventListener('pointercancel', endDrag);
+
+      // Prevent link navigation only when user actually performed a drag gesture
+      track.addEventListener('click', function (e) {
+        if (hasDragged) {
+          e.preventDefault();
+          e.stopPropagation();
+          hasDragged = false;
+        }
+      }, true);
 
       var syncing;
       track.addEventListener('scroll', function () {
@@ -201,6 +302,10 @@ const logoUrl = Astro.site ? new URL(`${base}/caniko_logo_dark_color1080.png`, A
       }, { passive: true });
 
       start();
+
+      document.addEventListener('astro:before-swap', function () {
+        stop();
+      }, { once: true });
     })();
   </script>
 
@@ -212,7 +317,7 @@ const logoUrl = Astro.site ? new URL(`${base}/caniko_logo_dark_color1080.png`, A
           <p class="eyebrow"><Trans en="Shop" tr="Kategoriler" /></p>
           <h2><Trans en="Pick your household." tr="Kimin için bakıyorsunuz?" /></h2>
         </div>
-        <a class="link-cta" href={`${base}/products`}><Trans en="See everything" tr="Tüm Ürünler" /> ↗</a>
+        <a class="link-cta" href={`${base}/products`}><Trans en="See everything" tr="Tüm Ürünler" /> <span aria-hidden="true">↗</span></a>
       </div>
 
       <div class="cat-tiles">
@@ -221,37 +326,37 @@ const logoUrl = Astro.site ? new URL(`${base}/caniko_logo_dark_color1080.png`, A
           <span class="cat-tile__eyebrow"><Trans en="For cats" tr="Kediler için" /></span>
           <h3><Trans en="Cats" tr="Kediler" /></h3>
           <p><Trans en="Litter mats and couch scratchers made with durable textiles, not flimsy plastic." tr="Plastik yerine dayanıklı tekstilden üretilen kedi kumu paspasları ve koltuk tırmalama pedleri." /></p>
-          <span class="cat-tile__cta"><Trans en="Shop cats" tr="Kedi Ürünleri" /> ↗</span>
+          <span class="cat-tile__cta"><Trans en="Shop cats" tr="Kedi Ürünleri" /> <span aria-hidden="true">↗</span></span>
         </a>
         <a class="cat-tile" href={`${base}/products`} style="--tile:var(--color-lavender);">
           <svg class="cat-tile__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M239.71,125l-16.42-88a16,16,0,0,0-19.61-12.58l-.31.09L150.85,40h-45.7L52.63,24.56l-.31-.09A16,16,0,0,0,32.71,37.05L16.29,125a15.77,15.77,0,0,0,9.12,17.52A16.26,16.26,0,0,0,32.12,144,15.48,15.48,0,0,0,40,141.84V184a40,40,0,0,0,40,40h96a40,40,0,0,0,40-40V141.85a15.5,15.5,0,0,0,7.87,2.16,16.31,16.31,0,0,0,6.72-1.47A15.77,15.77,0,0,0,239.71,125ZM32,128h0L48.43,40,90.5,52.37Zm144,80H136V195.31l13.66-13.65a8,8,0,0,0-11.32-11.32L128,180.69l-10.34-10.35a8,8,0,0,0-11.32,11.32L120,195.31V208H80a24,24,0,0,1-24-24V123.11L107.92,56h40.15L200,123.11V184A24,24,0,0,1,176,208Zm48-80L165.5,52.37,207.57,40,224,128ZM104,140a12,12,0,1,1-12-12A12,12,0,0,1,104,140Zm72,0a12,12,0,1,1-12-12A12,12,0,0,1,176,140Z"/></svg>
           <span class="cat-tile__eyebrow"><Trans en="For dogs · coming soon" tr="Köpekler için · Yakında" /></span>
           <h3><Trans en="Dogs" tr="Köpekler" /></h3>
           <p><Trans en="Feeding mats, crate pads, and floor protection in production." tr="Mama matları, kafes pedleri ve zemin koruma örtüleri yakında sizlerle." /></p>
-          <span class="cat-tile__cta"><Trans en="Preview the line" tr="İnceleyin" /> ↗</span>
+          <span class="cat-tile__cta"><Trans en="Preview the line" tr="İnceleyin" /> <span aria-hidden="true">↗</span></span>
         </a>
         <a class="cat-tile" href={`${base}/wholesale`} style="--tile:var(--color-teal);">
           <svg class="cat-tile__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M232,96a7.89,7.89,0,0,0-.3-2.2L217.35,43.6A16.07,16.07,0,0,0,202,32H54A16.07,16.07,0,0,0,38.65,43.6L24.31,93.8A7.89,7.89,0,0,0,24,96h0v16a40,40,0,0,0,16,32v72a8,8,0,0,0,8,8H208a8,8,0,0,0,8-8V144a40,40,0,0,0,16-32V96ZM54,48H202l11.42,40H42.61Zm50,56h48v8a24,24,0,0,1-48,0Zm-16,0v8a24,24,0,0,1-35.12,21.26,7.88,7.88,0,0,0-1.82-1.06A24,24,0,0,1,40,112v-8ZM200,208H56V151.2a40.57,40.57,0,0,0,8,.8,40,40,0,0,0,32-16,40,40,0,0,0,64,0,40,40,0,0,0,32,16,40.57,40.57,0,0,0,8-.8Zm4.93-75.8a8.08,8.08,0,0,0-1.8,1.05A24,24,0,0,1,168,112v-8h48v8A24,24,0,0,1,204.93,132.2Z"/></svg>
           <span class="cat-tile__eyebrow"><Trans en="For retailers" tr="Toptan Satış" /></span>
           <h3><Trans en="Wholesale" tr="Toptan" /></h3>
           <p><Trans en="Direct from our Ankara workshop. Flexible MOQs, custom sizes, and tailored prints." tr="Ankara'daki atölyemizden doğrudan alım imkanı. Esnek sipariş adetleri, özel ölçü ve baskı seçenekleri." /></p>
-          <span class="cat-tile__cta"><Trans en="Talk to us" tr="Teklif Alın" /> ↗</span>
+          <span class="cat-tile__cta"><Trans en="Talk to us" tr="Teklif Alın" /> <span aria-hidden="true">↗</span></span>
         </a>
       </div>
     </div>
   </section>
 
   {/* ---------- Featured products ---------- */}
-  <section class="section" style="background: var(--color-bg-soft);">
+  <section class="section section--soft">
     <div class="container">
       <div class="section-head">
         <div>
           <p class="eyebrow"><Trans en="The collection" tr="Öne Çıkanlar" /></p>
           <h2><Trans en="Shipping today." tr="Hemen Teslim Ürünler" /></h2>
         </div>
-        <a class="link-cta" href={`${base}/products`}><Trans en="All products" tr="Tüm Ürünler" /> ↗</a>
+        <a class="link-cta" href={`${base}/products`}><Trans en="All products" tr="Tüm Ürünler" /> <span aria-hidden="true">↗</span></a>
       </div>
-      <div class="grid grid--3" style="margin-top: 32px;">
+      <div class="grid grid--2">
         {featuredProducts.map((p) => (
           <ProductCard
             href={`${base}/products/${p.id}`}
@@ -275,27 +380,31 @@ const logoUrl = Astro.site ? new URL(`${base}/caniko_logo_dark_color1080.png`, A
   {/* ---------- Benefits row: colored accent, no emoji ---------- */}
   <section class="section">
     <div class="container">
-      <p class="eyebrow"><Trans en="Why Canico" tr="Neden Canico?" /></p>
-      <h2><Trans en="What every mat we ship has in common." tr="Ürünlerimizin öne çıkan özellikleri" /></h2>
+      <div class="section-head">
+        <div>
+          <p class="eyebrow"><Trans en="Why Canico" tr="Neden Canico?" /></p>
+          <h2><Trans en="What every mat we ship has in common." tr="Ürünlerimizin öne çıkan özellikleri" /></h2>
+        </div>
+      </div>
       <div class="benefits">
         <div class="benefit" style="--accent: var(--color-coral);">
           <span class="benefit__num">01</span>
-          <h4><Trans en="In-house factory" tr="Kendi Üretimimiz" /></h4>
+          <h3><Trans en="In-house factory" tr="Kendi Üretimimiz" /></h3>
           <p><Trans en="Printing, cutting, sewing, and edge binding all take place at Aktunc Tekstil in Ankara." tr="Baskı, kesim, dikim ve biye işlemlerinin tamamını Ankara'daki tesisimizde yapıyoruz." /></p>
         </div>
         <div class="benefit" style="--accent: var(--color-lavender);">
           <span class="benefit__num">02</span>
-          <h4><Trans en="Textile face" tr="Tekstil Doku" /></h4>
+          <h3><Trans en="Textile face" tr="Tekstil Doku" /></h3>
           <p><Trans en="Dual-layer honeycomb mesh for litter. Natural fiber texture for scratching." tr="Kum tutucu petek dokulu yüzey ve mobilyaları koruyan doğal lifli tırmalama dokusu." /></p>
         </div>
         <div class="benefit" style="--accent: var(--color-teal);">
           <span class="benefit__num">03</span>
-          <h4><Trans en="Easy to clean" tr="Kolay Temizlik" /></h4>
+          <h3><Trans en="Easy to clean" tr="Kolay Temizlik" /></h3>
           <p><Trans en="Rinse or wash cold and air dry. Reinforced edge binding withstands repeat washing." tr="İster silkeleyin, ister yıkayın. Sağlam biye dikişleri sayesinde uzun ömürlüdür." /></p>
         </div>
         <div class="benefit" style="--accent: var(--color-sunshine);">
           <span class="benefit__num">04</span>
-          <h4><Trans en="Custom runs" tr="Özel Üretim" /></h4>
+          <h3><Trans en="Custom runs" tr="Özel Üretim" /></h3>
           <p><Trans en="Tailored dimensions, custom surface prints, and bespoke packaging for wholesale clients." tr="Toptan siparişlerde isteğe göre özel ölçü, farklı desen baskısı ve ambalaj imkanı." /></p>
         </div>
       </div>
@@ -303,7 +412,7 @@ const logoUrl = Astro.site ? new URL(`${base}/caniko_logo_dark_color1080.png`, A
   </section>
 
   {/* ---------- Story block: single landscape photo, side-by-side copy ---------- */}
-  <section class="section" style="background: var(--color-bg-warm);">
+  <section class="section section--warm">
     <div class="container story">
       <div class="story__media">
         <Image
@@ -317,8 +426,8 @@ const logoUrl = Astro.site ? new URL(`${base}/caniko_logo_dark_color1080.png`, A
         <h2><Trans en="A textile workshop since 1968." tr="1968'den gelen tekstil ustalığı" /></h2>
         <p>
           <Trans
-            en="Aktunc Tekstil has been printing, cutting, and finishing textiles in Ankara since 1968. That is over 50 years of steady production: sublimation printing, die-cutting, and edge binding. Canico Pets builds on that manufacturing foundation, creating functional pet accessories that solve everyday household needs."
-            tr="Aktunç Tekstil, 1968 yılından bu yana Ankara'da tekstil baskısı, kalıp kesim ve dikim alanında faaliyet gösteriyor. 50 yılı aşan bu atölye tecrübesi üzerine kurulan Canico Pets; kedi ve köpeklerin günlük ihtiyaçlarına pratik, kaliteli ve şık tekstil çözümleri sunuyor."
+            en="Aktunc Tekstil began in 1968 as a family furnishing business, incorporated in 1997 with a focus on contract flooring and industrial matting, and entered pet accessories in 2020. Today our workshop houses textile printing, precision die-cutting, and edge binding under one roof, with a monthly capacity of up to 20,000 mats."
+            tr="1968 yılında bir aile mefruşat işletmesi olarak kurulan Aktunç Tekstil, 1997'de zemin kaplamaları ve endüstriyel paspas üretimiyle uzmanlığını genişletti; 2020'de ise bu tecrübesini evcil hayvan sektörüne taşıdı. Atölyemizde tekstil baskısı, kalıp kesim ve biye dikişini tek çatı altında yürütüyor, ayda 20.000 adede varan üretim kapasitesi sunuyoruz."
           />
         </p>
         <a class="btn btn--ghost" href={`${base}/about`}><Trans en="More about us" tr="Hakkımızda" /></a>
@@ -380,11 +489,11 @@ const logoUrl = Astro.site ? new URL(`${base}/caniko_logo_dark_color1080.png`, A
   </section>
 
   {/* ---------- Wholesale CTA band ---------- */}
-  <section class="section" style="background: var(--color-ink); color: var(--color-bg);">
+  <section class="section section--dark">
     <div class="container">
       <div class="cta-band">
         <div class="cta-band__copy">
-          <p class="eyebrow" style="color: var(--color-sunshine);"><Trans en="For retailers" tr="Toptan Satış" /></p>
+          <p class="eyebrow cta-band__eyebrow"><Trans en="For retailers" tr="Toptan Satış" /></p>
           <h2><Trans en="Selling pet accessories?" tr="Mağazanız veya işletmeniz için ürün mü arıyorsunuz?" /></h2>
           <p>
             <Trans
@@ -394,8 +503,8 @@ const logoUrl = Astro.site ? new URL(`${base}/caniko_logo_dark_color1080.png`, A
           </p>
         </div>
         <div class="cta-band__ctas">
-          <a class="btn btn--primary" href={`${base}/wholesale`} style="background: var(--color-coral);"><Trans en="Wholesale details" tr="Toptan Bilgisi" /></a>
-          <a class="btn btn--ghost" href={`${base}/contact`} style="border-color: white; color: white;"><Trans en="Contact us" tr="Bize Ulaşın" /></a>
+          <a class="btn btn--coral" href={`${base}/wholesale`}><Trans en="Wholesale details" tr="Toptan Bilgisi" /></a>
+          <a class="btn btn--ghost-white" href={`${base}/contact`}><Trans en="Contact us" tr="Bize Ulaşın" /></a>
         </div>
       </div>
     </div>
@@ -432,6 +541,29 @@ const logoUrl = Astro.site ? new URL(`${base}/caniko_logo_dark_color1080.png`, A
     flex-direction: column;
     user-select: none;
   }
+  .home-carousel__track,
+  .home-carousel__track a,
+  .home-carousel__track img {
+    -webkit-user-drag: none;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .home-carousel__link {
+    display: block;
+    width: 100%;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+    touch-action: pan-y;
+  }
+  .home-carousel__caption h2 a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 120ms ease;
+  }
+  .home-carousel__caption h2 a:hover {
+    color: var(--color-coral);
+  }
   .home-carousel__slide img {
     width: 100%;
     height: clamp(320px, 55vh, 620px);
@@ -442,7 +574,9 @@ const logoUrl = Astro.site ? new URL(`${base}/caniko_logo_dark_color1080.png`, A
     user-select: none;
   }
   .home-carousel__caption {
-    padding: var(--space-5) var(--space-4);
+    width: 100%;
+    box-sizing: border-box;
+    padding: var(--space-5) var(--space-4) var(--space-2);
     max-width: var(--w-content);
     margin: 0 auto;
     text-align: left;
@@ -465,28 +599,36 @@ const logoUrl = Astro.site ? new URL(`${base}/caniko_logo_dark_color1080.png`, A
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 8px;
-    padding: var(--space-3) 0 var(--space-4);
+    gap: 4px;
+    padding: var(--space-2) 0 var(--space-5);
   }
   .home-carousel__dots button {
-    width: 10px;
-    height: 10px;
-    min-width: 10px;
-    min-height: 10px;
-    aspect-ratio: 1 / 1;
+    position: relative;
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    min-height: 32px;
     padding: 0;
     margin: 0;
-    display: block;
-    flex-shrink: 0;
-    background: color-mix(in srgb, var(--color-ink) 20%, transparent);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
     border: 0;
     border-radius: 50%;
     cursor: pointer;
+  }
+  .home-carousel__dots button::after {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--color-ink) 25%, transparent);
     transition: background 160ms ease, transform 160ms ease;
   }
-  .home-carousel__dots button[aria-selected="true"] {
+  .home-carousel__dots button[aria-selected="true"]::after {
     background: var(--color-coral);
-    transform: scale(1.25);
+    transform: scale(1.35);
   }
 
   .section-head {
@@ -524,12 +666,19 @@ const logoUrl = Astro.site ? new URL(`${base}/caniko_logo_dark_color1080.png`, A
     background: var(--tile);
     color: var(--color-ink);
     text-decoration: none;
-    padding: var(--space-5);
+    padding: clamp(var(--space-4), 3vw, var(--space-5));
     border-radius: var(--radius-lg);
-    aspect-ratio: 3 / 4;
+    aspect-ratio: auto;
+    min-height: 220px;
     transition: transform 220ms ease, box-shadow 220ms ease;
     position: relative;
     overflow: hidden;
+  }
+  @media (min-width: 720px) {
+    .cat-tile {
+      aspect-ratio: 4 / 5;
+      min-height: 380px;
+    }
   }
   .cat-tile:hover {
     transform: translateY(-4px);
@@ -538,14 +687,23 @@ const logoUrl = Astro.site ? new URL(`${base}/caniko_logo_dark_color1080.png`, A
   }
   .cat-tile__icon {
     position: absolute;
-    top: -8%;
-    right: -8%;
-    width: 60%;
+    top: -6%;
+    right: -6%;
+    width: 45%;
+    max-width: 140px;
     height: auto;
     color: var(--color-ink);
     opacity: 0.16;
     pointer-events: none;
     transition: opacity 220ms ease, transform 220ms ease;
+  }
+  @media (min-width: 720px) {
+    .cat-tile__icon {
+      top: -8%;
+      right: -8%;
+      width: 58%;
+      max-width: 220px;
+    }
   }
   .cat-tile:hover .cat-tile__icon {
     opacity: 0.24;
@@ -600,16 +758,18 @@ const logoUrl = Astro.site ? new URL(`${base}/caniko_logo_dark_color1080.png`, A
     display: grid;
     gap: var(--space-4);
     grid-template-columns: 1fr;
-    margin-top: var(--space-5);
+    margin-top: 0;
   }
   @media (min-width: 720px) { .benefits { grid-template-columns: repeat(2, 1fr); } }
   @media (min-width: 1000px) { .benefits { grid-template-columns: repeat(4, 1fr); } }
   .benefit {
-    padding: var(--space-5);
+    padding: clamp(var(--space-4), 2.5vw, var(--space-5));
     background: white;
     border: 1.5px solid var(--color-line);
     border-top: 4px solid var(--accent, var(--color-coral));
     border-radius: var(--radius-lg);
+    display: flex;
+    flex-direction: column;
   }
   .benefit__num {
     font-family: var(--font-accent);
@@ -620,13 +780,13 @@ const logoUrl = Astro.site ? new URL(`${base}/caniko_logo_dark_color1080.png`, A
     display: block;
     margin-bottom: 12px;
   }
-  .benefit h4 { margin: 0 0 8px; font-size: 17px; font-weight: 700; }
+  .benefit h3 { margin: 0 0 8px; font-size: 17px; font-weight: 700; }
   .benefit p { margin: 0; font-size: 14px; color: var(--color-ink-soft); line-height: 1.5; }
 
   /* Story block: landscape image, wider spacing */
   .story {
     display: grid;
-    gap: var(--space-6);
+    gap: clamp(var(--space-4), 4vw, var(--space-6));
     align-items: center;
     grid-template-columns: 1fr;
   }
@@ -641,24 +801,33 @@ const logoUrl = Astro.site ? new URL(`${base}/caniko_logo_dark_color1080.png`, A
     background: var(--color-bg-soft);
   }
   .story__media img { width: 100%; height: 100%; object-fit: cover; }
-  .story__copy .btn { margin-top: var(--space-3); }
+  .story__copy {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .story__copy p:last-of-type {
+    margin-bottom: var(--space-4);
+  }
+  .story__copy .btn { margin-top: 0; }
 
   /* Reviews */
   .reviews {
     display: grid;
     gap: var(--space-4);
     grid-template-columns: 1fr;
-    margin-top: var(--space-5);
   }
   @media (min-width: 720px) {
     .reviews { grid-template-columns: repeat(3, 1fr); }
   }
   .review {
     margin: 0;
-    padding: var(--space-5);
+    padding: clamp(var(--space-4), 3vw, var(--space-5));
     background: white;
     border: 1.5px solid var(--color-line);
     border-radius: var(--radius-lg);
+    display: flex;
+    flex-direction: column;
   }
   .review__stars {
     color: var(--color-sunshine);
@@ -667,16 +836,18 @@ const logoUrl = Astro.site ? new URL(`${base}/caniko_logo_dark_color1080.png`, A
     margin-bottom: 12px;
   }
   .review blockquote {
-    margin: 0 0 16px 0;
+    margin: 0 0 var(--space-4) 0;
     font-family: var(--font-sans);
     font-size: 15px;
     line-height: 1.55;
     color: var(--color-ink);
+    flex: 1;
   }
   .review figcaption {
     display: flex;
     flex-direction: column;
     font-size: 13px;
+    margin-top: auto;
   }
   .review__name { font-weight: 700; color: var(--color-ink); }
   .review__meta { color: var(--color-muted); }
@@ -697,7 +868,26 @@ const logoUrl = Astro.site ? new URL(`${base}/caniko_logo_dark_color1080.png`, A
   @media (min-width: 720px) {
     .cta-band { grid-template-columns: 1.4fr auto; }
   }
+  .cta-band__eyebrow {
+    color: var(--color-sunshine);
+  }
   .cta-band__copy h2 { color: var(--color-bg); }
   .cta-band__copy p { color: rgba(255,255,255,0.75); margin: 0; max-width: 60ch; }
   .cta-band__ctas { display: flex; gap: var(--space-3); flex-wrap: wrap; }
+  .btn--coral {
+    background: var(--color-coral);
+    color: white;
+  }
+  .btn--coral:hover {
+    background: white;
+    color: var(--color-ink);
+  }
+  .btn--ghost-white {
+    border-color: white;
+    color: white;
+  }
+  .btn--ghost-white:hover {
+    background: white;
+    color: var(--color-ink);
+  }
 </style>

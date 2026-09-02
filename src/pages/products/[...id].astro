@@ -6,6 +6,7 @@ import { base } from '../../lib/paths';
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 import { formatDimension } from '../../lib/dimensions';
 import { getVariantAssets } from '../../lib/variants';
+import { RETAILER_REGISTRY, resolveRetailLinks } from '../../lib/retailers';
 
 export async function getStaticPaths() {
   const products = await getCollection('products');
@@ -24,6 +25,8 @@ const { Content } = await render(product);
 const d = product.data;
 const heroImage = d.images[0];
 
+const heroRetailLinks = resolveRetailLinks(d.retail_links, null);
+
 // Prepare all variants with resolved assets and formatted dimensions
 const variantsWithAssets = d.variants.map((v) => {
   const sizeObj = d.sizes.find((s) => s.id === v.size_id);
@@ -31,6 +34,7 @@ const variantsWithAssets = d.variants.map((v) => {
   const swatchAspect = sizeObj
     ? `${Math.max(sizeObj.w, sizeObj.l)} / ${Math.min(sizeObj.w, sizeObj.l)}`
     : '1 / 1';
+  const resolvedRetail = resolveRetailLinks(d.retail_links, v.retail_links);
 
   return {
     sku: v.sku,
@@ -40,6 +44,7 @@ const variantsWithAssets = d.variants.map((v) => {
     size_label_in: sizeObj ? formatDimension(sizeObj, 'in') : '',
     status: v.status,
     price: v.price,
+    retail_links: resolvedRetail,
     swatch_aspect: swatchAspect,
     thumbnail: assets.thumbnail,
     design: assets.design,
@@ -50,6 +55,7 @@ const variantsWithAssets = d.variants.map((v) => {
 // Initial active variant (first variant or fallback)
 const initialVariant = variantsWithAssets[0];
 const initialSizeId = initialVariant ? initialVariant.size_id : d.sizes[0]?.id;
+const initialRetailLinks = initialVariant ? initialVariant.retail_links : heroRetailLinks;
 const fallbackGallery = initialVariant ? initialVariant.gallery : (d.images.length > 0 ? d.images : [heroImage].filter(Boolean));
 
 // Sizes defined on the product
@@ -70,9 +76,33 @@ const variantsPayload = await Promise.all(
       sku: v.sku,
       size_id: v.size_id,
       gallery: optimizedGallery,
+      retail_links: v.retail_links,
     };
   })
 );
+
+const productCanonical = new URL(Astro.url.pathname, Astro.site).toString();
+const heroImageAbs = heroImage ? new URL(heroImage.src, Astro.site).toString() : undefined;
+
+const productSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: `Canico Pet ${d.name}`,
+  description: d.description,
+  brand: {
+    '@type': 'Brand',
+    name: 'Canico Pet',
+  },
+  category: 'Pet Supplies > Cat Supplies',
+  url: productCanonical,
+  image: heroImageAbs,
+  offers: {
+    '@type': 'AggregateOffer',
+    priceCurrency: 'TRY',
+    availability: d.status === 'available' ? 'https://schema.org/InStock' : 'https://schema.org/PreOrder',
+    url: productCanonical,
+  },
+};
 ---
 <BaseLayout
   title={d.name}
@@ -80,9 +110,11 @@ const variantsPayload = await Promise.all(
   description={d.tagline ?? d.description}
   descriptionTr={d.tagline_tr ?? d.description_tr}
 >
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(productSchema)} />
+
   <article class="section">
     <div class="container">
-      <a href={`${base}/products`} class="back-link">← <Trans en="All products" tr="Tüm Ürünler" /></a>
+      <a href={`${base}/products`} class="back-link"><span aria-hidden="true">← </span><Trans en="All products" tr="Tüm Ürünler" /></a>
 
       <!-- Pre-rendered variant gallery JSON payload for instant synchronous client rendering -->
       <script is:inline type="application/json" id="variants-data" set:html={JSON.stringify(variantsPayload)} />
@@ -101,7 +133,7 @@ const variantsPayload = await Promise.all(
                       width={800}
                       height={800}
                       quality={80}
-                      loading="lazy"
+                      loading={idx === 0 ? 'eager' : 'lazy'}
                       fetchpriority={idx === 0 ? 'high' : 'auto'}
                       decoding="async"
                     />
@@ -115,7 +147,7 @@ const variantsPayload = await Promise.all(
               id="gallery-controls"
               style={fallbackGallery.length > 1 ? '' : 'display: none;'}
             >
-              <button type="button" class="gallery-btn gallery-btn--prev" id="gallery-prev-btn" aria-label="Previous image">‹</button>
+              <button type="button" class="gallery-btn gallery-btn--prev" id="gallery-prev-btn" aria-label="Previous image"><span aria-hidden="true">‹</span></button>
               <div class="gallery-dots" id="gallery-dots">
                 {fallbackGallery.map((_, idx) => (
                   <button
@@ -126,7 +158,7 @@ const variantsPayload = await Promise.all(
                   />
                 ))}
               </div>
-              <button type="button" class="gallery-btn gallery-btn--next" id="gallery-next-btn" aria-label="Next image">›</button>
+              <button type="button" class="gallery-btn gallery-btn--next" id="gallery-next-btn" aria-label="Next image"><span aria-hidden="true">›</span></button>
             </div>
 
             <span class="product-hero__badge" id="product-badge">
@@ -154,10 +186,10 @@ const variantsPayload = await Promise.all(
           <!-- Size Selector (only rendered if there are multiple sizes to choose from) -->
           {allSizes.length > 1 && (
             <div class="picker-section">
-              <label class="picker-label">
+              <p class="picker-label" id="size-picker-label">
                 <Trans en="1. Select Size" tr="1. Ölçü Seçin" />
-              </label>
-              <div class="size-pill-group" role="radiogroup" aria-label="Product size">
+              </p>
+              <div class="size-pill-group" role="radiogroup" aria-labelledby="size-picker-label">
                 {allSizes.map((s) => {
                   const isAvailable = variantsWithAssets.length === 0 || variantsWithAssets.some((v) => v.size_id === s.id);
                   const isSelected = isAvailable && s.id === initialSizeId;
@@ -170,7 +202,7 @@ const variantsPayload = await Promise.all(
                       role="radio"
                       aria-checked={isSelected ? 'true' : 'false'}
                       aria-disabled={!isAvailable ? 'true' : 'false'}
-                      tabindex={!isAvailable ? -1 : 0}
+                      tabindex={isSelected ? 0 : -1}
                     >
                       <span class="size-pill__cm">{formatDimension(s, 'cm')}</span>
                       <span class="size-pill__in">{formatDimension(s, 'in')}</span>
@@ -189,14 +221,14 @@ const variantsPayload = await Promise.all(
           <!-- Visual Design Palette -->
           {variantsWithAssets.length > 0 && (
             <div class="picker-section">
-              <label class="picker-label">
+              <p class="picker-label" id="design-picker-label">
                 {allSizes.length > 1 ? (
                   <Trans en="2. Select Print Design" tr="2. Desen Seçin" />
                 ) : (
                   <Trans en="Select Print Design" tr="Desen Seçin" />
                 )}
-              </label>
-              <div class="design-swatch-grid" role="radiogroup" aria-label="Print design">
+              </p>
+              <div class="design-swatch-grid" role="radiogroup" aria-labelledby="design-picker-label">
                 {variantsWithAssets.map((v) => {
                   const isSelected = v.sku === initialVariant?.sku;
                   const isVisible = v.size_id === initialSizeId;
@@ -208,7 +240,9 @@ const variantsPayload = await Promise.all(
                       data-size-id={v.size_id}
                       role="radio"
                       aria-checked={isSelected ? 'true' : 'false'}
+                      aria-label={`SKU ${v.sku}`}
                       title={`SKU ${v.sku}`}
+                      tabindex={isSelected ? 0 : -1}
                       style={`--swatch-aspect: ${v.swatch_aspect};`}
                     >
                       <div class="design-swatch__thumb" style={`aspect-ratio: ${v.swatch_aspect};`}>
@@ -249,20 +283,53 @@ const variantsPayload = await Promise.all(
             </div>
           )}
 
+          <!-- Retail / Marketplace Links -->
+          {Object.keys(RETAILER_REGISTRY).length > 0 && (
+            <div
+              class="retail-section"
+              id="retail-section"
+              style={Object.keys(initialRetailLinks).length > 0 ? '' : 'display: none;'}
+            >
+              <p class="retail-section__label">
+                <Trans en="Buy online:" tr="Satın alabileceğiniz pazaryerleri:" />
+              </p>
+              <div class="retail-links" id="retail-links-grid">
+                {Object.values(RETAILER_REGISTRY).map((retailer) => {
+                  const url = initialRetailLinks[retailer.id];
+                  return (
+                    <a
+                      id={`retail-link-${retailer.id}`}
+                      href={url || '#'}
+                      target={retailer.isExternal !== false ? '_blank' : '_self'}
+                      rel={retailer.isExternal !== false ? 'nofollow noopener noreferrer' : undefined}
+                      class={`retail-badge retail-badge--${retailer.id}`}
+                      style={url ? '' : 'display: none;'}
+                      aria-label={retailer.name}
+                      data-retailer-id={retailer.id}
+                    >
+                      <img
+                        src={`${base}${retailer.logo}`}
+                        alt={retailer.name}
+                        width="124"
+                        height="28"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </a>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
           <div class="product-hero__ctas">
             <a class="btn btn--primary" href={`${base}/wholesale`}><Trans en="Wholesale inquiry" tr="Toptan Bilgisi Alın" /></a>
             <a class="btn btn--ghost" href={`${base}/contact`}><Trans en="Contact us" tr="İletişime Geçin" /></a>
           </div>
-          <p class="note">
-            <Trans
-              en="Online checkout is not live yet. Contact us for samples or bulk quotes."
-              tr="Perakende online satışımız henüz aktif değildir. Numune veya toptan sipariş talepleriniz için bizimle iletişime geçebilirsiniz."
-            />
-          </p>
         </div>
 
         <!-- Inline synchronous parser script: Immediately updates gallery, SKU, size pills, and swatches BEFORE first paint -->
-        <script is:inline>
+        <script is:inline data-astro-rerun>
           (function() {
             try {
               var sku = new URLSearchParams(window.location.search).get('sku');
@@ -317,6 +384,7 @@ const variantsPayload = await Promise.all(
                   var isSel = Number(p.getAttribute('data-size-id')) === sizeId;
                   p.classList.toggle('is-selected', isSel);
                   p.setAttribute('aria-checked', isSel ? 'true' : 'false');
+                  p.setAttribute('tabindex', isSel ? '0' : '-1');
                 });
 
                 var swatches = document.querySelectorAll('.design-swatch');
@@ -326,7 +394,28 @@ const variantsPayload = await Promise.all(
                   s.classList.toggle('is-hidden', !matchesSize);
                   s.classList.toggle('is-selected', isSel);
                   s.setAttribute('aria-checked', isSel ? 'true' : 'false');
+                  s.setAttribute('tabindex', isSel ? '0' : '-1');
                 });
+              }
+
+              // 5. Immediately update retail links
+              var rLinks = v.retail_links || {};
+              var hasAnyRetail = false;
+              var badges = document.querySelectorAll('[data-retailer-id]');
+              badges.forEach(function(badge) {
+                var rid = badge.getAttribute('data-retailer-id');
+                var url = rLinks[rid];
+                if (url) {
+                  badge.href = url;
+                  badge.style.display = 'inline-flex';
+                  hasAnyRetail = true;
+                } else {
+                  badge.style.display = 'none';
+                }
+              });
+              var retailSec = document.getElementById('retail-section');
+              if (retailSec) {
+                retailSec.style.display = hasAnyRetail ? '' : 'none';
               }
             } catch(e) {}
           })();
@@ -351,7 +440,7 @@ const variantsPayload = await Promise.all(
 
     const variantsDataEl = document.getElementById('variants-data');
     const rawData = variantsDataEl ? JSON.parse(variantsDataEl.textContent || '[]') : [];
-    const variantsMap = new Map<string, { sku: string; size_id: number; gallery: string[] }>();
+    const variantsMap = new Map<string, { sku: string; size_id: number; gallery: string[]; retail_links?: Record<string, string> }>();
     rawData.forEach((item: any) => variantsMap.set(item.sku, item));
 
     const sizePills = root.querySelectorAll<HTMLButtonElement>('.size-pill:not([disabled])');
@@ -480,79 +569,54 @@ const variantsPayload = await Promise.all(
       }, 500);
     }
 
-    let activeSwitchToken = 0;
-
-    async function renderGalleryForVariant(sku: string) {
+    function renderGalleryForVariant(sku: string) {
       const variant = variantsMap.get(sku);
       if (!variant || !mediaContainer) return;
 
-      const switchToken = ++activeSwitchToken;
-      const primaryUrl = variant.gallery[0];
+      // Reset any active drag state
+      isPointerDown = false;
+      isHorizontalDrag = false;
+      dragDeltaX = 0;
+      mediaContainer.classList.remove('is-dragging');
 
-      // Decode the primary image first so the previous variant stays displayed
-      if (primaryUrl) {
-        await preloadImage(primaryUrl);
+      // Find or create the canonical gallery container
+      let gal = document.getElementById('active-gallery') as HTMLElement | null;
+      if (!gal) {
+        gal = mediaContainer.querySelector<HTMLElement>('.variant-gallery');
       }
+      if (!gal) {
+        gal = document.createElement('div');
+        gal.className = 'variant-gallery';
+        if (controlsContainer && controlsContainer.parentElement === mediaContainer) {
+          mediaContainer.insertBefore(gal, controlsContainer);
+        } else {
+          mediaContainer.appendChild(gal);
+        }
+      }
+      gal.id = 'active-gallery';
+      gal.classList.remove('is-incoming');
+      gal.style.opacity = '1';
+      gal.style.transition = 'transform 320ms cubic-bezier(0.25, 1, 0.5, 1)';
+      gal.style.transform = 'translateX(0%)';
+      gal.setAttribute('data-sku', sku);
 
-      // If user switched to another variant while loading, discard this render
-      if (switchToken !== activeSwitchToken) return;
+      // Clean up any extraneous or orphaned gallery elements
+      const allGalleries = mediaContainer.querySelectorAll<HTMLElement>('.variant-gallery');
+      allGalleries.forEach((g) => {
+        if (g !== gal) g.remove();
+      });
 
+      activeGalleryContainer = gal;
       currentSlideIdx = 0;
 
-      // Create incoming gallery layer placed on top of the old gallery
-      const newGallery = document.createElement('div');
-      newGallery.className = 'variant-gallery is-incoming';
-      newGallery.setAttribute('data-sku', sku);
-      newGallery.style.opacity = '0';
-      newGallery.style.transition = 'opacity 180ms ease';
-      newGallery.style.transform = 'translateX(0%)';
-
-      // Build slide elements
+      // Build slide elements synchronously
+      let html = '';
       variant.gallery.forEach((url, idx) => {
-        const slide = document.createElement('div');
-        slide.className = `gallery-slide ${idx === 0 ? 'is-active' : ''}`;
-        slide.setAttribute('data-slide-idx', String(idx));
-        
-        const img = document.createElement('img');
-        img.src = url;
-        img.alt = `${sku} photo ${idx + 1}`;
-        img.loading = idx === 0 ? 'eager' : 'lazy';
-        img.decoding = 'async';
-        
-        slide.appendChild(img);
-        newGallery.appendChild(slide);
+        html += `<div class="gallery-slide ${idx === 0 ? 'is-active' : ''}" data-slide-idx="${idx}">` +
+          `<img src="${url}" alt="${sku} photo ${idx + 1}" ${idx === 0 ? 'loading="eager" fetchpriority="high"' : 'loading="lazy"'} decoding="async" />` +
+          `</div>`;
       });
-
-      // Insert before controls so controls remain on top
-      if (controlsContainer && controlsContainer.parentElement === mediaContainer) {
-        mediaContainer.insertBefore(newGallery, controlsContainer);
-      } else {
-        mediaContainer.appendChild(newGallery);
-      }
-
-      // Set as active gallery immediately for click/dot events
-      activeGalleryContainer = newGallery;
-
-      // Trigger seamless opacity fade-in over the old variant
-      requestAnimationFrame(() => {
-        newGallery.style.opacity = '1';
-      });
-
-      // Clean up previous galleries only AFTER the new layer is fully opaque
-      setTimeout(() => {
-        if (switchToken === activeSwitchToken) {
-          const allGalleries = mediaContainer.querySelectorAll('.variant-gallery');
-          allGalleries.forEach((g) => {
-            if (g !== newGallery) {
-              g.remove();
-            }
-          });
-          newGallery.classList.remove('is-incoming');
-          newGallery.id = 'active-gallery';
-          newGallery.style.opacity = '';
-          newGallery.style.transition = '';
-        }
-      }, 200);
+      gal.innerHTML = html;
 
       // Update dots and controls visibility
       if (controlsContainer && dotsContainer) {
@@ -743,6 +807,31 @@ const variantsPayload = await Promise.all(
     showSlide(0, false);
     rebindDots();
 
+    function updateRetailLinks(sku: string) {
+      if (!root) return;
+      const v = variantsMap.get(sku);
+      const rLinks = v?.retail_links || {};
+      let hasAnyRetail = false;
+
+      const badges = root.querySelectorAll<HTMLAnchorElement>('[data-retailer-id]');
+      badges.forEach((badge) => {
+        const rid = badge.getAttribute('data-retailer-id');
+        const url = rid ? rLinks[rid] : undefined;
+        if (url) {
+          badge.href = url;
+          badge.style.display = 'inline-flex';
+          hasAnyRetail = true;
+        } else {
+          badge.style.display = 'none';
+        }
+      });
+
+      const retailSec = document.getElementById('retail-section');
+      if (retailSec) {
+        retailSec.style.display = hasAnyRetail ? '' : 'none';
+      }
+    }
+
     function activateSku(sku: string) {
       if (sku === activeSku && activeGalleryContainer?.getAttribute('data-sku') === sku) return;
       activeSku = sku;
@@ -752,10 +841,14 @@ const variantsPayload = await Promise.all(
         const isSelected = swatch.getAttribute('data-sku') === sku;
         swatch.classList.toggle('is-selected', isSelected);
         swatch.setAttribute('aria-checked', isSelected ? 'true' : 'false');
+        swatch.setAttribute('tabindex', isSelected ? '0' : '-1');
       });
 
       // Dynamically load gallery images for selected SKU
       renderGalleryForVariant(sku);
+
+      // Dynamically update retail links for selected SKU
+      updateRetailLinks(sku);
 
       // Update SKU display
       if (skuDisplay && sku) {
@@ -778,6 +871,7 @@ const variantsPayload = await Promise.all(
         const isSelected = Number(pill.getAttribute('data-size-id')) === sizeId;
         pill.classList.toggle('is-selected', isSelected);
         pill.setAttribute('aria-checked', isSelected ? 'true' : 'false');
+        pill.setAttribute('tabindex', isSelected ? '0' : '-1');
       });
 
       // Filter design swatches
@@ -809,6 +903,32 @@ const variantsPayload = await Promise.all(
       });
     });
 
+    // Size pill keyboard arrow navigation (WAI-ARIA Radiogroup)
+    const sizePillGroup = root.querySelector('.size-pill-group');
+    if (sizePillGroup) {
+      sizePillGroup.addEventListener('keydown', (e: Event) => {
+        const keyEvent = e as KeyboardEvent;
+        const availablePills = Array.from(sizePills).filter((p) => !p.disabled);
+        const currentIdx = availablePills.findIndex((p) => p.classList.contains('is-selected'));
+        if (currentIdx === -1) return;
+
+        let nextIdx = -1;
+        if (keyEvent.key === 'ArrowRight' || keyEvent.key === 'ArrowDown') {
+          nextIdx = (currentIdx + 1) % availablePills.length;
+        } else if (keyEvent.key === 'ArrowLeft' || keyEvent.key === 'ArrowUp') {
+          nextIdx = (currentIdx - 1 + availablePills.length) % availablePills.length;
+        }
+
+        if (nextIdx !== -1) {
+          keyEvent.preventDefault();
+          const target = availablePills[nextIdx];
+          target.focus();
+          const sizeId = Number(target.getAttribute('data-size-id'));
+          if (sizeId) selectSize(sizeId);
+        }
+      });
+    }
+
     // Design swatch click handlers
     designSwatches.forEach((swatch) => {
       swatch.addEventListener('click', () => {
@@ -816,6 +936,32 @@ const variantsPayload = await Promise.all(
         if (sku) activateSku(sku);
       });
     });
+
+    // Design swatch keyboard arrow navigation (WAI-ARIA Radiogroup)
+    const swatchGrid = root.querySelector('.design-swatch-grid');
+    if (swatchGrid) {
+      swatchGrid.addEventListener('keydown', (e: Event) => {
+        const keyEvent = e as KeyboardEvent;
+        const visibleSwatches = Array.from(designSwatches).filter((s) => !s.classList.contains('is-hidden'));
+        const currentIdx = visibleSwatches.findIndex((s) => s.classList.contains('is-selected'));
+        if (currentIdx === -1) return;
+
+        let nextIdx = -1;
+        if (keyEvent.key === 'ArrowRight' || keyEvent.key === 'ArrowDown') {
+          nextIdx = (currentIdx + 1) % visibleSwatches.length;
+        } else if (keyEvent.key === 'ArrowLeft' || keyEvent.key === 'ArrowUp') {
+          nextIdx = (currentIdx - 1 + visibleSwatches.length) % visibleSwatches.length;
+        }
+
+        if (nextIdx !== -1) {
+          keyEvent.preventDefault();
+          const target = visibleSwatches[nextIdx];
+          target.focus();
+          const sku = target.getAttribute('data-sku');
+          if (sku) activateSku(sku);
+        }
+      });
+    }
 
     // Deep linking on load: check ?sku= in URL
     const params = new URLSearchParams(window.location.search);
@@ -830,6 +976,7 @@ const variantsPayload = await Promise.all(
     }
   }
 
+  document.addEventListener('astro:page-load', initVariantPicker);
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initVariantPicker);
   } else {
@@ -840,7 +987,7 @@ const variantsPayload = await Promise.all(
 <style>
   .back-link {
     display: inline-block;
-    margin-bottom: var(--space-4);
+    margin-bottom: var(--space-3);
     text-decoration: none;
     color: var(--color-muted);
     font-size: 14px;
@@ -866,7 +1013,7 @@ const variantsPayload = await Promise.all(
   @media (min-width: 900px) {
     .product-hero__media-col {
       position: sticky;
-      top: 96px; /* Clears sticky header (70px) + 26px breathing margin */
+      top: 86px; /* Clears sticky header (70px) + 16px breathing margin */
       z-index: 5;
     }
   }
@@ -1023,12 +1170,12 @@ const variantsPayload = await Promise.all(
   .lede {
     font-size: 1.15rem;
     color: var(--color-ink-soft);
+    margin-bottom: var(--space-3);
   }
 
   /* Picker Sections */
   .picker-section {
-    margin: var(--space-4) 0;
-    padding: var(--space-3) 0;
+    padding-block: var(--space-3);
     border-top: 1px solid var(--color-line);
   }
   .picker-label {
@@ -1177,16 +1324,71 @@ const variantsPayload = await Promise.all(
   }
   .spec__label { color: var(--color-muted); }
   .spec__value { color: var(--color-ink); font-weight: 500; text-align: right; }
+
+  /* Retail / Marketplace Links Section */
+  .retail-section {
+    padding-block: var(--space-3);
+    border-top: 1px solid var(--color-line);
+  }
+  .retail-section__label {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--color-ink);
+    margin-bottom: var(--space-2);
+  }
+  .retail-links,
   .product-hero__ctas {
     display: flex;
     gap: var(--space-3);
     flex-wrap: wrap;
-    margin-top: var(--space-4);
+    align-items: center;
   }
-  .note {
+  .product-hero__ctas {
     margin-top: var(--space-3);
-    color: var(--color-muted);
-    font-size: 13px;
   }
+  .retail-badge,
+  .product-hero__ctas .btn {
+    flex: 1 1 calc(50% - var(--space-3) / 2);
+    max-width: calc(50% - var(--space-3) / 2);
+    height: 48px;
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  .retail-badge {
+    padding: 10px 18px;
+    background: white;
+    border: 1.5px solid var(--color-line);
+    border-radius: var(--radius);
+    text-decoration: none;
+    transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  }
+  .retail-badge:hover {
+    border-color: var(--color-coral);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transform: translateY(-1px);
+  }
+  .retail-badge img {
+    width: 100%;
+    height: 100%;
+    max-width: 124px;
+    max-height: 28px;
+    object-fit: contain;
+    display: block;
+  }
+  @media (max-width: 480px) {
+    .retail-badge,
+    .product-hero__ctas .btn {
+      flex: 1 1 100%;
+      max-width: 100%;
+    }
+  }
+
   .prose h2 { margin-top: var(--space-5); }
 </style>

@@ -162,4 +162,4 @@ The site is configured for automatic deployment to **GitHub Pages** with the cus
 
 ## Repository Rules
 
-This is the **public** marketing repository. Do not copy internal operational data (pricing sheets, raw supplier invoices, customer contact databases) from private repositories. All committed code and copy are public-facing.
+This is the **public** marketing website repository. Do not copy internal operational data (pricing sheets, raw supplier invoices, customer contact databases) from private repositories. All committed code and copy are public-facing. See AGENTS.md.

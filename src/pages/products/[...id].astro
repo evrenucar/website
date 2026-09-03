@@ -983,7 +983,7 @@ const productSchema = {
       const bodyCol = root.querySelector<HTMLElement>('.product-hero__body');
       if (!mediaCol || !bodyCol) return;
 
-      if (window.innerWidth < 900) {
+      if (window.innerWidth < 900 || window.innerHeight < 500) {
         mediaCol.style.top = '';
         bodyCol.style.top = '';
         return;
@@ -1057,6 +1057,10 @@ const productSchema = {
     color: var(--color-muted);
     font-size: 14px;
   }
+  .product-hero__body {
+    container-type: inline-size;
+    container-name: hero-body;
+  }
   /* Mobile (< 900px): Optimal e-commerce sequence (Carousel -> Body/Pickers -> Description) */
   @media (max-width: 899px) {
     .product-hero {
@@ -1081,8 +1085,8 @@ const productSchema = {
     }
   }
 
-  /* Desktop (>= 900px): Dual-column synchronized scroll with dynamic docking */
-  @media (min-width: 900px) {
+  /* Desktop (>= 900px and height >= 500px): Dual-column synchronized scroll with dynamic docking */
+  @media (min-width: 900px) and (min-height: 500px) {
     .product-hero {
       display: grid;
       grid-template-columns: 1.1fr 1fr;
@@ -1099,6 +1103,24 @@ const productSchema = {
       position: sticky;
       top: 86px;
       z-index: 4;
+      container-type: inline-size;
+      container-name: hero-body;
+    }
+  }
+
+  /* Desktop layout fallback when viewport height is ultra-short (< 500px): keep 2 columns without sticky traps */
+  @media (min-width: 900px) and (max-height: 499px) {
+    .product-hero {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: var(--space-6);
+      align-items: start;
+    }
+    .product-hero__media-col,
+    .product-hero__body {
+      position: static;
+      container-type: inline-size;
+      container-name: hero-body;
     }
   }
 
@@ -1263,7 +1285,7 @@ const productSchema = {
 
   /* Picker Sections */
   .picker-section {
-    padding-block: var(--space-3);
+    padding-block: clamp(10px, 1.8vh, var(--space-3));
     border-top: 1px solid var(--color-line);
   }
   .picker-label {
@@ -1277,18 +1299,30 @@ const productSchema = {
   }
   .size-pill-group {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 80px), 1fr));
+    grid-template-columns: repeat(4, 1fr);
     gap: 8px;
+  }
+  @container hero-body (max-width: 460px) {
+    .size-pill-group {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+  }
+  @container hero-body (max-width: 250px) {
+    .size-pill-group {
+      grid-template-columns: 1fr;
+    }
   }
   .size-pill {
     position: relative;
     width: 100%;
+    min-height: 48px;
     box-sizing: border-box;
     display: inline-flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 8px 10px;
+    padding: clamp(6px, 1.5cqi, 8px) clamp(6px, 2cqi, 10px);
     background: white;
     border: 1.5px solid var(--color-line);
     border-radius: var(--radius);
@@ -1351,13 +1385,18 @@ const productSchema = {
     transform: translateX(-50%) translateY(0);
   }
   .size-pill__cm {
-    font-size: 14px;
+    font-size: clamp(12px, 3cqi, 14px);
     font-weight: 700;
     color: var(--color-ink);
+    white-space: nowrap;
+    line-height: 1.2;
   }
   .size-pill__in {
-    font-size: 11px;
+    font-size: clamp(10px, 2.2cqi, 11px);
     color: var(--color-muted);
+    white-space: nowrap;
+    line-height: 1.2;
+    margin-top: 2px;
   }
 
   /* Visual Design Swatches */
@@ -1421,7 +1460,7 @@ const productSchema = {
 
   /* Retail / Marketplace Links Section */
   .retail-section {
-    padding-block: var(--space-3);
+    padding-block: clamp(10px, 1.8vh, var(--space-3));
     border-top: 1px solid var(--color-line);
   }
   .retail-section__label {
@@ -1433,16 +1472,24 @@ const productSchema = {
     color: var(--color-ink);
     margin-bottom: var(--space-2);
   }
-  .retail-links,
+  .retail-links {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-3);
+    align-items: stretch;
+  }
+  @container hero-body (max-width: 320px) {
+    .retail-links {
+      grid-template-columns: 1fr;
+    }
+  }
   .product-hero__ctas {
     display: flex;
     gap: var(--space-3);
     flex-wrap: wrap;
     align-items: center;
-  }
-  .product-hero__ctas {
-    margin-top: var(--space-3);
-    margin-bottom: var(--space-3);
+    margin-top: clamp(10px, 1.8vh, var(--space-3));
+    margin-bottom: clamp(10px, 1.8vh, var(--space-3));
   }
   .product-hero__ctas .btn {
     flex: 1 1 calc(50% - var(--space-3) / 2);
@@ -1454,16 +1501,22 @@ const productSchema = {
     justify-content: center;
     text-align: center;
   }
+  @container hero-body (max-width: 340px) {
+    .product-hero__ctas .btn {
+      flex: 1 1 100%;
+      max-width: 100%;
+    }
+  }
   .retail-badge {
-    flex: 1 1 calc(50% - var(--space-3) / 2);
-    max-width: calc(50% - var(--space-3) / 2);
-    height: 80px;
+    width: 100%;
+    min-height: 72px;
+    height: 100%;
     box-sizing: border-box;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding: 12px 18px;
+    padding: clamp(10px, 2.5cqi, 12px) clamp(12px, 3cqi, 18px);
     background: white;
     border: 1.5px solid var(--color-line);
     border-radius: var(--radius);
@@ -1484,23 +1537,16 @@ const productSchema = {
     object-fit: contain;
     display: block;
   }
-  @media (max-width: 480px) {
-    .retail-badge,
-    .product-hero__ctas .btn {
-      flex: 1 1 100%;
-      max-width: 100%;
-    }
-  }
 
   .retail-empty-note {
     margin: 0;
-    height: 80px;
-    min-height: 80px;
+    min-height: 72px;
+    height: auto;
     box-sizing: border-box;
     display: flex;
     align-items: center;
     gap: var(--space-3);
-    padding: 10px 18px;
+    padding: clamp(10px, 2.5cqi, 14px) clamp(14px, 3.5cqi, 18px);
     background: white;
     border: 1.5px solid var(--color-line);
     border-left: 4px solid var(--color-coral);
@@ -1509,14 +1555,14 @@ const productSchema = {
   }
   .retail-empty-note__icon {
     flex-shrink: 0;
-    width: 24px;
-    height: 24px;
+    width: 22px;
+    height: 22px;
     color: var(--color-coral);
   }
   .retail-empty-note__text {
-    font-size: 0.95rem;
-    font-weight: 600;
-    line-height: 1.35;
+    font-size: clamp(0.82rem, 2.3cqi, 0.88rem);
+    font-weight: 500;
+    line-height: 1.42;
     color: var(--color-ink);
     letter-spacing: -0.01em;
     text-wrap: pretty;

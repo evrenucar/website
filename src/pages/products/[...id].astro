@@ -1232,6 +1232,7 @@ const productSchema = {
   }
   .gallery-dots .dot,
   :global(.gallery-dots .dot) {
+    position: relative;
     width: 8px;
     height: 8px;
     min-width: 8px;
@@ -1247,6 +1248,16 @@ const productSchema = {
     cursor: pointer;
     box-shadow: 0 1px 3px rgba(0,0,0,0.3);
     transition: transform 180ms ease, background 180ms ease;
+  }
+  .gallery-dots .dot::before,
+  :global(.gallery-dots .dot::before) {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 24px;
+    min-height: 24px;
   }
   .gallery-dots .dot.is-active,
   :global(.gallery-dots .dot.is-active) {
@@ -1335,7 +1346,7 @@ const productSchema = {
   }
   .size-pill.is-selected {
     border-color: var(--color-coral);
-    background: color-mix(in srgb, var(--color-coral) 8%, white);
+    background: color-mix(in oklab, var(--color-coral) 8%, white);
     box-shadow: 0 0 0 2px var(--color-coral);
   }
   .size-pill--disabled {
@@ -1569,4 +1580,13 @@ const productSchema = {
   }
 
   .prose h2 { margin-top: var(--space-5); }
+
+  /* High Contrast / Forced Colors Mode (Windows) */
+  @media (forced-colors: active) {
+    .size-pill.is-selected,
+    .design-swatch.is-selected {
+      outline: 3px solid Highlight;
+      outline-offset: 2px;
+    }
+  }
 </style>

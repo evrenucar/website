@@ -216,7 +216,7 @@ const linkedin = 'https://linkedin.com/company/canicopet';
     height: 44px;
     display: grid;
     place-items: center;
-    background: color-mix(in srgb, var(--color-coral) 12%, transparent);
+    background: color-mix(in oklab, var(--color-coral) 12%, transparent);
     border-radius: 12px;
     color: var(--color-coral);
   }
@@ -272,6 +272,15 @@ const linkedin = 'https://linkedin.com/company/canicopet';
     background: var(--color-bg);
     color: var(--color-ink);
     width: 100%;
+    transition: border-color 140ms ease;
+  }
+  .cform input:user-invalid,
+  .cform textarea:user-invalid {
+    border-color: var(--color-coral);
+  }
+  .cform input:user-valid,
+  .cform textarea:user-valid {
+    border-color: var(--color-moss);
   }
   .cform textarea { resize: vertical; }
   .cform button {

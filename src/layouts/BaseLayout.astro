@@ -44,11 +44,11 @@ const ogImageAbs = new URL(ogImage, Astro.site).toString();
     <link rel="icon" type="image/png" sizes="256x256" href={`${base}/favicon-256x256.png`} />
     <link rel="apple-touch-icon" sizes="180x180" href={`${base}/favicon-180x180.png`} />
 
-    <link rel="preload" as="image" href={`${base}/caniko_logo_dark_color1080.png`} fetchpriority="high" />
-
-    <!-- Preload local variable fonts -->
+    <!-- Preload local variable fonts (Latin & Latin-ext subsets) -->
     <link rel="preload" href={`${base}/fonts/manrope-latin.woff2`} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={`${base}/fonts/manrope-latin-ext.woff2`} as="font" type="font/woff2" crossorigin />
     <link rel="preload" href={`${base}/fonts/dmsans-latin.woff2`} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={`${base}/fonts/dmsans-latin-ext.woff2`} as="font" type="font/woff2" crossorigin />
 
     <ClientRouter />
 

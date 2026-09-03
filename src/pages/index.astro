@@ -89,6 +89,7 @@ const logoUrl = Astro.site ? new URL(`${base}/caniko_logo_dark_color1080.png`, A
             src={carouselScratchingPad}
             alt="Cat scratching a textile pad on a sofa arm"
             loading="lazy"
+            fetchpriority="low"
             draggable="false"
           />
         </a>
@@ -106,6 +107,7 @@ const logoUrl = Astro.site ? new URL(`${base}/caniko_logo_dark_color1080.png`, A
           src={carouselTabbyCat}
           alt="Tabby cat under a warm interior lamp"
           loading="lazy"
+          fetchpriority="low"
           draggable="false"
         />
         <div class="home-carousel__caption">
@@ -310,7 +312,7 @@ const logoUrl = Astro.site ? new URL(`${base}/caniko_logo_dark_color1080.png`, A
   </script>
 
   {/* ---------- Shop by pet: three solid colored tiles, no stock photos ---------- */}
-  <section class="section">
+  <section class="section section-deferred">
     <div class="container">
       <div class="section-head">
         <div>
@@ -347,7 +349,7 @@ const logoUrl = Astro.site ? new URL(`${base}/caniko_logo_dark_color1080.png`, A
   </section>
 
   {/* ---------- Featured products ---------- */}
-  <section class="section section--soft">
+  <section class="section section--soft section-deferred">
     <div class="container">
       <div class="section-head">
         <div>
@@ -378,7 +380,7 @@ const logoUrl = Astro.site ? new URL(`${base}/caniko_logo_dark_color1080.png`, A
   </section>
 
   {/* ---------- Benefits row: colored accent, no emoji ---------- */}
-  <section class="section">
+  <section class="section section-deferred">
     <div class="container">
       <div class="section-head">
         <div>
@@ -412,7 +414,7 @@ const logoUrl = Astro.site ? new URL(`${base}/caniko_logo_dark_color1080.png`, A
   </section>
 
   {/* ---------- Story block: single landscape photo, side-by-side copy ---------- */}
-  <section class="section section--warm">
+  <section class="section section--warm section-deferred">
     <div class="container story">
       <div class="story__media">
         <Image
@@ -436,7 +438,7 @@ const logoUrl = Astro.site ? new URL(`${base}/caniko_logo_dark_color1080.png`, A
   </section>
 
   {/* ---------- Testimonials ---------- */}
-  <section class="section">
+  <section class="section section-deferred">
     <div class="container">
       <div class="section-head" style="justify-content: center; text-align: center;">
         <div>
@@ -489,7 +491,7 @@ const logoUrl = Astro.site ? new URL(`${base}/caniko_logo_dark_color1080.png`, A
   </section>
 
   {/* ---------- Wholesale CTA band ---------- */}
-  <section class="section section--dark">
+  <section class="section section--dark section-deferred">
     <div class="container">
       <div class="cta-band">
         <div class="cta-band__copy">
@@ -622,12 +624,19 @@ const logoUrl = Astro.site ? new URL(`${base}/caniko_logo_dark_color1080.png`, A
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: color-mix(in srgb, var(--color-ink) 25%, transparent);
+    background: color-mix(in oklab, var(--color-ink) 25%, transparent);
     transition: background 160ms ease, transform 160ms ease;
   }
   .home-carousel__dots button[aria-selected="true"]::after {
     background: var(--color-coral);
     transform: scale(1.35);
+  }
+
+  @media (forced-colors: active) {
+    .home-carousel__dots button[aria-selected="true"] {
+      outline: 2px solid Highlight;
+      outline-offset: 2px;
+    }
   }
 
   .section-head {

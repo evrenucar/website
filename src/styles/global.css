@@ -106,6 +106,7 @@ body {
   background: var(--color-bg);
   color: var(--color-ink);
   font-family: var(--font-sans);
+  font-size-adjust: from-font;
   font-size: 17px;
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
@@ -221,6 +222,11 @@ main > article.section:first-of-type {
 .section--dark {
   background: var(--color-ink);
   color: var(--color-bg);
+}
+
+.section-deferred {
+  content-visibility: auto;
+  contain-intrinsic-size: auto none auto 500px;
 }
 
 .skip-link {
@@ -379,6 +385,12 @@ html.lang-tr [lang="en"] {
 .lang-toggle button[aria-pressed="true"] {
   background: var(--color-ink);
   color: var(--color-bg);
+}
+
+@media (forced-colors: active) {
+  .lang-toggle button[aria-pressed="true"] {
+    outline: 2px solid Highlight;
+  }
 }
 
 /* Hero with lifestyle image + colored blobs */

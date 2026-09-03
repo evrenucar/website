@@ -56,6 +56,7 @@ const variantsWithAssets = d.variants.map((v) => {
 const initialVariant = variantsWithAssets[0];
 const initialSizeId = initialVariant ? initialVariant.size_id : d.sizes[0]?.id;
 const initialRetailLinks = initialVariant ? initialVariant.retail_links : heroRetailLinks;
+const hasInitialRetail = initialRetailLinks && Object.keys(initialRetailLinks).length > 0;
 const fallbackGallery = initialVariant ? initialVariant.gallery : (d.images.length > 0 ? d.images : [heroImage].filter(Boolean));
 
 // Sizes defined on the product
@@ -169,6 +170,10 @@ const productSchema = {
               )}
             </span>
           </div>
+
+          <div class="prose product-hero__prose">
+            <Content />
+          </div>
         </div>
 
         <!-- Product Specs & Interactive Pickers -->
@@ -182,6 +187,73 @@ const productSchema = {
               <span lang="en">{d.tagline}</span>{d.tagline_tr && <span lang="tr">{d.tagline_tr}</span>}
             </p>
           )}
+
+          <!-- Retail / Marketplace Links -->
+          {Object.keys(RETAILER_REGISTRY).length > 0 && (
+            <div
+              class="retail-section"
+              id="retail-section"
+            >
+              <p
+                class="retail-section__label"
+                id="retail-section-label"
+              >
+                <Trans en="Online marketplaces:" tr="Pazaryerleri:" />
+              </p>
+              <div
+                class="retail-links"
+                id="retail-links-grid"
+                style={hasInitialRetail ? '' : 'display: none;'}
+              >
+                {Object.values(RETAILER_REGISTRY).map((retailer) => {
+                  const url = initialRetailLinks[retailer.id];
+                  return (
+                    <a
+                      id={`retail-link-${retailer.id}`}
+                      href={url || '#'}
+                      target={retailer.isExternal !== false ? '_blank' : '_self'}
+                      rel={retailer.isExternal !== false ? 'nofollow noopener noreferrer' : undefined}
+                      class={`retail-badge retail-badge--${retailer.id}`}
+                      style={url ? '' : 'display: none;'}
+                      aria-label={retailer.name}
+                      data-retailer-id={retailer.id}
+                    >
+                      <img
+                        src={`${base}${retailer.logo}`}
+                        alt={retailer.name}
+                        width="124"
+                        height="28"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </a>
+                  );
+                })}
+              </div>
+              <div
+                class="retail-empty-note"
+                id="retail-empty-note"
+                style={hasInitialRetail ? 'display: none;' : ''}
+              >
+                <svg class="retail-empty-note__icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="12" y1="16" x2="12" y2="12" stroke-linecap="round" stroke-linejoin="round" />
+                  <line x1="12" y1="8" x2="12.01" y2="8" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <span class="retail-empty-note__text">
+                  <Trans
+                    en="This variant is currently not available on online marketplaces. Contact us for stock availability and ordering information, or select a different variant."
+                    tr="Bu seçenek şu anda pazaryerlerinde satışta değildir. Stok durumu ve sipariş bilgisi için bizimle iletişime geçebilir veya farklı bir seçenek belirleyebilirsiniz."
+                  />
+                </span>
+              </div>
+            </div>
+          )}
+
+          <div class="product-hero__ctas">
+            <a class="btn btn--primary" href={`${base}/wholesale`}><Trans en="Wholesale inquiry" tr="Toptan Bilgisi Alın" /></a>
+            <a class="btn btn--ghost" id="product-contact-link" href={`${base}/contact`}><Trans en="Contact us" tr="İletişime Geçin" /></a>
+          </div>
 
           <!-- Size Selector (only rendered if there are multiple sizes to choose from) -->
           {allSizes.length > 1 && (
@@ -273,59 +345,6 @@ const productSchema = {
             </div>
           )}
 
-          {d.materials.length > 0 && (
-            <div class="spec">
-              <span class="spec__label"><Trans en="Materials" tr="Malzemeler" /></span>
-              <span class="spec__value">
-                <span lang="en">{d.materials.join(', ')}</span>
-                <span lang="tr">{(d.materials_tr && d.materials_tr.length > 0 ? d.materials_tr : d.materials).join(', ')}</span>
-              </span>
-            </div>
-          )}
-
-          <!-- Retail / Marketplace Links -->
-          {Object.keys(RETAILER_REGISTRY).length > 0 && (
-            <div
-              class="retail-section"
-              id="retail-section"
-              style={Object.keys(initialRetailLinks).length > 0 ? '' : 'display: none;'}
-            >
-              <p class="retail-section__label">
-                <Trans en="Buy online:" tr="Satın alabileceğiniz pazaryerleri:" />
-              </p>
-              <div class="retail-links" id="retail-links-grid">
-                {Object.values(RETAILER_REGISTRY).map((retailer) => {
-                  const url = initialRetailLinks[retailer.id];
-                  return (
-                    <a
-                      id={`retail-link-${retailer.id}`}
-                      href={url || '#'}
-                      target={retailer.isExternal !== false ? '_blank' : '_self'}
-                      rel={retailer.isExternal !== false ? 'nofollow noopener noreferrer' : undefined}
-                      class={`retail-badge retail-badge--${retailer.id}`}
-                      style={url ? '' : 'display: none;'}
-                      aria-label={retailer.name}
-                      data-retailer-id={retailer.id}
-                    >
-                      <img
-                        src={`${base}${retailer.logo}`}
-                        alt={retailer.name}
-                        width="124"
-                        height="28"
-                        loading="lazy"
-                        decoding="async"
-                      />
-                    </a>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          <div class="product-hero__ctas">
-            <a class="btn btn--primary" href={`${base}/wholesale`}><Trans en="Wholesale inquiry" tr="Toptan Bilgisi Alın" /></a>
-            <a class="btn btn--ghost" href={`${base}/contact`}><Trans en="Contact us" tr="İletişime Geçin" /></a>
-          </div>
         </div>
 
         <!-- Inline synchronous parser script: Immediately updates gallery, SKU, size pills, and swatches BEFORE first paint -->
@@ -413,20 +432,15 @@ const productSchema = {
                   badge.style.display = 'none';
                 }
               });
-              var retailSec = document.getElementById('retail-section');
-              if (retailSec) {
-                retailSec.style.display = hasAnyRetail ? '' : 'none';
-              }
+              var retailGrid = document.getElementById('retail-links-grid');
+              var retailEmpty = document.getElementById('retail-empty-note');
+              if (retailGrid) retailGrid.style.display = hasAnyRetail ? '' : 'none';
+              if (retailEmpty) retailEmpty.style.display = hasAnyRetail ? 'none' : '';
             } catch(e) {}
           })();
         </script>
       </div>
 
-      <hr class="divider" />
-
-      <div class="prose container--narrow">
-        <Content />
-      </div>
     </div>
   </article>
 
@@ -826,10 +840,10 @@ const productSchema = {
         }
       });
 
-      const retailSec = document.getElementById('retail-section');
-      if (retailSec) {
-        retailSec.style.display = hasAnyRetail ? '' : 'none';
-      }
+      const retailGrid = document.getElementById('retail-links-grid');
+      const retailEmpty = document.getElementById('retail-empty-note');
+      if (retailGrid) retailGrid.style.display = hasAnyRetail ? '' : 'none';
+      if (retailEmpty) retailEmpty.style.display = hasAnyRetail ? 'none' : '';
     }
 
     function activateSku(sku: string) {
@@ -963,6 +977,49 @@ const productSchema = {
       });
     }
 
+    // Synchronize bottom-docking / top-docking sticky positions for desktop dual-column layout
+    function updateStickyOffsets() {
+      const mediaCol = root.querySelector<HTMLElement>('.product-hero__media-col');
+      const bodyCol = root.querySelector<HTMLElement>('.product-hero__body');
+      if (!mediaCol || !bodyCol) return;
+
+      if (window.innerWidth < 900) {
+        mediaCol.style.top = '';
+        bodyCol.style.top = '';
+        return;
+      }
+
+      const vh = window.innerHeight;
+      const headerOffset = 86; // 70px sticky header + 16px breathing margin
+      const bottomGap = 24;
+      const heroRect = root.getBoundingClientRect();
+      const naturalTop = Math.max(headerOffset, Math.round(heroRect.top + window.scrollY));
+
+      [mediaCol, bodyCol].forEach((col) => {
+        const h = col.offsetHeight;
+        // 1. If column fits completely in viewport at its natural initial position (e.g. 60x90 size):
+        //    Pin directly at naturalTop so it does NOT scroll at all from pixel 0 until other column catches up!
+        if (h + naturalTop + bottomGap <= vh) {
+          col.style.top = `${naturalTop}px`;
+        } else if (h + headerOffset + bottomGap <= vh) {
+          // 2. If it fits within the viewport when tucked below header:
+          //    Pin at headerOffset so it stays fully visible
+          col.style.top = `${headerOffset}px`;
+        } else {
+          // 3. If column is taller than viewport (e.g. 45x60 size):
+          //    Scroll until its bottom edge docks 24px above viewport bottom so all contents are 100% visible
+          col.style.top = `${vh - h - bottomGap}px`;
+        }
+      });
+    }
+
+    // Call updateStickyOffsets whenever size changes
+    const originalSelectSize = selectSize;
+    selectSize = function(sizeId: number) {
+      originalSelectSize(sizeId);
+      requestAnimationFrame(updateStickyOffsets);
+    };
+
     // Deep linking on load: check ?sku= in URL
     const params = new URLSearchParams(window.location.search);
     const skuParam = params.get('sku');
@@ -974,6 +1031,14 @@ const productSchema = {
         activateSku(skuParam);
       }
     }
+
+    window.addEventListener('resize', updateStickyOffsets);
+    const ro = new ResizeObserver(() => updateStickyOffsets());
+    const mediaColEl = root.querySelector<HTMLElement>('.product-hero__media-col');
+    const bodyColEl = root.querySelector<HTMLElement>('.product-hero__body');
+    if (mediaColEl) ro.observe(mediaColEl);
+    if (bodyColEl) ro.observe(bodyColEl);
+    requestAnimationFrame(updateStickyOffsets);
   }
 
   document.addEventListener('astro:page-load', initVariantPicker);
@@ -992,30 +1057,53 @@ const productSchema = {
     color: var(--color-muted);
     font-size: 14px;
   }
-  .product-hero {
-    display: grid;
-    gap: var(--space-6);
+  /* Mobile (< 900px): Optimal e-commerce sequence (Carousel -> Body/Pickers -> Description) */
+  @media (max-width: 899px) {
+    .product-hero {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-6);
+    }
+    .product-hero__media-col {
+      display: contents;
+    }
+    .product-hero__media {
+      order: 1;
+    }
+    .product-hero__body {
+      order: 2;
+    }
+    .product-hero__prose {
+      order: 3;
+      margin-top: var(--space-4);
+      padding-top: var(--space-6);
+      border-top: 1px solid var(--color-line);
+    }
   }
+
+  /* Desktop (>= 900px): Dual-column synchronized scroll with dynamic docking */
   @media (min-width: 900px) {
     .product-hero {
+      display: grid;
       grid-template-columns: 1.1fr 1fr;
+      gap: var(--space-6);
       align-items: start;
     }
-  }
-  
-  /* Mobile: Media is in natural flow (not sticky) to avoid covering scrolled content */
-  .product-hero__media-col {
-    position: relative;
-    z-index: 1;
-  }
-  
-  /* Desktop (>= 900px): Sticky with clearance for the 70px+ sticky navbar */
-  @media (min-width: 900px) {
     .product-hero__media-col {
+      display: block;
       position: sticky;
-      top: 86px; /* Clears sticky header (70px) + 16px breathing margin */
+      top: 86px;
       z-index: 5;
     }
+    .product-hero__body {
+      position: sticky;
+      top: 86px;
+      z-index: 4;
+    }
+  }
+
+  .product-hero__prose {
+    margin-top: var(--space-5);
   }
 
   .product-hero__media {
@@ -1188,16 +1276,19 @@ const productSchema = {
     margin-bottom: var(--space-2);
   }
   .size-pill-group {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 80px), 1fr));
     gap: 8px;
   }
   .size-pill {
     position: relative;
+    width: 100%;
+    box-sizing: border-box;
     display: inline-flex;
     flex-direction: column;
     align-items: center;
-    padding: 8px 14px;
+    justify-content: center;
+    padding: 8px 10px;
     background: white;
     border: 1.5px solid var(--color-line);
     border-radius: var(--radius);
@@ -1271,11 +1362,13 @@ const productSchema = {
 
   /* Visual Design Swatches */
   .design-swatch-grid {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(68px, 1fr));
     gap: 10px;
   }
   .design-swatch {
+    width: 100%;
+    box-sizing: border-box;
     padding: 3px;
     background: white;
     border: 2px solid var(--color-line);
@@ -1299,6 +1392,7 @@ const productSchema = {
   .design-swatch__thumb {
     height: 48px;
     width: auto;
+    max-width: 100%;
     aspect-ratio: var(--swatch-aspect, 4 / 3);
     border-radius: 5px;
     overflow: hidden;
@@ -1348,8 +1442,8 @@ const productSchema = {
   }
   .product-hero__ctas {
     margin-top: var(--space-3);
+    margin-bottom: var(--space-3);
   }
-  .retail-badge,
   .product-hero__ctas .btn {
     flex: 1 1 calc(50% - var(--space-3) / 2);
     max-width: calc(50% - var(--space-3) / 2);
@@ -1361,7 +1455,15 @@ const productSchema = {
     text-align: center;
   }
   .retail-badge {
-    padding: 10px 18px;
+    flex: 1 1 calc(50% - var(--space-3) / 2);
+    max-width: calc(50% - var(--space-3) / 2);
+    height: 80px;
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 12px 18px;
     background: white;
     border: 1.5px solid var(--color-line);
     border-radius: var(--radius);
@@ -1377,8 +1479,8 @@ const productSchema = {
   .retail-badge img {
     width: 100%;
     height: 100%;
-    max-width: 124px;
-    max-height: 28px;
+    max-width: 130px;
+    max-height: 32px;
     object-fit: contain;
     display: block;
   }
@@ -1388,6 +1490,36 @@ const productSchema = {
       flex: 1 1 100%;
       max-width: 100%;
     }
+  }
+
+  .retail-empty-note {
+    margin: 0;
+    height: 80px;
+    min-height: 80px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: 10px 18px;
+    background: white;
+    border: 1.5px solid var(--color-line);
+    border-left: 4px solid var(--color-coral);
+    border-radius: var(--radius);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  }
+  .retail-empty-note__icon {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    color: var(--color-coral);
+  }
+  .retail-empty-note__text {
+    font-size: 0.95rem;
+    font-weight: 600;
+    line-height: 1.35;
+    color: var(--color-ink);
+    letter-spacing: -0.01em;
+    text-wrap: pretty;
   }
 
   .prose h2 { margin-top: var(--space-5); }
